@@ -1,2 +1,6 @@
 # Cset
-Cr ou nao Cr?
+"Cr ou nao Cr?"
+
+## Part 1:
+
+Lexer
