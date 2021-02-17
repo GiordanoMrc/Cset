@@ -14,6 +14,7 @@ int main() {
     set possibleSums;
     possibleSums = EMPTY;
     int x;
+    int 1a121qwe3___;
     
     forall (x in s) {
         set sumsWithX;   
