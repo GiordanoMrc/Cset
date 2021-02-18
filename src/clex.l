@@ -7,8 +7,8 @@
 int line = 1;
 int error_count = 0;
 int strLen = 0;
-char openParenthesis[] = "(";
-char closeParenthesis[] = ")";
+char oP[] = "(";
+char cP[] = ")";
 
 %}
 
@@ -63,26 +63,26 @@ ID                      {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
 
 %%
 \'                     {
-                        printf("-> STRING:%s%s", openParenthesis, yytext);
+                        printf("-> STRING:%s%s", oP, yytext);
                         strLen += 1;
                         BEGIN(STRING);
                         }
 
 <STRING>\'              {
                         strLen += 1;
-                        printf("%s%s LENGTH %d\n", yytext, closeParenthesis, strLen);
+                        printf("%s%s LENGTH %d\n", yytext, cP, strLen);
                         strLen = 0;
                         BEGIN(INITIAL);
                         }
 \"                      {
-                        printf("-> STRING:%s%s", openParenthesis, yytext);
+                        printf("-> STRING:%s%s", oP, yytext);
                         strLen += 1;
                         BEGIN(STRING);
                         }
 
 <STRING>\"              {
                         strLen += 1;
-                        printf("%s%s LENGTH %d\n\n", yytext, closeParenthesis, strLen);
+                        printf("%s%s LENGTH %d\n\n", yytext, cP, strLen);
                         strLen = 0;
                         BEGIN(INITIAL);
                         }

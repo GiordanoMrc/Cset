@@ -505,8 +505,8 @@ char *yytext;
 int line = 1;
 int error_count = 0;
 int strLen = 0;
-char openParenthesis[] = "(";
-char closeParenthesis[] = ")";
+char oP[] = "(";
+char cP[] = ")";
 
 #line 512 "lex.yy.c"
 /*Arit*/
@@ -794,7 +794,7 @@ case 1:
 YY_RULE_SETUP
 #line 65 "clex.l"
 {
-                        printf("-> STRING:%s%s", openParenthesis, yytext);
+                        printf("-> STRING:%s%s", oP, yytext);
                         strLen += 1;
                         BEGIN(STRING);
                         }
@@ -804,7 +804,7 @@ YY_RULE_SETUP
 #line 71 "clex.l"
 {
                         strLen += 1;
-                        printf("%s%s LENGTH %d\n", yytext, closeParenthesis, strLen);
+                        printf("%s%s LENGTH %d\n", yytext, cP, strLen);
                         strLen = 0;
                         BEGIN(INITIAL);
                         }
@@ -813,7 +813,7 @@ case 3:
 YY_RULE_SETUP
 #line 77 "clex.l"
 {
-                        printf("-> STRING:%s%s", openParenthesis, yytext);
+                        printf("-> STRING:%s%s", oP, yytext);
                         strLen += 1;
                         BEGIN(STRING);
                         }
@@ -823,7 +823,7 @@ YY_RULE_SETUP
 #line 83 "clex.l"
 {
                         strLen += 1;
-                        printf("%s%s LENGTH %d\n\n", yytext, closeParenthesis, strLen);
+                        printf("%s%s LENGTH %d\n\n", yytext, cP, strLen);
                         strLen = 0;
                         BEGIN(INITIAL);
                         }
