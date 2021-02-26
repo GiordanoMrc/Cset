@@ -1,5 +1,5 @@
 int main(){
-    int 1%;
-    writeln("Hello World");
+    set ?;
+    writeln("Hello World"##);
     return 0;
 }

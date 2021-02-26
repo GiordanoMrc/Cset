@@ -1,5 +1,7 @@
 int main(){
-    int 1_a;
+    int 1_!a;
+    set $x;
     writeln("Hello World"@);
+
     return 0;
 }

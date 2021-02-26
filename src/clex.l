@@ -18,14 +18,17 @@ DIGIT                   [0-9]
 UNDERSCORE              "_"
 EOL                     \n        
 WS                      [ \t]+
+OPENBRACKET             "{"
+CLOSEBRACKET            "}"
+OPENPARENT              "("
+CLOSEPARENT             ")"
+COMMA                   ","
+SEMICOLON               ";"
 INLINE_COMMENT          [/]{2}.*
-
-
 TYPE                    "int"|"float"|"elem"|"set"
 INTEGER                 {DIGIT}+
 FLOAT                   {DIGIT}+"."{DIGIT}+
 EMPTY                   EMPTY
-/*Arit*/
 PLUS                    "+"
 MINUS                   "-"
 DIV                     "/"
@@ -33,32 +36,22 @@ MULT                    "*"
 EQ                      "="
 I_PLUS                  "++"
 D_MINUS                 "--"
-
 ARIT_OP                 {PLUS}|{MINUS}|{DIV}|{MULT}|{EQ}|{I_PLUS}|{D_MINUS}
-/*Logic*/
-
 NOT                     "!"
 OR                      "||"
 AND                     "&&"
-
 LOGIC_OP                {NOT}|{OR}|{AND}
-
-/*Relational*/
-
 EQ_TO                   "=="
 NEQ_TO                  "!="
 GT                      ">"
 LT                      "<"
 GTE                     ">="
 LTE                     "<="
-
 REL_OP                  {EQ_TO}|{NEQ_TO}|{GT}|{LT}|{GTE}|{LTE}
-
-
-KEYWORD                 "if"|"else"|"for"|"forall"|"return"
+KEYWORD                 "if"|"else"|"for"|"forall"|"is_set"|"add"|"exists"|"in"|"return"|"remove"
 READ                    "read"
 WRITE                   "write"|"writeln"
-ID                      {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
+ID                      [a-zA-Z_][_a-z0-9A-Z]*
 
 %x STRING
 
@@ -99,14 +92,14 @@ ID                      {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
                         strLen += 1;
                         }
 {EOL}                   {line++;}
-{INLINE_COMMENT}        {;}
-{WS}                    {;} 
-"{"                     {;}    
-"}"                     {;} 
-"("                     {;}    
-")"                     {;}    
-","                     {;}    
-";"                     {;}
+{INLINE_COMMENT}        {printf( "[INLINE-COMMENT: %s | LINE: %d]\n", yytext,line);}
+{WS}                    {printf( "[WHITE-SPACE: %s | LINE: %d]\n", yytext,line);} 
+"{"                     {printf( "[OPENBRACKET: %s | LINE: %d]\n", yytext,line);}    
+"}"                     {printf( "[CLOSEBRACKET: %s | LINE: %d]\n", yytext,line);} 
+"("                     {printf( "[OPENPARENT: %s | LINE: %d]\n", yytext,line);}    
+")"                     {printf( "[CLOSEPARENT: %s | LINE: %d]\n", yytext,line);}    
+","                     {printf( "[COMMA: %s | LINE: %d]\n", yytext,line);}    
+";"                     {printf( "[SEMICOLON: %s | LINE: %d]\n", yytext,line);}
 {TYPE}                  {
                         printf( "[TYPE: %s | LINE: %d]\n", yytext,line);
                         }
@@ -129,7 +122,7 @@ ID                      {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
                         printf( "[REL_OP:  %s | LINE: %d]\n",yytext,line);
                         }
 {KEYWORD}               {
-                        printf( "[RE_OP: %s | LINE: %d]\n",yytext,line);
+                        printf( "[KEYWORD: %s | LINE: %d]\n",yytext,line);
                         }
 {READ}                  {
                         printf( "[READ: %s | LINE: %d]\n",yytext,line);
@@ -144,7 +137,6 @@ ID                      {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
                         printf(">> Simbolo nao reconhecido pelo lexer:%s\n", yytext);
                         error_count++;
                         }
-
 %%
 
 
@@ -159,5 +151,5 @@ int main( int argc, char **argv ) {
     yylex_destroy();
 
 
-    printf("Foram encontrados %d erros pelo lexer.", error_count);
+    printf("\n>> Foram encontrados %d erros pelo lexer.\n", error_count);
 }
