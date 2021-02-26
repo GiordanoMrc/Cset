@@ -1,8 +1,9 @@
-# The syntax of C7 in Backus-Naur Form
+# The syntax of C7 in Backus-Naur Form based on C-Minus Bnf
 
 <program> ::= <declaration-list>
 
-<declaration-list> ::= <declaration> <declaration-list> | <declaration>
+<declaration-list> ::= <declaration> <declaration-list> 
+                     | <declaration>
 
 <declaration> ::= <function-definition>
                 | <var-declaration>
@@ -21,7 +22,7 @@
 
 <parameter-declaration> ::= <type> <id>
 
-<compound-statement> ::= { {<var-declaration>}* {<statement>}* }
+<compound-statement> ::= "{" {<var-declaration>}* {<statement>}* "}"
 
 <statement> ::= <expression-statement>
               | <compound-statement>
@@ -31,10 +32,11 @@
               | <io-statement>
               | <set-statement>
 
-<expression-statement> ::= <expression> ";" | ";"
+<expression-statement> ::= <expression> ";" 
+                         | ";"
 
 <if-statement> ::= if "(" <expression> ")" <statement>
-                        | if "(" <expression> ")" <statement> "else" <statement>
+                 | if "(" <expression> ")" <statement> "else" <statement>
 
 <for-statement> ::= for "(" {<expression>}? ";" {<expression>}? ";" {<expression>}? ")" <statement>
 
@@ -42,9 +44,33 @@
 
 <io-statement> ::= read "(" <id> ")" ";"
                  | write "(" <id> ")" ";"
-                 | writeln "(" <id> ")" ";" 
+                 | writeln "(" <id> ")" ";"
 
-<expression> ::= <id> "=" <expression> | <basic-expression>
+<set-statement> ::= forall "(" <in-expression>  ")" <statement>
+                  | is_set "(" <id> ")" ";"
+
+
+<expression> ::= <id> "=" <expression> 
+               | <basic-expression>
+               | <set-expression>
+
+
+<set-expression> ::=  "{" <element-list> "}" 
+                   | <set-operation>
+
+<element-list> ::= <element-list> "," elem 
+                 | elem
+
+<elem> ::= <id> 
+         | <integer-constant> 
+         | <float-constant>
+
+<set-operation> ::= add "("<in-expression>")"
+                  | remove"("<in-expression>")"
+                  | exists "("<in-expression>")"
+
+<in-expression> ::= <basic-expression> in <set-expression>
+                  | <basic-expression> in <id>
 
 <basic-expression> ::= <add-expression> 
                      | <add-expression> <relop> <add-expression>
@@ -67,7 +93,9 @@
 <mulop> ::= "*"
           | "/"
 
-<factor> ::= "(" <expression> ")" | <id> | <constant>
+<factor> ::= "(" <expression> ")" 
+           | <id> 
+           | <constant>
 
 <constant> ::= <integer-constant>
              | <float-constant>
@@ -79,8 +107,10 @@
 
 <integer-constant> ::= <digit> {<digit>}*
 
-<float-constant> ::= <digit> {<digit>}
+<float-constant> ::= <digit> "." {<digit>}+
 
 <digit> ::= [0-9]
+
+<empty-constant> ::= "EMPTY"
 
 
