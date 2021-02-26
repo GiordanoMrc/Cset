@@ -496,7 +496,8 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "clex.l"
-#line 2 "clex.l"
+#define YY_NO_INPUT 1
+#line 3 "clex.l"
 
 #include <string.h>
 #include <stdlib.h>
@@ -508,12 +509,12 @@ int strLen = 0;
 char oP[] = "(";
 char cP[] = ")";
 
-#line 512 "lex.yy.c"
+#line 513 "lex.yy.c"
 /*Arit*/
 /*Logic*/
 /*Relational*/
 
-#line 517 "lex.yy.c"
+#line 518 "lex.yy.c"
 
 #define INITIAL 0
 #define STRING 1
@@ -574,8 +575,6 @@ extern int yywrap ( void );
 #endif
 
 #ifndef YY_NO_UNPUT
-    
-    static void yyunput ( int c, char *buf_ptr  );
     
 #endif
 
@@ -731,9 +730,9 @@ YY_DECL
 		}
 
 	{
-#line 64 "clex.l"
+#line 65 "clex.l"
 
-#line 737 "lex.yy.c"
+#line 736 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -792,7 +791,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 65 "clex.l"
+#line 66 "clex.l"
 {
                         printf("-> STRING:%s%s", oP, yytext);
                         strLen += 1;
@@ -801,7 +800,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 71 "clex.l"
+#line 72 "clex.l"
 {
                         strLen += 1;
                         printf("%s%s LENGTH %d\n", yytext, cP, strLen);
@@ -811,7 +810,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 77 "clex.l"
+#line 78 "clex.l"
 {
                         printf("-> STRING:%s%s", oP, yytext);
                         strLen += 1;
@@ -820,7 +819,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 83 "clex.l"
+#line 84 "clex.l"
 {
                         strLen += 1;
                         printf("%s%s LENGTH %d\n\n", yytext, cP, strLen);
@@ -831,7 +830,7 @@ YY_RULE_SETUP
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 90 "clex.l"
+#line 91 "clex.l"
 {
                         printf("%s", yytext);
                         strLen += 1;
@@ -840,7 +839,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 96 "clex.l"
+#line 97 "clex.l"
 {
                         printf("%s", yytext);
                         strLen += 1;
@@ -849,129 +848,129 @@ YY_RULE_SETUP
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 100 "clex.l"
+#line 101 "clex.l"
 {line++;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 101 "clex.l"
+#line 102 "clex.l"
 {;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 102 "clex.l"
+#line 103 "clex.l"
 {;} 
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 103 "clex.l"
+#line 104 "clex.l"
 {;}    
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 104 "clex.l"
+#line 105 "clex.l"
 {;} 
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 105 "clex.l"
+#line 106 "clex.l"
 {;}    
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 106 "clex.l"
+#line 107 "clex.l"
 {;}    
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 107 "clex.l"
+#line 108 "clex.l"
 {;}    
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 108 "clex.l"
+#line 109 "clex.l"
 {;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 109 "clex.l"
+#line 110 "clex.l"
 {
                         printf( "[TYPE: %s | LINE: %d]\n", yytext,line);
                         }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 112 "clex.l"
+#line 113 "clex.l"
 {
                         printf( "[INTEGER: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 115 "clex.l"
+#line 116 "clex.l"
 {
                         printf( "[FLOAT: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 118 "clex.l"
+#line 119 "clex.l"
 {
                         printf( "[EMPTY: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 121 "clex.l"
+#line 122 "clex.l"
 {
                         printf( "[ARIT_OP: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 124 "clex.l"
+#line 125 "clex.l"
 {
                         printf( "[LOGIC_OP: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 127 "clex.l"
+#line 128 "clex.l"
 {
                         printf( "[REL_OP:  %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 130 "clex.l"
+#line 131 "clex.l"
 {
                         printf( "[RE_OP: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 133 "clex.l"
+#line 134 "clex.l"
 {
                         printf( "[READ: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 136 "clex.l"
+#line 137 "clex.l"
 {
                         printf( "[WRITE: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 139 "clex.l"
+#line 140 "clex.l"
 {
                         printf( "[ID: %s | LINE: %d]\n",yytext,line);
                         }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 142 "clex.l"
+#line 143 "clex.l"
 { 
                         printf(">> Simbolo nao reconhecido pelo lexer:%s\n", yytext);
                         error_count++;
@@ -979,10 +978,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 147 "clex.l"
+#line 148 "clex.l"
 ECHO;
 	YY_BREAK
-#line 986 "lex.yy.c"
+#line 985 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 	yyterminate();
@@ -1318,43 +1317,6 @@ static int yy_get_next_buffer (void)
 }
 
 #ifndef YY_NO_UNPUT
-
-    static void yyunput (int c, char * yy_bp )
-{
-	char *yy_cp;
-    
-    yy_cp = (yy_c_buf_p);
-
-	/* undo effects of setting up yytext */
-	*yy_cp = (yy_hold_char);
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		int number_to_move = (yy_n_chars) + 2;
-		char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			(yy_n_chars) = (int) YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-	(yytext_ptr) = yy_bp;
-	(yy_hold_char) = *yy_cp;
-	(yy_c_buf_p) = yy_cp;
-}
 
 #endif
 
@@ -1988,7 +1950,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 147 "clex.l"
+#line 148 "clex.l"
 
 
 
@@ -1999,6 +1961,8 @@ int main( int argc, char **argv ) {
     else
         yyin = stdin;
     yylex();
+    fclose(yyin);
+    yylex_destroy();
 
 
     printf("Foram encontrados %d erros pelo lexer.", error_count);

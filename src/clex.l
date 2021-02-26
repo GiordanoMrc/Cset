@@ -1,3 +1,4 @@
+%option noinput nounput
 %{
 
 #include <string.h>
@@ -154,6 +155,8 @@ int main( int argc, char **argv ) {
     else
         yyin = stdin;
     yylex();
+    fclose(yyin);
+    yylex_destroy();
 
 
     printf("Foram encontrados %d erros pelo lexer.", error_count);

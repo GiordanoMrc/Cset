@@ -101,8 +101,6 @@
              | <float-constant>
              | <empty-constant>
 
-#--------------------------------------------------------------------------------------- type rules
-
 <id> ::= [a-zA-Z_][_a-z0-9A-Z]*
 
 <integer-constant> ::= <digit> {<digit>}*
