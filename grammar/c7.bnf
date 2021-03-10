@@ -64,13 +64,13 @@
 <elem> ::= <id> 
          | <integer-constant> 
          | <float-constant>
+         | "{" <element-list> "}" 
 
 <set-operation> ::= add "("<in-expression>")"
                   | remove"("<in-expression>")"
                   | exists "("<in-expression>")"
 
-<in-expression> ::= <basic-expression> in <set-expression>
-                  | <basic-expression> in <id>
+<in-expression> ::= <basic-expression> in <expression>
 
 <basic-expression> ::= <add-expression> 
                      | <add-expression> <relop> <add-expression>
@@ -110,5 +110,3 @@
 <digit> ::= [0-9]
 
 <empty-constant> ::= "EMPTY"
-
-
