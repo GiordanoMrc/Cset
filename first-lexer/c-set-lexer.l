@@ -2,7 +2,7 @@
 %option nounput 
 %option noyywrap
 %{
-#include "lang.tab.h"
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -28,14 +28,10 @@ CLOSEPARENT             ")"
 COMMA                   ","
 SEMICOLON               ";"
 INLINE_COMMENT          [/]{2}.*
-TYPE                    INT|"float"|"elem"|"set"
-INT                     "int"
-FLOAT                   "float"
-ELEM                    "elem"
-SET                     "set"
-INTEGER_CONST           {DIGIT}+
-FLOAT_CONST             {DIGIT}+"."{DIGIT}+
-EMPTY_CONST             "EMPTY"
+TYPE                    "int"|"float"|"elem"|"set"
+INTEGER                 {DIGIT}+
+FLOAT                   {DIGIT}+"."{DIGIT}+
+EMPTY                   EMPTY
 PLUS                    "+"
 MINUS                   "-"
 DIV                     "/"
@@ -93,34 +89,51 @@ ID                      [a-zA-Z_][_a-z0-9A-Z]*
                         }
 
 <STRING>\n              {
+                        printf("%s", yytext);
                         strLen += 1;
                         line++;
                         col++;
                         }
 
 <STRING>.               {
+                        printf("%s", yytext);
                         strLen += 1;
                         col++;
                         }
 {EOL}                   {line++;col=0;}
-{INLINE_COMMENT}        {col++;}
-{WS}                    {col++;} 
-"{"                     {col++;}    
-"}"                     {col++;} 
-"("                     {col++;}    
-")"                     {col++;}    
-","                     {col++;}    
-";"                     {col++;}
-{INT}                   {col++;return INT;}
-{INTEGER_CONST}         {col++;}
-{FLOAT_CONST}           {col++;}
-{EMPTY_CONST}           {col++;}
-{ARIT_OP}               {col++;}
-{LOGIC_OP}              {col++;}
-{REL_OP}                {col++;}                       
-{KEYWORD}               {col++;}
-{READ}                  {col++;}
-{WRITE}                 {col++;}
-{ID}                    {col++;return ID;}
-.                       {error_count++;col++;}
+{INLINE_COMMENT}        {printf( "[INLINE-COMMENT: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}
+{WS}                    {printf( "[WHITE-SPACE: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;} 
+"{"                     {printf( "[OPENBRACKET: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}    
+"}"                     {printf( "[CLOSEBRACKET: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;} 
+"("                     {printf( "[OPENPARENT: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}    
+")"                     {printf( "[CLOSEPARENT: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}    
+","                     {printf( "[COMMA: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}    
+";"                     {printf( "[SEMICOLON: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}
+{TYPE}                  {printf( "[TYPE: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}
+{INTEGER}               {printf( "[INTEGER: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++; return int;}
+{FLOAT}                 {printf( "[FLOAT: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
+{EMPTY}                 {printf( "[EMPTY: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
+{ARIT_OP}               {printf( "[ARIT_OP: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
+{LOGIC_OP}              {printf( "[LOGIC_OP: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
+{REL_OP}                {printf( "[REL_OP:  %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}                       
+{KEYWORD}               {printf( "[KEYWORD: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
+{READ}                  {printf( "[READ: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
+{WRITE}                 {printf( "[WRITE: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
+{ID}                    {printf( "[ID: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
+.                       {printf( "[ERROR: %s | LINE: %d | COLUMN: %d]\n", yytext,line, col);error_count++;col++;}
 %%
+
+
+int main( int argc, char **argv ) {
+    ++argv, --argc;
+    if(argc > 0)
+        yyin = fopen( argv[0], "r" );
+    else
+        yyin = stdin;
+    yylex();
+    fclose(yyin);
+    yylex_destroy();
+
+
+    printf("\n>> Foram encontrados %d erros pelo lexer.\n", error_count);
+}
