@@ -1353,7 +1353,7 @@ yyreduce:
 
   case 3:
 #line 52 "c7synt.y"
-                                               {printf("declaration-list declaration\n");}
+                                               {printf("declaration-list: \n");}
 #line 1358 "c7synt.tab.c"
     break;
 
@@ -1365,7 +1365,7 @@ yyreduce:
 
   case 5:
 #line 55 "c7synt.y"
-                                 {printf("declaration\n");}
+                                 {printf("function-definition\n");}
 #line 1370 "c7synt.tab.c"
     break;
 
@@ -1377,37 +1377,37 @@ yyreduce:
 
   case 7:
 #line 58 "c7synt.y"
-                             {printf("declaration\n");}
+                             {printf("var-declaration\n");}
 #line 1382 "c7synt.tab.c"
     break;
 
   case 8:
 #line 60 "c7synt.y"
-                                                    {printf("declaration\n");}
+                                                    {printf("function-definition\n");}
 #line 1388 "c7synt.tab.c"
     break;
 
   case 9:
 #line 62 "c7synt.y"
-                {printf("declaration\n");}
+                {printf("INT\n");}
 #line 1394 "c7synt.tab.c"
     break;
 
   case 10:
 #line 63 "c7synt.y"
-                {printf("declaration\n");}
+                {printf("FLOAT\n");}
 #line 1400 "c7synt.tab.c"
     break;
 
   case 11:
 #line 64 "c7synt.y"
-                {printf("declaration\n");}
+                {printf("SET\n");}
 #line 1406 "c7synt.tab.c"
     break;
 
   case 12:
 #line 65 "c7synt.y"
-                {printf("declaration\n");}
+                {printf("ELEM\n");}
 #line 1412 "c7synt.tab.c"
     break;
 
