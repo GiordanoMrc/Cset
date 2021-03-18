@@ -100,7 +100,7 @@ ID                      [a-zA-Z_][_a-z0-9A-Z]*
                         strLen += 1;
                         col++;
                         }
-{EOL}                   {line++;col=0;}
+{EOL}                   {line++;col=1;}
 {INLINE_COMMENT}        {printf( "[INLINE-COMMENT: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}
 {WS}                    {printf( "[WHITE-SPACE: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;} 
 "{"                     {printf( "[OPENBRACKET: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}    
@@ -110,7 +110,7 @@ ID                      [a-zA-Z_][_a-z0-9A-Z]*
 ","                     {printf( "[COMMA: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}    
 ";"                     {printf( "[SEMICOLON: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}
 {TYPE}                  {printf( "[TYPE: %s | LINE: %d | COLUMN: %d]\n", yytext,line,col);col++;}
-{INTEGER}               {printf( "[INTEGER: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++; return int;}
+{INTEGER}               {printf( "[INTEGER: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
 {FLOAT}                 {printf( "[FLOAT: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
 {EMPTY}                 {printf( "[EMPTY: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}
 {ARIT_OP}               {printf( "[ARIT_OP: %s | LINE: %d | COLUMN: %d]\n",yytext,line,col);col++;}

@@ -1,0 +1,338 @@
+Terminais sem uso na gramática
+
+    INTEGER_CONST
+    FLOAT_CONST
+    EMPTY_CONST
+    PLUS
+    MINUS
+    DIV
+    MULT
+    EQ
+    I_PLUS
+    D_MINUS
+    NOT
+    OR
+    AND
+    EQ_TO
+    NEQ_TO
+    GT
+    LT
+    GTE
+    LTE
+    IF
+    ELSE
+    FOR
+    FORALL
+    IS_SET
+    ADD
+    IN
+    REMOVE
+    RETURN
+    EXISTS
+    READ
+    WRITE
+    WRITELN
+
+
+Gramática
+
+    0 $accept: program $end
+
+    1 program: declaration-list
+
+    2 declaration-list: declaration-list declaration
+    3                 | declaration
+
+    4 declaration: function-definition
+    5            | var-declaration
+
+    6 var-declaration: type ID ';'
+
+    7 function-definition: type ID '(' parameter-list ')'
+
+    8 type: INT
+    9     | FLOAT
+   10     | SET
+   11     | ELEM
+
+   12 parameter-list: parameter-declaration
+   13               | parameter-list ',' parameter-declaration
+
+   14 parameter-declaration: type ID
+
+
+Terminais, com as regras onde eles aparecem
+
+    $end (0) 0
+    '(' (40) 7
+    ')' (41) 7
+    ',' (44) 13
+    ';' (59) 6
+    error (256)
+    INT (258) 8
+    FLOAT (259) 9
+    ELEM (260) 11
+    SET (261) 10
+    INTEGER_CONST (262)
+    FLOAT_CONST (263)
+    EMPTY_CONST (264)
+    PLUS (265)
+    MINUS (266)
+    DIV (267)
+    MULT (268)
+    EQ (269)
+    I_PLUS (270)
+    D_MINUS (271)
+    NOT (272)
+    OR (273)
+    AND (274)
+    EQ_TO (275)
+    NEQ_TO (276)
+    GT (277)
+    LT (278)
+    GTE (279)
+    LTE (280)
+    IF (281)
+    ELSE (282)
+    FOR (283)
+    FORALL (284)
+    IS_SET (285)
+    ADD (286)
+    IN (287)
+    REMOVE (288)
+    RETURN (289)
+    EXISTS (290)
+    READ (291)
+    WRITE (292)
+    WRITELN (293)
+    ID (294) 6 7 14
+
+
+Não terminais com as regras onde eles aparecem
+
+    $accept (44)
+        à esquerda: 0
+    program (45)
+        à esquerda: 1
+        à direita: 0
+    declaration-list (46)
+        à esquerda: 2 3
+        à direita: 1 2
+    declaration (47)
+        à esquerda: 4 5
+        à direita: 2 3
+    var-declaration (48)
+        à esquerda: 6
+        à direita: 5
+    function-definition (49)
+        à esquerda: 7
+        à direita: 4
+    type (50)
+        à esquerda: 8 9 10 11
+        à direita: 6 7 14
+    parameter-list (51)
+        à esquerda: 12 13
+        à direita: 7 13
+    parameter-declaration (52)
+        à esquerda: 14
+        à direita: 12 13
+
+
+Estado 0
+
+    0 $accept: . program $end
+
+    INT    deslocar, e ir ao estado 1
+    FLOAT  deslocar, e ir ao estado 2
+    ELEM   deslocar, e ir ao estado 3
+    SET    deslocar, e ir ao estado 4
+
+    program              ir ao estado 5
+    declaration-list     ir ao estado 6
+    declaration          ir ao estado 7
+    var-declaration      ir ao estado 8
+    function-definition  ir ao estado 9
+    type                 ir ao estado 10
+
+
+Estado 1
+
+    8 type: INT .
+
+    $padrão  reduzir usando a regra 8 (type)
+
+
+Estado 2
+
+    9 type: FLOAT .
+
+    $padrão  reduzir usando a regra 9 (type)
+
+
+Estado 3
+
+   11 type: ELEM .
+
+    $padrão  reduzir usando a regra 11 (type)
+
+
+Estado 4
+
+   10 type: SET .
+
+    $padrão  reduzir usando a regra 10 (type)
+
+
+Estado 5
+
+    0 $accept: program . $end
+
+    $end  deslocar, e ir ao estado 11
+
+
+Estado 6
+
+    1 program: declaration-list .
+    2 declaration-list: declaration-list . declaration
+
+    INT    deslocar, e ir ao estado 1
+    FLOAT  deslocar, e ir ao estado 2
+    ELEM   deslocar, e ir ao estado 3
+    SET    deslocar, e ir ao estado 4
+
+    $padrão  reduzir usando a regra 1 (program)
+
+    declaration          ir ao estado 12
+    var-declaration      ir ao estado 8
+    function-definition  ir ao estado 9
+    type                 ir ao estado 10
+
+
+Estado 7
+
+    3 declaration-list: declaration .
+
+    $padrão  reduzir usando a regra 3 (declaration-list)
+
+
+Estado 8
+
+    5 declaration: var-declaration .
+
+    $padrão  reduzir usando a regra 5 (declaration)
+
+
+Estado 9
+
+    4 declaration: function-definition .
+
+    $padrão  reduzir usando a regra 4 (declaration)
+
+
+Estado 10
+
+    6 var-declaration: type . ID ';'
+    7 function-definition: type . ID '(' parameter-list ')'
+
+    ID  deslocar, e ir ao estado 13
+
+
+Estado 11
+
+    0 $accept: program $end .
+
+    $padrão  aceitar
+
+
+Estado 12
+
+    2 declaration-list: declaration-list declaration .
+
+    $padrão  reduzir usando a regra 2 (declaration-list)
+
+
+Estado 13
+
+    6 var-declaration: type ID . ';'
+    7 function-definition: type ID . '(' parameter-list ')'
+
+    ';'  deslocar, e ir ao estado 14
+    '('  deslocar, e ir ao estado 15
+
+
+Estado 14
+
+    6 var-declaration: type ID ';' .
+
+    $padrão  reduzir usando a regra 6 (var-declaration)
+
+
+Estado 15
+
+    7 function-definition: type ID '(' . parameter-list ')'
+
+    INT    deslocar, e ir ao estado 1
+    FLOAT  deslocar, e ir ao estado 2
+    ELEM   deslocar, e ir ao estado 3
+    SET    deslocar, e ir ao estado 4
+
+    type                   ir ao estado 16
+    parameter-list         ir ao estado 17
+    parameter-declaration  ir ao estado 18
+
+
+Estado 16
+
+   14 parameter-declaration: type . ID
+
+    ID  deslocar, e ir ao estado 19
+
+
+Estado 17
+
+    7 function-definition: type ID '(' parameter-list . ')'
+   13 parameter-list: parameter-list . ',' parameter-declaration
+
+    ')'  deslocar, e ir ao estado 20
+    ','  deslocar, e ir ao estado 21
+
+
+Estado 18
+
+   12 parameter-list: parameter-declaration .
+
+    $padrão  reduzir usando a regra 12 (parameter-list)
+
+
+Estado 19
+
+   14 parameter-declaration: type ID .
+
+    $padrão  reduzir usando a regra 14 (parameter-declaration)
+
+
+Estado 20
+
+    7 function-definition: type ID '(' parameter-list ')' .
+
+    $padrão  reduzir usando a regra 7 (function-definition)
+
+
+Estado 21
+
+   13 parameter-list: parameter-list ',' . parameter-declaration
+
+    INT    deslocar, e ir ao estado 1
+    FLOAT  deslocar, e ir ao estado 2
+    ELEM   deslocar, e ir ao estado 3
+    SET    deslocar, e ir ao estado 4
+
+    type                   ir ao estado 16
+    parameter-declaration  ir ao estado 22
+
+
+Estado 22
+
+   13 parameter-list: parameter-list ',' parameter-declaration .
+
+    $padrão  reduzir usando a regra 13 (parameter-list)

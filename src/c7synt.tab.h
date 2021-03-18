@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_LANG_TAB_H_INCLUDED
-# define YY_YY_LANG_TAB_H_INCLUDED
+#ifndef YY_YY_C7SYNT_TAB_H_INCLUDED
+# define YY_YY_C7SYNT_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -50,7 +50,42 @@ extern int yydebug;
   enum yytokentype
   {
     INT = 258,
-    ID = 259
+    FLOAT = 259,
+    ELEM = 260,
+    SET = 261,
+    INTEGER_CONST = 262,
+    FLOAT_CONST = 263,
+    EMPTY_CONST = 264,
+    PLUS = 265,
+    MINUS = 266,
+    DIV = 267,
+    MULT = 268,
+    EQ = 269,
+    I_PLUS = 270,
+    D_MINUS = 271,
+    NOT = 272,
+    OR = 273,
+    AND = 274,
+    EQ_TO = 275,
+    NEQ_TO = 276,
+    GT = 277,
+    LT = 278,
+    GTE = 279,
+    LTE = 280,
+    IF = 281,
+    ELSE = 282,
+    FOR = 283,
+    FORALL = 284,
+    IS_SET = 285,
+    ADD = 286,
+    IN = 287,
+    REMOVE = 288,
+    RETURN = 289,
+    EXISTS = 290,
+    READ = 291,
+    WRITE = 292,
+    WRITELN = 293,
+    ID = 294
   };
 #endif
 
@@ -66,4 +101,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_LANG_TAB_H_INCLUDED  */
+#endif /* !YY_YY_C7SYNT_TAB_H_INCLUDED  */
