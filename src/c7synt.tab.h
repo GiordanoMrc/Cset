@@ -82,10 +82,16 @@ extern int yydebug;
     REMOVE = 288,
     RETURN = 289,
     EXISTS = 290,
-    READ = 291,
-    WRITE = 292,
-    WRITELN = 293,
-    ID = 294
+    OPENPARENT = 291,
+    CLOSEPARENT = 292,
+    OPENBRACES = 293,
+    CLOSEBRACES = 294,
+    SEMICOLON = 295,
+    COMMA = 296,
+    READ = 297,
+    WRITE = 298,
+    WRITELN = 299,
+    ID = 300
   };
 #endif
 

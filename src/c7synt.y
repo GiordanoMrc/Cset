@@ -1,3 +1,4 @@
+%define lr.type canonical-lr
 %{
     #include <stdio.h>
     extern int yylex();
@@ -66,6 +67,7 @@ var-declaration: type ID ';' {printf("var-declaration -> type ID\n");}
 
 function-definition: type ID '(' parameters ')'  compound-stmt {printf("function-definition -> type ID '(' parameter-list ')'\n");}
 ;
+
 type: INT       {printf("INT\n");}
     | FLOAT     {printf("FLOAT\n");}
     | SET       {printf("SET\n");}
@@ -81,10 +83,10 @@ parameter-declaration: type ID {printf("parameter-declaration -> type ID\n");}
 ;
 compound-stmt: '{' var-decls local-stmt'}' {printf("C-stmt -> '{' var-decls local-stmt'}'\n");}
 ;
-var-decls: var-declaration var-decls {printf("var-decls -> var-declaration var-decls\n");}
+var-decls: var-decls var-declaration {printf("var-decls -> var-declaration var-decls\n");}
          | %empty {printf("C-stmt -> empty\n");}
 ;
-local-stmt: stmt local-stmt {printf("local-stmt -> stmt local-stmt\n");}
+local-stmt: local-stmt stmt  {printf("local-stmt -> stmt local-stmt\n");}
           | %empty {printf("local-stmt -> empty\n");}
 ;
 stmt: io-stmt {printf("stmt -> io-stmt\n");}
@@ -92,7 +94,6 @@ stmt: io-stmt {printf("stmt -> io-stmt\n");}
     | compound-stmt {printf("stmt -> cp-stmt\n");}
     | if-stmt {printf("stmt -> if-stmt\n");}
     | for-stmt {printf("stmt -> for-stmt\n");}
-    | set-stmt {printf("stmt -> set-stmt\n");}
     | expression-stmt {printf("stmt -> expression-stmt\n");}
 ;
 
@@ -103,7 +104,7 @@ io-stmt: READ '(' ID ')' ';' {printf("io-stmt -> read ( <id> ) \n");}
 
 return-stmt: %empty
 ;
-set-stmt: %empty
+set-stmt: set-exp {printf("set-stmt -> set-expression\n");}
 ;
 if-stmt: %empty
 ;
@@ -115,9 +116,8 @@ expression-stmt: expression ';'  {printf("expression-stmt -> expression ;\n");}
 expression: ID EQ expression {printf("expression-> ID = expression \n");}
           | basic-exp {printf("expression -> basic-exp\n");}
 ;
-set-exp: '{' element-list '}' {printf("set-exp -> element-list")}
-;
-set-op: ADD '(' in-exp ')' {printf(" set-op -> ADD (in-exp)\n");}
+element-list: %empty;
+set-exp: ADD '(' in-exp ')' {printf(" set-op -> ADD (in-exp)\n");}
        | REMOVE '(' in-exp ')' {printf(" set-op -> REMOVE (in-exp)\n");}
        | EXISTS '(' in-exp ')' {printf(" set-op -> EXISTS (in-exp)\n");}
 ;
@@ -148,7 +148,6 @@ mul-op: MULT {printf(" mul-op -> MULT\n");}
 factor: '(' expression ')' {printf(" factor -> ( expression )\n");}
       | ID {printf(" factor -> ID\n");}
       | constant {printf(" factor -> constant\n");}
-      | call {printf(" factor -> call-exp\n");}
 ;
 constant: INTEGER_CONST {printf(" constant -> INTEGER_CONST\n");}
         | FLOAT_CONST {printf(" constant -> FLOAT_CONST\n");}

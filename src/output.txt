@@ -21,79 +21,15 @@ parameter-list -> parameter-declaration
 FLOAT
 parameter-declaration -> type ID
 parameter-list -> parameter-list ',' parameter-declaration
-INT
-var-declaration -> type ID
-INT
-var-declaration -> type ID
-INT
-var-declaration -> type ID
 C-stmt -> empty
+INT
+var-declaration -> type ID
 var-decls -> var-declaration var-decls
+INT
+var-declaration -> type ID
 var-decls -> var-declaration var-decls
+INT
+var-declaration -> type ID
 var-decls -> var-declaration var-decls
- constant -> INTEGER_CONST
- factor -> constant
- term -> factor
- add-exp -> term
- basic-exp -> add-exp
-expression -> basic-exp
-expression-> ID = expression 
-expression-stmt -> expression ;
-stmt -> expression-stmt
-io-stmt -> write ( <id> ) 
-stmt -> io-stmt
- factor -> ID
- term -> factor
- add-exp -> term
- basic-exp -> add-exp
-expression -> basic-exp
-expression-> ID = expression 
-expression-> ID = expression 
-expression-stmt -> expression ;
-stmt -> expression-stmt
- factor -> ID
- term -> factor
- rel-op -> MINUS
- factor -> ID
- term -> factor
- add-exp -> term add-op term
- basic-exp -> add-exp
-expression -> basic-exp
-expression-> ID = expression 
-expression-stmt -> expression ;
-stmt -> expression-stmt
- constant -> INTEGER_CONST
- factor -> constant
- term -> factor
- rel-op -> MINUS
- factor -> ID
- term -> factor
- mul-op -> MULT
- factor -> ID
- term -> factor
- mul-op -> DIV
- constant -> INTEGER_CONST
- factor -> constant
- term -> term mul-op factor
- add-exp -> term
- basic-exp -> add-exp
-expression -> basic-exp
- factor -> ( expression )
- term -> term mul-op factor
- add-exp -> term add-op term
- basic-exp -> add-exp
-expression -> basic-exp
-expression-> ID = expression 
-expression-stmt -> expression ;
-stmt -> expression-stmt
 local-stmt -> empty
-local-stmt -> stmt local-stmt
-local-stmt -> stmt local-stmt
-local-stmt -> stmt local-stmt
-local-stmt -> stmt local-stmt
-local-stmt -> stmt local-stmt
-C-stmt -> '{' var-decls local-stmt'}'
-function-definition -> type ID '(' parameter-list ')'
-declaration -> function-definition
-declaration-list -> declaration-list declaration 
-program -> declaration-list
+yyerror: syntax error

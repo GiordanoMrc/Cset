@@ -45,18 +45,14 @@
 <io-statement> ::= read "(" <id> ")" ";"
                  | write "(" <id> ")" ";"
                  | writeln "(" <id> ")" ";"
-                 | <io-statement> <io-statement>
-
-<set-statement> ::= <set-expression> 
 
 <forall-statement> ::= forall "(" <in-expression>  ")" <statement>
 
 <is_set-statement> ::=is_set "(" <id> ")" ";"
 
-
 <expression> ::= <id> "=" <expression> 
                | <basic-expression>
-
+               | <set-expression>
 <set-expression> ::=  "{" <element-list> "}" 
                    | <set-operation>
 
