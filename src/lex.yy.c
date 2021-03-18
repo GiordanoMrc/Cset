@@ -812,14 +812,13 @@ YY_RULE_SETUP
 {
                         strLen += 1;
                         col++;
-                        
                         strLen = 0;
                         BEGIN(INITIAL);
                         }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 84 "c7lex.l"
+#line 83 "c7lex.l"
 {
                         
                         strLen += 1;
@@ -829,10 +828,9 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 91 "c7lex.l"
+#line 90 "c7lex.l"
 {
                         strLen += 1;
-                        
                         strLen = 0;
                         col++;
                         BEGIN(INITIAL);
@@ -841,7 +839,7 @@ YY_RULE_SETUP
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 99 "c7lex.l"
+#line 97 "c7lex.l"
 {
                         strLen += 1;
                         line++;
@@ -850,7 +848,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 105 "c7lex.l"
+#line 103 "c7lex.l"
 {
                         strLen += 1;
                         col++;
@@ -859,215 +857,215 @@ YY_RULE_SETUP
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 109 "c7lex.l"
+#line 107 "c7lex.l"
 {line++;col=1;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 110 "c7lex.l"
+#line 108 "c7lex.l"
 {col++;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 111 "c7lex.l"
+#line 109 "c7lex.l"
 {col++;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 112 "c7lex.l"
+#line 110 "c7lex.l"
 {col++; return '{';}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 113 "c7lex.l"
+#line 111 "c7lex.l"
 {col++; return '}';} 
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 114 "c7lex.l"
+#line 112 "c7lex.l"
 {col++; return '(';}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 115 "c7lex.l"
+#line 113 "c7lex.l"
 {col++; return ')';}   
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 116 "c7lex.l"
+#line 114 "c7lex.l"
 {col++; return ',';}    
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 117 "c7lex.l"
+#line 115 "c7lex.l"
 {col++; return ';';}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 118 "c7lex.l"
+#line 116 "c7lex.l"
 {col++; return INT;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 119 "c7lex.l"
+#line 117 "c7lex.l"
 {col++; return FLOAT;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 120 "c7lex.l"
+#line 118 "c7lex.l"
 {col++; return ELEM;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 121 "c7lex.l"
+#line 119 "c7lex.l"
 {col++; return SET;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 122 "c7lex.l"
+#line 120 "c7lex.l"
 {col++; return INTEGER_CONST;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 123 "c7lex.l"
+#line 121 "c7lex.l"
 {col++; return FLOAT_CONST;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 124 "c7lex.l"
+#line 122 "c7lex.l"
 {col++; return EMPTY_CONST;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 125 "c7lex.l"
+#line 123 "c7lex.l"
 {col++; return PLUS;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 126 "c7lex.l"
+#line 124 "c7lex.l"
 {col++; return MINUS;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 127 "c7lex.l"
+#line 125 "c7lex.l"
 {col++; return DIV;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 128 "c7lex.l"
+#line 126 "c7lex.l"
 {col++; return MULT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 129 "c7lex.l"
+#line 127 "c7lex.l"
 {col++; return EQ;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 130 "c7lex.l"
+#line 128 "c7lex.l"
 {col++; return I_PLUS;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 131 "c7lex.l"
+#line 129 "c7lex.l"
 {col++; return D_MINUS;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 132 "c7lex.l"
+#line 130 "c7lex.l"
 {col++; return NOT;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 133 "c7lex.l"
+#line 131 "c7lex.l"
 {col++; return OR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 134 "c7lex.l"
+#line 132 "c7lex.l"
 {col++; return AND;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 135 "c7lex.l"
+#line 133 "c7lex.l"
 {col++; return IF;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 136 "c7lex.l"
+#line 134 "c7lex.l"
 {col++; return ELSE;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 137 "c7lex.l"
+#line 135 "c7lex.l"
 {col++; return  FOR;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 138 "c7lex.l"
+#line 136 "c7lex.l"
 {col++; return FORALL;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 139 "c7lex.l"
+#line 137 "c7lex.l"
 {col++; return IS_SET;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 140 "c7lex.l"
+#line 138 "c7lex.l"
 {col++; return ADD;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 141 "c7lex.l"
+#line 139 "c7lex.l"
 {col++; return EXISTS;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 142 "c7lex.l"
+#line 140 "c7lex.l"
 {col++; return IN;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 143 "c7lex.l"
+#line 141 "c7lex.l"
 {col++; return RETURN;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 144 "c7lex.l"
+#line 142 "c7lex.l"
 {col++; return REMOVE;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 145 "c7lex.l"
+#line 143 "c7lex.l"
 {col++; return READ;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 146 "c7lex.l"
+#line 144 "c7lex.l"
 {col++; return WRITE;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 147 "c7lex.l"
+#line 145 "c7lex.l"
 {col++; return WRITELN;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 148 "c7lex.l"
+#line 146 "c7lex.l"
 {col++; return ID;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 149 "c7lex.l"
+#line 147 "c7lex.l"
 {error_count++;col++;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 150 "c7lex.l"
+#line 149 "c7lex.l"
 ECHO;
 	YY_BREAK
-#line 1071 "lex.yy.c"
+#line 1069 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 	yyterminate();
@@ -2036,6 +2034,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 150 "c7lex.l"
+#line 149 "c7lex.l"
 
 

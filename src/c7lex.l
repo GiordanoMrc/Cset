@@ -77,7 +77,6 @@ ID                      [a-zA-Z_][_a-z0-9A-Z]*
 <STRING>\'              {
                         strLen += 1;
                         col++;
-                        
                         strLen = 0;
                         BEGIN(INITIAL);
                         }
@@ -90,7 +89,6 @@ ID                      [a-zA-Z_][_a-z0-9A-Z]*
 
 <STRING>\"              {
                         strLen += 1;
-                        
                         strLen = 0;
                         col++;
                         BEGIN(INITIAL);
@@ -147,4 +145,5 @@ ID                      [a-zA-Z_][_a-z0-9A-Z]*
 {WRITELN}               {col++; return WRITELN;}
 {ID}                    {col++; return ID;}
 .                       {error_count++;col++;}
+
 %%

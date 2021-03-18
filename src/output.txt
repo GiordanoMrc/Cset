@@ -1,0 +1,99 @@
+INT
+var-declaration -> type ID
+declaration -> var-declaration
+declaration-list -> declaration
+ELEM
+var-declaration -> type ID
+declaration -> var-declaration
+declaration-list -> declaration-list declaration 
+SET
+var-declaration -> type ID
+declaration -> var-declaration
+declaration-list -> declaration-list declaration 
+SET
+var-declaration -> type ID
+declaration -> var-declaration
+declaration-list -> declaration-list declaration 
+INT
+INT
+parameter-declaration -> type ID
+parameter-list -> parameter-declaration
+FLOAT
+parameter-declaration -> type ID
+parameter-list -> parameter-list ',' parameter-declaration
+INT
+var-declaration -> type ID
+INT
+var-declaration -> type ID
+INT
+var-declaration -> type ID
+C-stmt -> empty
+var-decls -> var-declaration var-decls
+var-decls -> var-declaration var-decls
+var-decls -> var-declaration var-decls
+ constant -> INTEGER_CONST
+ factor -> constant
+ term -> factor
+ add-exp -> term
+ basic-exp -> add-exp
+expression -> basic-exp
+expression-> ID = expression 
+expression-stmt -> expression ;
+stmt -> expression-stmt
+io-stmt -> write ( <id> ) 
+stmt -> io-stmt
+ factor -> ID
+ term -> factor
+ add-exp -> term
+ basic-exp -> add-exp
+expression -> basic-exp
+expression-> ID = expression 
+expression-> ID = expression 
+expression-stmt -> expression ;
+stmt -> expression-stmt
+ factor -> ID
+ term -> factor
+ rel-op -> MINUS
+ factor -> ID
+ term -> factor
+ add-exp -> term add-op term
+ basic-exp -> add-exp
+expression -> basic-exp
+expression-> ID = expression 
+expression-stmt -> expression ;
+stmt -> expression-stmt
+ constant -> INTEGER_CONST
+ factor -> constant
+ term -> factor
+ rel-op -> MINUS
+ factor -> ID
+ term -> factor
+ mul-op -> MULT
+ factor -> ID
+ term -> factor
+ mul-op -> DIV
+ constant -> INTEGER_CONST
+ factor -> constant
+ term -> term mul-op factor
+ add-exp -> term
+ basic-exp -> add-exp
+expression -> basic-exp
+ factor -> ( expression )
+ term -> term mul-op factor
+ add-exp -> term add-op term
+ basic-exp -> add-exp
+expression -> basic-exp
+expression-> ID = expression 
+expression-stmt -> expression ;
+stmt -> expression-stmt
+local-stmt -> empty
+local-stmt -> stmt local-stmt
+local-stmt -> stmt local-stmt
+local-stmt -> stmt local-stmt
+local-stmt -> stmt local-stmt
+local-stmt -> stmt local-stmt
+C-stmt -> '{' var-decls local-stmt'}'
+function-definition -> type ID '(' parameter-list ')'
+declaration -> function-definition
+declaration-list -> declaration-list declaration 
+program -> declaration-list
