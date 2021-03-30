@@ -48,7 +48,7 @@
 
 <forall-statement> ::= forall "(" <in-expression>  ")" <statement>
 
-<is_set-statement> ::=is_set "(" <id> ")" ";"
+<is_set-statement> ::= is_set "(" <id> ")" ";"
 
 <expression> ::= <id> "=" <expression> 
                | <basic-expression>

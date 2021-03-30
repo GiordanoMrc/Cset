@@ -3,12 +3,10 @@
 %option noyywrap
 %{
 #include "c7synt.tab.h"
-
 int col = 1;
 int line = 1;
 int error_count = 0;
 int strLen = 0;
-
 %}
 
 LETTER                  [a-zA-Z]
@@ -16,10 +14,10 @@ DIGIT                   [0-9]
 EOL                     \n        
 WS                      [ \t]+
 INLINE_COMMENT          [/]{2}.*
-INT                     "int"
-FLOAT                   "float"
-ELEM                    "elem"
-SET                     "set"
+INT                     int
+FLOAT                   float
+ELEM                    elem
+SET                     set
 INTEGER_CONST           {DIGIT}+
 FLOAT_CONST             {DIGIT}+"."{DIGIT}+
 EMPTY_CONST             "EMPTY"
@@ -35,23 +33,24 @@ NOT                     "!"
 OR                      "||"
 AND                     "&&"
 
-EQ_TO                   "=="
+EQ_TO                   ==
 NEQ_TO                  "!="
 GT                      ">"
 LT                      "<"
 GTE                     ">="
 LTE                     "<="
 
-IF                      "if"
-ELSE                    "else"     
-FOR                     "for"
-FORALL                  "forall"
-IS_SET                  "is_set"
-ADD                     "add"
-IN                      "in"
-REMOVE                  "remove"      
-RETURN                  "return"
-EXISTS                  "exists"
+IF                      if
+ELSE                    else     
+FOR                     for
+FORALL                  forall
+IS_SET                  is_set
+
+ADD                     add
+IN                      in
+REMOVE                  remove      
+RETURN                  return
+EXISTS                  exists
 
 OPENPARENT              "("
 CLOSEPARENT             ")"
@@ -60,9 +59,9 @@ CLOSEBRACES             "}"
 SEMICOLON               ";"
 COMMA                   ","
 
-READ                    "read"
-WRITE                   "write"
-WRITELN                 "writeln"
+READ                    read
+WRITE                   write
+WRITELN                 writeln
 ID                      [a-zA-Z_][_a-z0-9A-Z]*
 
 %x STRING
@@ -124,6 +123,12 @@ ID                      [a-zA-Z_][_a-z0-9A-Z]*
 {MINUS}                 {col++; return MINUS;}
 {DIV}                   {col++; return DIV;}
 {MULT}                  {col++; return MULT;}
+{EQ_TO}                 {col++; return EQ_TO;}
+{NEQ_TO}                {col++; return NEQ_TO;}
+{GTE}                   {col++; return GTE;}
+{LTE}                   {col++; return LTE;}
+{GT}                    {col++; return GT;}
+{LT}                    {col++; return LT;}
 {EQ}                    {col++; return EQ;}
 {I_PLUS}                {col++; return I_PLUS;}
 {D_MINUS}               {col++; return D_MINUS;}
@@ -132,7 +137,7 @@ ID                      [a-zA-Z_][_a-z0-9A-Z]*
 {AND}                   {col++; return AND;}
 {IF}                    {col++; return IF;}
 {ELSE}                  {col++; return ELSE;}
-{FOR}                   {col++; return  FOR;}
+{FOR}                   {col++; return FOR;}
 {FORALL}                {col++; return FORALL;}
 {IS_SET}                {col++; return IS_SET;}
 {ADD}                   {col++; return ADD;}

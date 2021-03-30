@@ -21,15 +21,120 @@ parameter-list -> parameter-declaration
 FLOAT
 parameter-declaration -> type ID
 parameter-list -> parameter-list ',' parameter-declaration
-C-stmt -> empty
+parameters -> parameter-list
 INT
 var-declaration -> type ID
-var-decls -> var-declaration var-decls
 INT
 var-declaration -> type ID
-var-decls -> var-declaration var-decls
-INT
+var-INT
 var-declaration -> type ID
-var-decls -> var-declaration var-decls
-local-stmt -> empty
-yyerror: syntax error
+var-var-decls -> var-declaration var-decls
+ constant -> INTEGER_CONST
+ factor -> constant
+ term -> factor
+ add-exp -> term
+ basic-exp -> add-exp
+expression -> basic-exp
+expression-> ID = expression 
+expression-stmt -> expression ;
+stmt -> expression-stmt
+io-stmt -> write ( <id> ) 
+stmt -> io-stmt
+stmts -> stmts stmt factor -> ID
+ term -> factor
+ add-exp -> term
+ basic-exp -> add-exp
+expression -> basic-exp
+expression-> ID = expression 
+expression-> ID = expression 
+expression-stmt -> expression ;
+stmt -> expression-stmt
+stmts -> stmts stmt factor -> ID
+ term -> factor
+ rel-op -> MINUS
+ factor -> ID
+ term -> factor
+ add-exp -> term add-op term
+ basic-exp -> add-exp
+expression -> basic-exp
+expression-> ID = expression 
+expression-stmt -> expression ;
+stmt -> expression-stmt
+stmts -> stmts stmt constant -> INTEGER_CONST
+ factor -> constant
+ term -> factor
+ rel-op -> MINUS
+ factor -> ID
+ term -> factor
+ mul-op -> MULT
+ factor -> ID
+ term -> factor
+ mul-op -> DIV
+ constant -> INTEGER_CONST
+ factor -> constant
+ term -> term mul-op factor
+ add-exp -> term
+ basic-exp -> add-exp
+expression -> basic-exp
+ factor -> ( expression )
+ term -> term mul-op factor
+ add-exp -> term add-op term
+ basic-exp -> add-exp
+expression -> basic-exp
+expression-> ID = expression 
+expression-stmt -> expression ;
+stmt -> expression-stmt
+stmts -> stmts stmtlocal-stmts -> stmts
+C-stmt -> '{' var-decls local-stmts'}'
+function-definition -> type ID '(' parameter-list ')'
+declaration -> function-definition
+declaration-list -> declaration-list declaration 
+SET
+SET
+parameter-declaration -> type ID
+parameter-list -> parameter-declaration
+INT
+parameter-declaration -> type ID
+parameter-list -> parameter-list ',' parameter-declaration
+INT
+parameter-declaration -> type ID
+parameter-list -> parameter-list ',' parameter-declaration
+SET
+parameter-declaration -> type ID
+parameter-list -> parameter-list ',' parameter-declaration
+parameters -> parameter-list
+ factor -> ID
+ term -> factor
+ add-exp -> term
+ rel-op -> EQ_TO
+ factor -> ID
+ term -> factor
+ add-exp -> term
+ basic-exp -> add-exp rel-op add-exp
+expression -> basic-exp
+ factor -> ID
+ term -> factor
+ add-exp -> term
+ basic-exp -> add-exp
+expression -> basic-exp
+return-stmt -> return exp ;
+stmt -> return-stmt
+ factor -> ID
+ term -> factor
+ add-exp -> term
+ rel-op -> EQ_TO
+ constant -> EMPTY_CONST
+ factor -> constant
+ term -> factor
+ add-exp -> term
+ basic-exp -> add-exp rel-op add-exp
+expression -> basic-exp
+ constant -> EMPTY_CONST
+ factor -> constant
+ term -> factor
+ add-exp -> term
+ basic-exp -> add-exp
+expression -> basic-exp
+return-stmt -> return exp ;
+stmt -> return-stmt
+yyerror: syntax error, unexpected '}', expecting ELSE

@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.7.6.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,68 +31,74 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_C7SYNT_TAB_H_INCLUDED
 # define YY_YY_C7SYNT_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    INT = 258,
-    FLOAT = 259,
-    ELEM = 260,
-    SET = 261,
-    INTEGER_CONST = 262,
-    FLOAT_CONST = 263,
-    EMPTY_CONST = 264,
-    PLUS = 265,
-    MINUS = 266,
-    DIV = 267,
-    MULT = 268,
-    EQ = 269,
-    I_PLUS = 270,
-    D_MINUS = 271,
-    NOT = 272,
-    OR = 273,
-    AND = 274,
-    EQ_TO = 275,
-    NEQ_TO = 276,
-    GT = 277,
-    LT = 278,
-    GTE = 279,
-    LTE = 280,
-    IF = 281,
-    ELSE = 282,
-    FOR = 283,
-    FORALL = 284,
-    IS_SET = 285,
-    ADD = 286,
-    IN = 287,
-    REMOVE = 288,
-    RETURN = 289,
-    EXISTS = 290,
-    OPENPARENT = 291,
-    CLOSEPARENT = 292,
-    OPENBRACES = 293,
-    CLOSEBRACES = 294,
-    SEMICOLON = 295,
-    COMMA = 296,
-    READ = 297,
-    WRITE = 298,
-    WRITELN = 299,
-    ID = 300
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    INT = 260,                     /* INT  */
+    FLOAT = 261,                   /* FLOAT  */
+    ELEM = 262,                    /* ELEM  */
+    SET = 263,                     /* SET  */
+    INTEGER_CONST = 264,           /* INTEGER_CONST  */
+    FLOAT_CONST = 265,             /* FLOAT_CONST  */
+    EMPTY_CONST = 266,             /* EMPTY_CONST  */
+    PLUS = 267,                    /* PLUS  */
+    MINUS = 268,                   /* MINUS  */
+    DIV = 269,                     /* DIV  */
+    MULT = 270,                    /* MULT  */
+    EQ = 271,                      /* EQ  */
+    I_PLUS = 272,                  /* I_PLUS  */
+    D_MINUS = 273,                 /* D_MINUS  */
+    NOT = 274,                     /* NOT  */
+    OR = 275,                      /* OR  */
+    AND = 276,                     /* AND  */
+    EQ_TO = 277,                   /* EQ_TO  */
+    NEQ_TO = 278,                  /* NEQ_TO  */
+    GT = 279,                      /* GT  */
+    LT = 280,                      /* LT  */
+    GTE = 281,                     /* GTE  */
+    LTE = 282,                     /* LTE  */
+    IF = 283,                      /* IF  */
+    ELSE = 284,                    /* ELSE  */
+    FOR = 285,                     /* FOR  */
+    FORALL = 286,                  /* FORALL  */
+    IS_SET = 287,                  /* IS_SET  */
+    ADD = 288,                     /* ADD  */
+    IN = 289,                      /* IN  */
+    REMOVE = 290,                  /* REMOVE  */
+    RETURN = 291,                  /* RETURN  */
+    EXISTS = 292,                  /* EXISTS  */
+    OPENPARENT = 293,              /* OPENPARENT  */
+    CLOSEPARENT = 294,             /* CLOSEPARENT  */
+    OPENBRACES = 295,              /* OPENBRACES  */
+    CLOSEBRACES = 296,             /* CLOSEBRACES  */
+    SEMICOLON = 297,               /* SEMICOLON  */
+    COMMA = 298,                   /* COMMA  */
+    READ = 299,                    /* READ  */
+    WRITE = 300,                   /* WRITE  */
+    WRITELN = 301,                 /* WRITELN  */
+    ID = 302                       /* ID  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
@@ -102,9 +108,23 @@ typedef int YYSTYPE;
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+/* Location type.  */
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE YYLTYPE;
+struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+};
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
 
 extern YYSTYPE yylval;
-
+extern YYLTYPE yylloc;
 int yyparse (void);
 
 #endif /* !YY_YY_C7SYNT_TAB_H_INCLUDED  */
