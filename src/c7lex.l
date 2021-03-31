@@ -2,153 +2,118 @@
 %option nounput 
 %option noyywrap
 %{
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "c7synt.tab.h"
-int col = 1;
-int line = 1;
-int error_count = 0;
-int strLen = 0;
+int col= 1;
+int line= 1;
+int error_count =0;
 %}
+
 
 LETTER                  [a-zA-Z]
 DIGIT                   [0-9]
 EOL                     \n        
 WS                      [ \t]+
 INLINE_COMMENT          [/]{2}.*
-INT                     int
-FLOAT                   float
-ELEM                    elem
-SET                     set
-INTEGER_CONST           {DIGIT}+
-FLOAT_CONST             {DIGIT}+"."{DIGIT}+
+
+
+TYPE                    INT | FLOAT | ELEM | SET
+INT                     "int"
+FLOAT                   "float"
+ELEM                    "elem"
+SET                     "set"
+
+INTEGER_CONST           "-"?{DIGIT}+
+FLOAT_CONST             "-"?{DIGIT}+"."({DIGIT}*)?
 EMPTY_CONST             "EMPTY"
+
 PLUS                    "+"
 MINUS                   "-"
 DIV                     "/"
 MULT                    "*"
 EQ                      "="
-I_PLUS                  "++"
-D_MINUS                 "--"
 
 NOT                     "!"
 OR                      "||"
 AND                     "&&"
 
-EQ_TO                   ==
+EQ_TO                   "=="
 NEQ_TO                  "!="
 GT                      ">"
 LT                      "<"
 GTE                     ">="
 LTE                     "<="
 
-IF                      if
-ELSE                    else     
-FOR                     for
-FORALL                  forall
-IS_SET                  is_set
+IF                      "if"
+ELSE                    "else"     
+FOR                     "for"
+FORALL                  "forall"
+IS_SET                  "is_set"
 
-ADD                     add
-IN                      in
-REMOVE                  remove      
-RETURN                  return
-EXISTS                  exists
+ADD                     "add"
+IN                      "in"
+REMOVE                  "remove"      
+RETURN                  "return"
+EXISTS                  "exists"
 
-OPENPARENT              "("
-CLOSEPARENT             ")"
-OPENBRACES              "{"
-CLOSEBRACES             "}"
-SEMICOLON               ";"
-COMMA                   ","
 
-READ                    read
-WRITE                   write
-WRITELN                 writeln
+READ                    "read"
+WRITE                   "write"
+WRITELN                 "writeln"
 ID                      [a-zA-Z_][_a-z0-9A-Z]*
 
-%x STRING
+STRING                   \"[^\"]*\"|'[^']*'
 
 %%
-\'                     {
-                        strLen += 1;
-                        col++;
-                        BEGIN(STRING);
-                        }
 
-<STRING>\'              {
-                        strLen += 1;
-                        col++;
-                        strLen = 0;
-                        BEGIN(INITIAL);
-                        }
-\"                      {
-                        
-                        strLen += 1;
-                        col++;
-                        BEGIN(STRING);
-                        }
-
-<STRING>\"              {
-                        strLen += 1;
-                        strLen = 0;
-                        col++;
-                        BEGIN(INITIAL);
-                        }
-
-<STRING>\n              {
-                        strLen += 1;
-                        line++;
-                        col++;
-                        }
-
-<STRING>.               {
-                        strLen += 1;
-                        col++;
-                        }
 {EOL}                   {line++;col=1;}
 {INLINE_COMMENT}        {col++;}
 {WS}                    {col++;}
-{OPENBRACES}            {col++; return '{';}
-{CLOSEBRACES}           {col++; return '}';} 
-{OPENPARENT}            {col++; return '(';}
-{CLOSEPARENT}           {col++; return ')';}   
-{COMMA}                 {col++; return ',';}    
-{SEMICOLON}             {col++; return ';';}
-{INT}                   {col++; return INT;}
-{FLOAT}                 {col++; return FLOAT;}
-{ELEM}                  {col++; return ELEM;}
-{SET}                   {col++; return SET;}
-{INTEGER_CONST}         {col++; return INTEGER_CONST;}
-{FLOAT_CONST}           {col++; return FLOAT_CONST;}
-{EMPTY_CONST}           {col++; return EMPTY_CONST;}
-{PLUS}                  {col++; return PLUS;}
-{MINUS}                 {col++; return MINUS;}
-{DIV}                   {col++; return DIV;}
-{MULT}                  {col++; return MULT;}
-{EQ_TO}                 {col++; return EQ_TO;}
-{NEQ_TO}                {col++; return NEQ_TO;}
-{GTE}                   {col++; return GTE;}
-{LTE}                   {col++; return LTE;}
-{GT}                    {col++; return GT;}
-{LT}                    {col++; return LT;}
-{EQ}                    {col++; return EQ;}
-{I_PLUS}                {col++; return I_PLUS;}
-{D_MINUS}               {col++; return D_MINUS;}
-{NOT}                   {col++; return NOT;}
-{OR}                    {col++; return OR;}
-{AND}                   {col++; return AND;}
-{IF}                    {col++; return IF;}
-{ELSE}                  {col++; return ELSE;}
-{FOR}                   {col++; return FOR;}
-{FORALL}                {col++; return FORALL;}
-{IS_SET}                {col++; return IS_SET;}
-{ADD}                   {col++; return ADD;}
-{EXISTS}                {col++; return EXISTS;}
-{IN}                    {col++; return IN;}
-{RETURN}                {col++; return RETURN;}
-{REMOVE}                {col++; return REMOVE;}
-{READ}                  {col++; return READ;}
-{WRITE}                 {col++; return WRITE;}
-{WRITELN}               {col++; return WRITELN;}
-{ID}                    {col++; return ID;}
-.                       {error_count++;col++;}
+"{"                     {col++; return '{';}
+"}"                     {col++; return '}';} 
+"("                     {col++; return '(';}
+")"                     {col++; return ')';}   
+","                     {col++; return ',';}    
+";"                     {col++; return ';';}
+{INT}                   {col+= yyleng; return INT;}
+{FLOAT}                 {col+= yyleng; return FLOAT;}
+{ELEM}                  {col+= yyleng; return ELEM;}
+{SET}                   {col+= yyleng; return SET;}
+{INTEGER_CONST}         {col+= yyleng; return INTEGER_CONST;}
+{FLOAT_CONST}           {col+= yyleng; return FLOAT_CONST;}
+{EMPTY_CONST}           {col+= yyleng; return EMPTY_CONST;}
+{PLUS}                  {col+= yyleng; return PLUS;}
+{MINUS}                 {col+= yyleng; return MINUS;}
+{DIV}                   {col+= yyleng; return DIV;}
+{MULT}                  {col+= yyleng; return MULT;}
+{EQ_TO}                 {col+= yyleng; return EQ_TO;}
+{NEQ_TO}                {col+= yyleng; return NEQ_TO;}
+{GTE}                   {col+= yyleng; return GTE;}
+{LTE}                   {col+= yyleng; return LTE;}
+{GT}                    {col+= yyleng; return GT;}
+{LT}                    {col+= yyleng; return LT;}
+{EQ}                    {col+= yyleng; return EQ;}
+{NOT}                   {col+= yyleng; return NOT;}
+{OR}                    {col+= yyleng; return OR;}
+{AND}                   {col+= yyleng; return AND;}
+{IF}                    {col+= yyleng; return IF;}
+{ELSE}                  {col+= yyleng; return ELSE;}
+{FOR}                   {col+= yyleng; return FOR;}
+{FORALL}                {col+= yyleng; return FORALL;}
+{IS_SET}                {col+= yyleng; return IS_SET;}
+{ADD}                   {col+= yyleng; return ADD;}
+{EXISTS}                {col+= yyleng; return EXISTS;}
+{IN}                    {col+= yyleng; return IN;}
+{RETURN}                {col+= yyleng; return RETURN;}
+{REMOVE}                {col+= yyleng; return REMOVE;}
+{READ}                  {col+= yyleng; return READ;}
+{WRITE}                 {col+= yyleng; return WRITE;}
+{WRITELN}               {col+= yyleng; return WRITELN;}
+{ID}                    {col+= yyleng; return ID;}
+{STRING}                {col += yyleng;strcpy(yylval.value, yytext);return STRING;}
+
+.                       {col+= yyleng; error_count++;}
 
 %%

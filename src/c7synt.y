@@ -1,37 +1,36 @@
+%right THEN ELSE
 %debug
 %define parse.error verbose
 %locations
 %{
+    #include <string.h>
+    #include <stdlib.h>
     #include <stdio.h>
     extern int yylex();
-    int yyerror(const char *s);
+    extern int yyparse();
+    extern int yyerror(const char *s);
     extern int yylex_destroy();
     extern FILE *yyin;
 %}
-%right "then" "else"
-%token INT 
-%token FLOAT
-%token ELEM
-%token SET
-%token INTEGER_CONST
-%token FLOAT_CONST
+
+%union {
+    char value[100];
+}
+
+%token INTEGER_CONST FLOAT_CONST STRING ID
+%token PLUS MINUS DIV MULT EQ I_PLUS D_MINUS
+%token NOT OR AND 
+%token EQ_TO NEQ_TO GT LT GTE LTE
+
+
+%token '(' 
+%token ')'
+%token '{'
+%token '}'
+%token ';' 
+%token ','
+%token INT FLOAT ELEM SET
 %token EMPTY_CONST
-%token PLUS
-%token MINUS
-%token DIV
-%token MULT
-%token EQ
-%token I_PLUS
-%token D_MINUS
-%token NOT
-%token OR
-%token AND
-%token EQ_TO
-%token NEQ_TO
-%token GT
-%token LT
-%token GTE
-%token LTE
 %token IF
 %token ELSE
 %token FOR
@@ -41,17 +40,10 @@
 %token IN
 %token REMOVE
 %token RETURN
-%token EXISTS
-%token OPENPARENT 
-%token CLOSEPARENT
-%token OPENBRACES 
-%token CLOSEBRACES
-%token SEMICOLON  
-%token COMMA      
+%token EXISTS 
 %token READ
 %token WRITE
 %token WRITELN
-%token ID
 
 %%
 program: declaration-list {printf("program -> declaration-list\n");};
@@ -60,10 +52,12 @@ declaration-list: declaration-list declaration {printf("declaration-list -> decl
                 | declaration {printf("declaration-list -> declaration\n");}
 ;
 declaration: function-definition {printf("declaration -> function-definition\n");}
-           | var-declaration {printf("declaration -> var-declaration\n");}
+           | var-declaration {printf("var-definition ->");}
 ;
+
 var-declaration: type ID ';' {printf("var-declaration -> type ID\n");}
 ; 
+
 function-definition: type ID '(' parameters ')'  compound-stmt {printf("function-definition -> type ID '(' parameter-list ')'\n");}
 ;
 
@@ -80,16 +74,10 @@ parameter-list: parameter-declaration   {printf("parameter-list -> parameter-dec
 ;
 parameter-declaration: type ID {printf("parameter-declaration -> type ID\n");}
 ;
-compound-stmt: '{' var-decls local-stmts'}' {printf("C-stmt -> '{' var-decls local-stmts'}'\n");}
-;
-var-decls: var-list {printf("var-decls -> var-declaration var-decls\n");}
-         | %empty
-;
-var-list: var-list var-declaration {printf("var-");}
-        | var-declaration
+compound-stmt: '{' local-decls-stmts'}' {printf("C-stmt -> '{' var-decls local-stmts'}'\n");}
 ;
 
-local-stmts: stmts  {printf("local-stmts -> stmts\n");}
+local-decls-stmts: stmts  {printf("local-stmts -> stmts\n");}
           | %empty
 ;
 stmts: stmts stmt {printf("stmts -> stmts stmt");}
@@ -102,17 +90,17 @@ stmt: io-stmt {printf("stmt -> io-stmt\n");}
     | for-stmt {printf("stmt -> for-stmt\n");}
     | expression-stmt {printf("stmt -> expression-stmt\n");}
     | forall-stmt {printf("stmt -> forall");}
-    | is_set-stmt {printf("stmt -> IS_SET");}
-    | set-stmt {printf("stmt -> SET");}
+    | var-declaration {printf("stmt -> var-decl");}
 ;
 
-io-stmt: READ '(' ID ')' ';' {printf("io-stmt -> read ( <id> ) \n");}
-       | WRITE '(' ID ')' ';' {printf("io-stmt -> write ( <id> ) \n");}
-       | WRITELN '(' ID ')' ';' {printf("io-stmt -> writeln ( <id> )\n");}
+io-stmt: READ '(' expression ')' ';' {printf("io-stmt -> read ( exp ) \n");}
+       | WRITE '(' expression ')' ';' {printf("io-stmt -> write ( exp ) \n");}
+       | WRITELN '(' expression ')' ';' {printf("io-stmt -> writeln ( exp )\n");}
 ;
 
-if-stmt: IF '(' expression ')' "then" stmt    %prec "then"
-       | IF '(' expression ')' stmt ELSE stmt
+if-stmt: IF '(' expression ')'   stmt        %prec THEN
+       | IF '(' expression ')'   stmt ELSE stmt
+       | IF '(' expression IN expression')' expression-stmt ELSE expression-stmt
 ;
 
 for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt ';' {printf("for-stmt -> for\n");}
@@ -121,78 +109,73 @@ for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt ';' {printf(
 return-stmt: RETURN expression ';' {printf("return-stmt -> return exp ;\n");}
 ;
 
-forall-stmt: FORALL '(' in-exp ')' set-stmt ';' {printf(" set-op -> FORALL (in-exp)\n");}
+forall-stmt: FORALL '(' in-exp ')' compound-stmt  {printf(" set-op -> FORALL (in-exp)\n");}
+           | FORALL '(' in-exp ')' expression-stmt
 ;
 
-is_set-stmt: IS_SET '(' in-exp ')' ';'
-;
-set-stmt: ADD '(' in-exp ')'  ';'{printf(" set-op -> ADD (in-exp)\n");}   
-       | REMOVE '(' in-exp ')' ';'{printf(" set-op -> REMOVE (in-exp)\n");}
-       | EXISTS '(' in-exp ')' ';'{printf(" set-op -> EXISTS (in-exp)\n");}
-;
 expression-stmt: expression ';'     {printf("expression-stmt -> expression ;\n");}
                | ';'                {printf("expression-stmt -> ;\n");}
 ;
-expression: ID EQ expression   {printf("expression-> ID = expression \n");}
-          | basic-exp          {printf("expression -> basic-exp\n");}
-          | set-exp             {printf("expression -> set-exp\n");}
+expression: assign-exp  {printf("expression-> assign \n");}
+          | expression  ',' assign-exp {printf("expression -> exp , assign\n");}      
 ;
-set-exp: '[' element-list ']' {printf("set-exp -> {element-list}\n");}
-       | in-exp {printf("set-exp -> in-exp\n");}
-;
-element-list: element-list ',' elem {printf("element-list -> element-list , elem\n");}
-            | elem                  {printf("element-list -> elem\n");}
-;
-elem: ID {printf(" elem -> ID \n");}
-    | INTEGER_CONST {printf(" elem -> INTEGER_CONST\n");}
-    | FLOAT_CONST {printf(" elem -> FLOAT_CONST\n");}
-    | '[' element-list ']' {printf(" elem ->  { element-list }\n");}
+assign-exp: basic-exp
+          | ID EQ assign-exp
 ;
 
-in-exp: basic-exp IN set-stmt {printf(" in-exp -> basic-exp IN set-stmt\n");}
-      | basic-exp IN ID {printf(" in-exp -> basic-exp IN set-exp\n");}
+in-exp: expression IN in-exp
+      | expression
 ;
-basic-exp: add-exp {printf(" basic-exp -> add-exp\n");}
-         | add-exp rel-op add-exp {printf(" basic-exp -> add-exp rel-op add-exp\n");}
+basic-exp: logical-exp
+         | logical-exp OR logical-exp
+         | logical-exp AND logical-exp
+         | NOT logical-exp
 ;
-rel-op: EQ_TO {printf(" rel-op -> EQ_TO\n");}
-      | NEQ_TO {printf(" rel-op -> NEQ_TO\n");}
-      | GT  {printf(" rel-op -> GT\n");}
-      | LT {printf(" rel-op -> LT\n");}
-      | GTE {printf(" rel-op -> GTE\n");}
-      | LTE {printf(" rel-op -> LTE\n");}
+
+
+logical-exp: add-exp {printf(" basic-exp -> add-exp\n");}
+            | add-exp EQ_TO add-exp {printf(" basic-exp -> add-exp rel-op add-exp\n");}
+            | add-exp NEQ_TO add-exp {printf(" basic-exp -> add-exp rel-op add-exp\n");}
+            | add-exp GT add-exp {printf(" basic-exp -> add-exp rel-op add-exp\n");}
+            | add-exp LT add-exp {printf(" basic-exp -> add-exp rel-op add-exp\n");}
+            | add-exp GTE add-exp {printf(" basic-exp -> add-exp rel-op add-exp\n");}
+            | add-exp LTE add-exp {printf(" basic-exp -> add-exp rel-op add-exp\n");}
 ;
+
 add-exp: term {printf(" add-exp -> term\n");}
-       | term add-op term {printf(" add-exp -> term add-op term\n");}
-;
-add-op: PLUS {printf(" add-op -> PLUS\n");}
-      | MINUS {printf(" rel-op -> MINUS\n");}
+       | term PLUS term {printf(" add-exp -> term add-op term\n");}
+       | term MINUS term {printf(" add-exp -> term add-op term\n");}
 ;
 term: factor {printf(" term -> factor\n");}
-    | term mul-op factor {printf(" term -> term mul-op factor\n");}
+    | term MULT factor {printf(" term -> term mul-op factor\n");}
+    | term DIV factor {printf(" term -> term mul-op factor\n");}
 ;
-mul-op: MULT {printf(" mul-op -> MULT\n");}
-      | DIV {printf(" mul-op -> DIV\n");}
-;
+
 factor: '(' expression ')' {printf(" factor -> ( expression )\n");}
       | ID {printf(" factor -> ID\n");}
       | constant {printf(" factor -> constant\n");}
       | call {printf("factor -> call\n");}
+      | set-exp {printf(" factor -> set-exp\n");}
 ;
+set-exp: ADD '(' in-exp ')'  {printf(" set-op -> ADD (in-exp)\n");}   
+       | REMOVE '(' in-exp ')' {printf(" set-op -> REMOVE (in-exp)\n");}
+       | EXISTS '(' in-exp ')' {printf(" set-op -> EXISTS (in-exp)\n");}
+       | IS_SET '(' in-exp ')' {printf(" set-op -> IS_SET (in-exp)\n");}
+;
+
 constant: INTEGER_CONST {printf(" constant -> INTEGER_CONST\n");}
         | FLOAT_CONST {printf(" constant -> FLOAT_CONST\n");}
         | EMPTY_CONST {printf(" constant -> EMPTY_CONST\n");}
+        | STRING      {printf(" constant -> STRING\n");}
 ;
 call: ID '('args')' {printf(" call -> ID (args)\n");}
 ;
-args: arg-list {printf(" args -> arg-list\n");}
+args: expression {printf(" args -> arg-list\n");}
     | %empty {printf(" args -> empty\n");}
-;
-arg-list: expression {printf(" arg-list -> expression\n");}
-        | arg-list ',' expression {printf(" arg-list -> arg-list , expression\n");}
 ;
 
 %%
+
 
 int yyerror(const char *s){
     printf("yyerror: %s\n",s);
@@ -201,11 +184,13 @@ int yyerror(const char *s){
 
 int main( int argc, char **argv ) {
     ++argv, --argc;
+
     if(argc > 0)
         yyin = fopen( argv[0], "r" );
     else
         yyin = stdin;
     yyparse();
+
     fclose(yyin);
     yylex_destroy();
     return 0;

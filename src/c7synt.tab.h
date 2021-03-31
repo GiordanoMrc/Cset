@@ -54,56 +54,61 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    INT = 260,                     /* INT  */
-    FLOAT = 261,                   /* FLOAT  */
-    ELEM = 262,                    /* ELEM  */
-    SET = 263,                     /* SET  */
-    INTEGER_CONST = 264,           /* INTEGER_CONST  */
-    FLOAT_CONST = 265,             /* FLOAT_CONST  */
-    EMPTY_CONST = 266,             /* EMPTY_CONST  */
-    PLUS = 267,                    /* PLUS  */
-    MINUS = 268,                   /* MINUS  */
-    DIV = 269,                     /* DIV  */
-    MULT = 270,                    /* MULT  */
-    EQ = 271,                      /* EQ  */
-    I_PLUS = 272,                  /* I_PLUS  */
-    D_MINUS = 273,                 /* D_MINUS  */
-    NOT = 274,                     /* NOT  */
-    OR = 275,                      /* OR  */
-    AND = 276,                     /* AND  */
-    EQ_TO = 277,                   /* EQ_TO  */
-    NEQ_TO = 278,                  /* NEQ_TO  */
-    GT = 279,                      /* GT  */
-    LT = 280,                      /* LT  */
-    GTE = 281,                     /* GTE  */
-    LTE = 282,                     /* LTE  */
-    IF = 283,                      /* IF  */
-    ELSE = 284,                    /* ELSE  */
-    FOR = 285,                     /* FOR  */
-    FORALL = 286,                  /* FORALL  */
-    IS_SET = 287,                  /* IS_SET  */
-    ADD = 288,                     /* ADD  */
-    IN = 289,                      /* IN  */
-    REMOVE = 290,                  /* REMOVE  */
-    RETURN = 291,                  /* RETURN  */
-    EXISTS = 292,                  /* EXISTS  */
-    OPENPARENT = 293,              /* OPENPARENT  */
-    CLOSEPARENT = 294,             /* CLOSEPARENT  */
-    OPENBRACES = 295,              /* OPENBRACES  */
-    CLOSEBRACES = 296,             /* CLOSEBRACES  */
-    SEMICOLON = 297,               /* SEMICOLON  */
-    COMMA = 298,                   /* COMMA  */
-    READ = 299,                    /* READ  */
-    WRITE = 300,                   /* WRITE  */
-    WRITELN = 301,                 /* WRITELN  */
-    ID = 302                       /* ID  */
+    THEN = 258,                    /* THEN  */
+    INTEGER_CONST = 259,           /* INTEGER_CONST  */
+    FLOAT_CONST = 260,             /* FLOAT_CONST  */
+    STRING = 261,                  /* STRING  */
+    ID = 262,                      /* ID  */
+    PLUS = 263,                    /* PLUS  */
+    MINUS = 264,                   /* MINUS  */
+    DIV = 265,                     /* DIV  */
+    MULT = 266,                    /* MULT  */
+    EQ = 267,                      /* EQ  */
+    I_PLUS = 268,                  /* I_PLUS  */
+    D_MINUS = 269,                 /* D_MINUS  */
+    NOT = 270,                     /* NOT  */
+    OR = 271,                      /* OR  */
+    AND = 272,                     /* AND  */
+    EQ_TO = 273,                   /* EQ_TO  */
+    NEQ_TO = 274,                  /* NEQ_TO  */
+    GT = 275,                      /* GT  */
+    LT = 276,                      /* LT  */
+    GTE = 277,                     /* GTE  */
+    LTE = 278,                     /* LTE  */
+    INT = 279,                     /* INT  */
+    FLOAT = 280,                   /* FLOAT  */
+    ELEM = 281,                    /* ELEM  */
+    SET = 282,                     /* SET  */
+    EMPTY_CONST = 283,             /* EMPTY_CONST  */
+    IF = 284,                      /* IF  */
+    ELSE = 285,                    /* ELSE  */
+    FOR = 286,                     /* FOR  */
+    FORALL = 287,                  /* FORALL  */
+    IS_SET = 288,                  /* IS_SET  */
+    ADD = 289,                     /* ADD  */
+    IN = 290,                      /* IN  */
+    REMOVE = 291,                  /* REMOVE  */
+    RETURN = 292,                  /* RETURN  */
+    EXISTS = 293,                  /* EXISTS  */
+    READ = 294,                    /* READ  */
+    WRITE = 295,                   /* WRITE  */
+    WRITELN = 296                  /* WRITELN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 16 "c7synt.y"
+
+    char value[100];
+
+#line 109 "c7synt.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

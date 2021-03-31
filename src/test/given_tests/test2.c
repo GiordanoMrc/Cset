@@ -14,14 +14,9 @@ int main() {
     set possibleSums;
     possibleSums = EMPTY;
     int x;
-    int 1a121qwe3___;
+    int y;
     
     forall (x in s) {
         set sumsWithX;   
-        sumsWithX = EMPTY;
-        int val;
-        forall (val in possibleSums) add((x + val) in sumsWithX);
-        forall (val in sumsWithX) add (val in possibleSums);
-        if (13 in possibleSums) writeln('y'); else writeln('n');
     }
 }
