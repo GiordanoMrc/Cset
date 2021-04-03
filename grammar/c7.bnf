@@ -50,9 +50,9 @@
 
 <is_set-statement> ::= is_set "(" <id> ")" ";"
 
-<expression> ::= <id> "=" <expression> 
+<expression> ::= <assign-expression>
                | <basic-expression>
-               | <set-expression>
+
 <set-expression> ::=  "{" <element-list> "}" 
                    | <set-operation>
 

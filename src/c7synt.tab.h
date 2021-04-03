@@ -55,44 +55,42 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     THEN = 258,                    /* THEN  */
-    INTEGER_CONST = 259,           /* INTEGER_CONST  */
-    FLOAT_CONST = 260,             /* FLOAT_CONST  */
-    STRING = 261,                  /* STRING  */
-    ID = 262,                      /* ID  */
-    PLUS = 263,                    /* PLUS  */
-    MINUS = 264,                   /* MINUS  */
-    DIV = 265,                     /* DIV  */
-    MULT = 266,                    /* MULT  */
-    EQ = 267,                      /* EQ  */
-    I_PLUS = 268,                  /* I_PLUS  */
-    D_MINUS = 269,                 /* D_MINUS  */
-    NOT = 270,                     /* NOT  */
-    OR = 271,                      /* OR  */
-    AND = 272,                     /* AND  */
-    EQ_TO = 273,                   /* EQ_TO  */
-    NEQ_TO = 274,                  /* NEQ_TO  */
-    GT = 275,                      /* GT  */
-    LT = 276,                      /* LT  */
-    GTE = 277,                     /* GTE  */
-    LTE = 278,                     /* LTE  */
-    INT = 279,                     /* INT  */
-    FLOAT = 280,                   /* FLOAT  */
-    ELEM = 281,                    /* ELEM  */
-    SET = 282,                     /* SET  */
-    EMPTY_CONST = 283,             /* EMPTY_CONST  */
-    IF = 284,                      /* IF  */
-    ELSE = 285,                    /* ELSE  */
-    FOR = 286,                     /* FOR  */
-    FORALL = 287,                  /* FORALL  */
-    IS_SET = 288,                  /* IS_SET  */
-    ADD = 289,                     /* ADD  */
-    IN = 290,                      /* IN  */
-    REMOVE = 291,                  /* REMOVE  */
-    RETURN = 292,                  /* RETURN  */
-    EXISTS = 293,                  /* EXISTS  */
-    READ = 294,                    /* READ  */
-    WRITE = 295,                   /* WRITE  */
-    WRITELN = 296                  /* WRITELN  */
+    ID = 259,                      /* ID  */
+    STRING = 260,                  /* STRING  */
+    INTEGER_CONST = 261,           /* INTEGER_CONST  */
+    FLOAT_CONST = 262,             /* FLOAT_CONST  */
+    EMPTY_CONST = 263,             /* EMPTY_CONST  */
+    PLUS = 264,                    /* PLUS  */
+    MINUS = 265,                   /* MINUS  */
+    DIV = 266,                     /* DIV  */
+    MULT = 267,                    /* MULT  */
+    EQ = 268,                      /* EQ  */
+    NOT = 269,                     /* NOT  */
+    OR = 270,                      /* OR  */
+    AND = 271,                     /* AND  */
+    EQ_TO = 272,                   /* EQ_TO  */
+    NEQ_TO = 273,                  /* NEQ_TO  */
+    GT = 274,                      /* GT  */
+    LT = 275,                      /* LT  */
+    GTE = 276,                     /* GTE  */
+    LTE = 277,                     /* LTE  */
+    IF = 278,                      /* IF  */
+    ELSE = 279,                    /* ELSE  */
+    FOR = 280,                     /* FOR  */
+    FORALL = 281,                  /* FORALL  */
+    IS_SET = 282,                  /* IS_SET  */
+    ADD = 283,                     /* ADD  */
+    IN = 284,                      /* IN  */
+    REMOVE = 285,                  /* REMOVE  */
+    RETURN = 286,                  /* RETURN  */
+    EXISTS = 287,                  /* EXISTS  */
+    INT = 288,                     /* INT  */
+    FLOAT = 289,                   /* FLOAT  */
+    ELEM = 290,                    /* ELEM  */
+    SET = 291,                     /* SET  */
+    READ = 292,                    /* READ  */
+    WRITE = 293,                   /* WRITE  */
+    WRITELN = 294                  /* WRITELN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -101,11 +99,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 16 "c7synt.y"
+#line 27 "c7synt.y"
 
-    char value[100];
+    char str[2000];
+    struct vertex* node;
 
-#line 109 "c7synt.tab.h"
+#line 108 "c7synt.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
