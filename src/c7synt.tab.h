@@ -74,20 +74,20 @@ extern int yydebug;
     LT = 275,                      /* LT  */
     GTE = 276,                     /* GTE  */
     LTE = 277,                     /* LTE  */
-    IF = 278,                      /* IF  */
-    ELSE = 279,                    /* ELSE  */
-    FOR = 280,                     /* FOR  */
-    FORALL = 281,                  /* FORALL  */
-    IS_SET = 282,                  /* IS_SET  */
-    ADD = 283,                     /* ADD  */
-    IN = 284,                      /* IN  */
-    REMOVE = 285,                  /* REMOVE  */
-    RETURN = 286,                  /* RETURN  */
-    EXISTS = 287,                  /* EXISTS  */
-    INT = 288,                     /* INT  */
-    FLOAT = 289,                   /* FLOAT  */
-    ELEM = 290,                    /* ELEM  */
-    SET = 291,                     /* SET  */
+    INT = 278,                     /* INT  */
+    FLOAT = 279,                   /* FLOAT  */
+    ELEM = 280,                    /* ELEM  */
+    SET = 281,                     /* SET  */
+    IF = 282,                      /* IF  */
+    ELSE = 283,                    /* ELSE  */
+    FOR = 284,                     /* FOR  */
+    FORALL = 285,                  /* FORALL  */
+    IS_SET = 286,                  /* IS_SET  */
+    ADD = 287,                     /* ADD  */
+    IN = 288,                      /* IN  */
+    REMOVE = 289,                  /* REMOVE  */
+    RETURN = 290,                  /* RETURN  */
+    EXISTS = 291,                  /* EXISTS  */
     READ = 292,                    /* READ  */
     WRITE = 293,                   /* WRITE  */
     WRITELN = 294                  /* WRITELN  */
@@ -101,7 +101,7 @@ union YYSTYPE
 {
 #line 27 "c7synt.y"
 
-    char str[2000];
+    char* str;
     struct vertex* node;
 
 #line 108 "c7synt.tab.h"

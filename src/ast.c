@@ -3,16 +3,22 @@
 #include <stdio.h>
 #include "ast.h"
 
-vertex *createNode(char *string)
+vertex* createNode(char* string)
 {
     vertex *node = (vertex *)malloc(sizeof(vertex));
-    node->terminal = strdup(string);
-    node->nextNode = NULL;
-    node->childNodes = NULL;
+    
+    node->nodes[0] = NULL;
+    node->nodes[1] = NULL;
+    node->nodes[2] = NULL;
+    node->nodes[3] = NULL;
+
+    node->variable = string;
+    //node->type = 'x';
+    node->symbol = NULL;
     return node;
 }
 
-void freeVertex(vertex *root)
+/*void freeVertex(vertex *root)
 {
     struct vertex *node = root;
     struct vertex *up = NULL;
@@ -58,14 +64,30 @@ void freeVertex(vertex *root)
             }
         }
     }
+} */
+void freeVertex(vertex * root){
+    if(root == NULL) return;
+    
+    if (root->nodes[0] !=NULL) freeVertex(root->nodes[0]);
+    if (root->nodes[1] !=NULL) freeVertex(root->nodes[1]);
+    if (root->nodes[2] !=NULL) freeVertex(root->nodes[2]);
+    if (root->nodes[3] !=NULL) freeVertex(root->nodes[3]);
+
+    if (root->variable!=NULL) free(root->variable);
+    //if (root->symbol!=NULL) free(root->symbol);
+    free(root);
+    
 }
 
 void printVertex(vertex *root)
 {
+    if (root != NULL) {
+        if(root->nodes[0] != NULL) printVertex(root->nodes[0]);
+        if(root->nodes[1] != NULL) printVertex(root->nodes[1]);
+        if(root->nodes[2] != NULL) printVertex(root->nodes[2]);
+        if(root->nodes[3] != NULL) printVertex(root->nodes[3]);
 
-    if (root == NULL)
-        return;
-    printVertex(root->childNodes);
-    printVertex(root->nextNode);
-    printf("%s\n", root->terminal);
+        if(root->variable != NULL) printf("%s\n", root->variable);
+        if(root->symbol != NULL) printf("%s\n", root->symbol);
+    }
 }

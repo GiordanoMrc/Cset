@@ -145,20 +145,20 @@ Terminais, com as regras onde eles aparecem
     LT <str> (275) 56
     GTE <str> (276) 57
     LTE <str> (277) 58
-    IF (278) 33 34 35
-    ELSE (279) 34 35
-    FOR (280) 36
-    FORALL (281) 38 39
-    IS_SET (282) 73
-    ADD (283) 70
-    IN (284) 35 46
-    REMOVE (285) 71
-    RETURN (286) 37
-    EXISTS (287) 72
-    INT (288) 8
-    FLOAT (289) 9
-    ELEM (290) 11
-    SET (291) 10
+    INT (278) 8
+    FLOAT (279) 9
+    ELEM (280) 11
+    SET (281) 10
+    IF (282) 33 34 35
+    ELSE (283) 34 35
+    FOR (284) 36
+    FORALL (285) 38 39
+    IS_SET (286) 73
+    ADD (287) 70
+    IN (288) 35 46
+    REMOVE (289) 71
+    RETURN (290) 37
+    EXISTS (291) 72
     READ (292) 30
     WRITE (293) 31
     WRITELN (294) 32
@@ -479,6 +479,10 @@ Estado 23
     FLOAT_CONST    deslocar, e ir ao estado 29
     EMPTY_CONST    deslocar, e ir ao estado 30
     NOT            deslocar, e ir ao estado 31
+    INT            deslocar, e ir ao estado 1
+    FLOAT          deslocar, e ir ao estado 2
+    ELEM           deslocar, e ir ao estado 3
+    SET            deslocar, e ir ao estado 4
     '('            deslocar, e ir ao estado 32
     '{'            deslocar, e ir ao estado 23
     ';'            deslocar, e ir ao estado 33
@@ -490,10 +494,6 @@ Estado 23
     REMOVE         deslocar, e ir ao estado 39
     RETURN         deslocar, e ir ao estado 40
     EXISTS         deslocar, e ir ao estado 41
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
     READ           deslocar, e ir ao estado 42
     WRITE          deslocar, e ir ao estado 43
     WRITELN        deslocar, e ir ao estado 44
@@ -778,6 +778,10 @@ Estado 49
     FLOAT_CONST    deslocar, e ir ao estado 29
     EMPTY_CONST    deslocar, e ir ao estado 30
     NOT            deslocar, e ir ao estado 31
+    INT            deslocar, e ir ao estado 1
+    FLOAT          deslocar, e ir ao estado 2
+    ELEM           deslocar, e ir ao estado 3
+    SET            deslocar, e ir ao estado 4
     '('            deslocar, e ir ao estado 32
     '{'            deslocar, e ir ao estado 23
     ';'            deslocar, e ir ao estado 33
@@ -789,10 +793,6 @@ Estado 49
     REMOVE         deslocar, e ir ao estado 39
     RETURN         deslocar, e ir ao estado 40
     EXISTS         deslocar, e ir ao estado 41
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
     READ           deslocar, e ir ao estado 42
     WRITE          deslocar, e ir ao estado 43
     WRITELN        deslocar, e ir ao estado 44
@@ -1951,6 +1951,10 @@ Estado 132
     FLOAT_CONST    deslocar, e ir ao estado 29
     EMPTY_CONST    deslocar, e ir ao estado 30
     NOT            deslocar, e ir ao estado 31
+    INT            deslocar, e ir ao estado 1
+    FLOAT          deslocar, e ir ao estado 2
+    ELEM           deslocar, e ir ao estado 3
+    SET            deslocar, e ir ao estado 4
     '('            deslocar, e ir ao estado 32
     '{'            deslocar, e ir ao estado 23
     ';'            deslocar, e ir ao estado 33
@@ -1962,10 +1966,6 @@ Estado 132
     REMOVE         deslocar, e ir ao estado 39
     RETURN         deslocar, e ir ao estado 40
     EXISTS         deslocar, e ir ao estado 41
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
     READ           deslocar, e ir ao estado 42
     WRITE          deslocar, e ir ao estado 43
     WRITELN        deslocar, e ir ao estado 44
@@ -2246,6 +2246,10 @@ Estado 154
     FLOAT_CONST    deslocar, e ir ao estado 29
     EMPTY_CONST    deslocar, e ir ao estado 30
     NOT            deslocar, e ir ao estado 31
+    INT            deslocar, e ir ao estado 1
+    FLOAT          deslocar, e ir ao estado 2
+    ELEM           deslocar, e ir ao estado 3
+    SET            deslocar, e ir ao estado 4
     '('            deslocar, e ir ao estado 32
     '{'            deslocar, e ir ao estado 23
     ';'            deslocar, e ir ao estado 33
@@ -2257,10 +2261,6 @@ Estado 154
     REMOVE         deslocar, e ir ao estado 39
     RETURN         deslocar, e ir ao estado 40
     EXISTS         deslocar, e ir ao estado 41
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
     READ           deslocar, e ir ao estado 42
     WRITE          deslocar, e ir ao estado 43
     WRITELN        deslocar, e ir ao estado 44
@@ -2408,6 +2408,10 @@ Estado 161
     FLOAT_CONST    deslocar, e ir ao estado 29
     EMPTY_CONST    deslocar, e ir ao estado 30
     NOT            deslocar, e ir ao estado 31
+    INT            deslocar, e ir ao estado 1
+    FLOAT          deslocar, e ir ao estado 2
+    ELEM           deslocar, e ir ao estado 3
+    SET            deslocar, e ir ao estado 4
     '('            deslocar, e ir ao estado 32
     '{'            deslocar, e ir ao estado 23
     ';'            deslocar, e ir ao estado 33
@@ -2419,10 +2423,6 @@ Estado 161
     REMOVE         deslocar, e ir ao estado 39
     RETURN         deslocar, e ir ao estado 40
     EXISTS         deslocar, e ir ao estado 41
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
     READ           deslocar, e ir ao estado 42
     WRITE          deslocar, e ir ao estado 43
     WRITELN        deslocar, e ir ao estado 44

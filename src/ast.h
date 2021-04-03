@@ -1,16 +1,19 @@
 #ifndef AST
 #define AST
 
-typedef struct vertex{
-        struct vertex* nextNode;
-        struct vertex* childNodes;
-        char* terminal;
-    } vertex;
+typedef struct vertex
+{
+    //char type;
+    struct vertex *nodes[4];
+    char* symbol;
+    char* variable;
+} vertex;
 
-vertex* createNode(char* string);
 
-void freeVertex(vertex* root);
+vertex* createNode(char *string);
 
-void printVertex(vertex* root);
+void freeVertex(vertex *root);
+
+void printVertex(vertex *root);
 
 #endif
