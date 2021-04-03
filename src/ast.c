@@ -73,7 +73,7 @@ void freeVertex(vertex * root){
     if (root->nodes[2] !=NULL) freeVertex(root->nodes[2]);
     if (root->nodes[3] !=NULL) freeVertex(root->nodes[3]);
 
-    if (root->variable!=NULL) free(root->variable);
+    //if (root->variable!=NULL) free(root->variable);
     //if (root->symbol!=NULL) free(root->symbol);
     free(root);
     
