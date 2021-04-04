@@ -6,13 +6,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "c7synt.tab.h"
-#include "ast.h"
+#include "tads.h"
 
-#define VERBOSE 0
-
- int col;
- int line;
- int error_count;
+int col =1;
+int line =1;
 %}
 
 
@@ -68,10 +65,12 @@ WRITELN                 "writeln"
 ID                      [a-zA-Z_][_a-z0-9A-Z]*
 STRING                   \"[^\"]*\"|'[^']*'
 
+%x COMMENT
+
 %%
 
 {EOL}                   {line++;col=1;}
-{INLINE_COMMENT}        {col++;}
+{INLINE_COMMENT}        {line++;}
 {WS}                    {col++;}
 "{"                     {col++; return '{';}
 "}"                     {col++; return '}';} 
@@ -106,15 +105,28 @@ STRING                   \"[^\"]*\"|'[^']*'
 {IN}                    {col+= yyleng; return IN;}
 {RETURN}                {col+= yyleng; return RETURN;}
 {REMOVE}                {col+= yyleng; return REMOVE;}
-{INT}                   {col+= yyleng; return INT;}
-{FLOAT}                 {col+= yyleng; return FLOAT;}
-{ELEM}                  {col+= yyleng; return ELEM;}
-{SET}                   {col+= yyleng; return SET;}
+{INT}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return INT;}
+{FLOAT}                 {col+= yyleng; yylval.str =(char *) strdup(yytext);return FLOAT;}
+{ELEM}                  {col+= yyleng; yylval.str =(char *) strdup(yytext);return ELEM;}
+{SET}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return SET;}
 {READ}                  {col+= yyleng; return READ;}
 {WRITE}                 {col+= yyleng; return WRITE;}
 {WRITELN}               {col+= yyleng; return WRITELN;}
 {ID}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return ID;}
 {STRING}                {col+= yyleng; yylval.str =(char *) strdup(yytext);return STRING;}
-.                       {col+= yyleng; error_count++;}
+.                       {   
+                            col+= yyleng;
+                            printf("Lexical error at: line %d ; col  %d \n", line, col);
+                        }
+"/*" {
+    BEGIN(COMMENT);
+}
 
+<COMMENT>"*/" {
+    BEGIN(INITIAL);
+}
+
+<COMMENT>\n {line++;}
+
+<COMMENT>. { }
 %%

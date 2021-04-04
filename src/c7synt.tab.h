@@ -99,7 +99,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "c7synt.y"
+#line 29 "c7synt.y"
 
     char* str;
     struct vertex* node;
