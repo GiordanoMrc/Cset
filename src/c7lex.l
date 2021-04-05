@@ -52,11 +52,7 @@ REMOVE                  "remove"
 RETURN                  "return"
 EXISTS                  "exists"
 
-INT                     "int"
-FLOAT                   "float"
-ELEM                    "elem"
-SET                     "set"
-
+TYPE                    "int"|"float"|"elem"|"set"
 
 READ                    "read"
 WRITE                   "write"
@@ -105,18 +101,15 @@ STRING                   \"[^\"]*\"|'[^']*'
 {IN}                    {col+= yyleng; return IN;}
 {RETURN}                {col+= yyleng; return RETURN;}
 {REMOVE}                {col+= yyleng; return REMOVE;}
-{INT}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return INT;}
-{FLOAT}                 {col+= yyleng; yylval.str =(char *) strdup(yytext);return FLOAT;}
-{ELEM}                  {col+= yyleng; yylval.str =(char *) strdup(yytext);return ELEM;}
-{SET}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return SET;}
+{TYPE}                  {col+= yyleng; yylval.str =(char *) strdup(yytext);return TYPE;}
 {READ}                  {col+= yyleng; return READ;}
 {WRITE}                 {col+= yyleng; return WRITE;}
 {WRITELN}               {col+= yyleng; return WRITELN;}
 {ID}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return ID;}
 {STRING}                {col+= yyleng; yylval.str =(char *) strdup(yytext);return STRING;}
 .                       {   
-                            col+= yyleng;
                             printf("Lexical error at: line %d ; col  %d \n", line, col);
+                            col+= yyleng;
                         }
 "/*" {
     BEGIN(COMMENT);

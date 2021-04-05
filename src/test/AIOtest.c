@@ -1,3 +1,43 @@
+//programa na nova linguagem (calcula subset_sum).
+
+int main() {
+    set s;
+    s = EMPTY;
+
+    add(1 in s);
+    add(2 in s);
+    add(5 in s);
+    add(8 in s);
+
+// Alternativamente: add(1 in add(2 in add(5 in add(8 in s))));
+
+    set possibleSums;
+    possibleSums = EMPTY;
+    int x;
+    int y;
+    
+    forall (x in s) {
+        set sumsWithX;   
+    }
+}
+
+// função na nova linguagem (calcula subset_sum):
+
+set subsum(set s, int target, int cur_sum, set ans) {
+    if(target == cur_sum) return ans;
+    else if (s == EMPTY) return EMPTY;
+    else {
+       int el;
+       remove((exists (el in s)) in s);
+       if(subsum(s, target, cur_sum, ans)) return ans;
+       cur_sum += el;
+       add(el in ans);
+       if(subsum(s, target, cur_sum, ans)) return ans;
+       add(el in s);
+       remove (el in s);
+       return EMPTY;
+    }
+}
 set add_int(set s) {
     return add(2 in add(1 in s));
 }
@@ -10,7 +50,7 @@ set add_float(set s) {
 set add_set(set s) {
     set newset;
     newset = EMPTY;
-    return add(add_int(newset) in s)
+    return add(add_int(newset) in s);
     //{{1,2}}
 }
 
@@ -49,11 +89,53 @@ int main() {
     forall(x in s) {
         if (!is_set(x)) {
            acc = acc + x;
-       accf = accf + x;
+       accf = accf + x
     }   
     }
+    write("oi");
 
    // acc is 6; accf is 6.9
+
+    return 0;
+}
+
+// Os números naturais representados como conjuntos
+
+set copy_set(set s) {
+    set ans;
+    ans = EMPTY;
+    forall(x in s) add(x in ans);
+    return ans;
+}
+
+set succ(set n) {
+    set next;
+    next = copy_set(n);
+    return add(n in next);
+}
+
+int main() {
+    set zero; set one; set two; set three;
+   
+    zero = EMPTY;
+    one = succ(zero);
+    two = succ(one);
+    three = succ(two);
+}
+
+elem test(){
+    elem testvar;
+    testvar = 0;
+    if(EMPTY){
+    testvar = -15 + 14 - 12;
+    }
+
+    return testvar;
+}
+
+int test2(){
+    int y
+    y = 0;
 
     return 0;
 }

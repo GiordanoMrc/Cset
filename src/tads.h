@@ -12,7 +12,6 @@ typedef enum variable_names{
     DECLARATION,
     VAR_DECLARATION,
     FUNCTION_DEFINITION,
-    TYPE,
     PARAMATERS,
     PARAMETER_LIST,
     PARAMETER_DECL,
@@ -41,15 +40,35 @@ typedef enum variable_names{
     VALUE_INT,
     VALUE_FLOAT,
     VALUE_EMPTY,
-    VALUE_STRING
+    VALUE_STRING,
+    READ_IO,
+    WRITE_IO,
+    WRITELN_IO,
+    OR_EXP,
+    AND_EXP,
+    NOT_EXP,
+    SET_ADD,
+    SET_REMOVE,
+    SET_EXISTS,
+    SET_FORALL,
+    SET_IS_SET,
+    IN_OP,
+    BASIC_OP,
+    IDENT,
+    CONST
 
 }variable_names;
+
+enum table_type {
+    VAR,
+    FUNC
+};
 
 
 typedef struct vertex
 {
     int variable_name;
-    char* op_sign;
+    char* op_or_type;
     char* value;
     struct vertex *n1;
     struct vertex *n2;
@@ -60,7 +79,7 @@ typedef struct vertex
 
 vertex* root;
 
-vertex* createNode(int variable_name,char* type, char *value, struct vertex *v1, vertex *v2, vertex *v3, vertex *v4);
+vertex* createNode(int variable_name,char* op_or_type, char *value, struct vertex *v1, vertex *v2, vertex *v3, vertex *v4);
 
 void print_tabs (int tabs);
 
@@ -80,7 +99,14 @@ typedef struct tableEntry {
     UT_hash_handle hh;        
 } tableEntry;
 
-struct tableEntry * table_entry;
+struct tableEntry * symbolTable;
 
+tableEntry * create_entry (char* ID , char * type , int var_or_func);
+
+void add_entry (char* ID , char* type , int var_or_func);
+
+void printTable();
+
+void freeTable();
 
 #endif

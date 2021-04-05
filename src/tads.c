@@ -4,12 +4,12 @@
 #include "tads.h"
 
 
-vertex* createNode(int variable_name,char* op_sign, char* value, vertex* n1, vertex* n2, vertex* n3, vertex* n4)
+vertex* createNode(int variable_name,char* op_or_type, char* value, vertex* n1, vertex* n2, vertex* n3, vertex* n4)
 {
     vertex *node = (vertex *) malloc (sizeof(vertex));
     
     node->variable_name = variable_name;
-    node->op_sign = op_sign;
+    node->op_or_type = op_or_type;
     node->value = value;
     node->n1 = n1;
     node->n2 = n2;
@@ -24,7 +24,7 @@ void freeVertex(vertex* root) {
     if(root->n2 != NULL) freeVertex(root->n2);
     if(root->n3 != NULL) freeVertex(root->n3);
     if(root->n4 != NULL) freeVertex(root->n4);
-    if(root->op_sign != NULL) free(root->op_sign);
+    if(root->op_or_type != NULL) free(root->op_or_type);
     if(root->value != NULL) free(root->value);  
     free(root);
 }
@@ -32,97 +32,106 @@ void freeVertex(vertex* root) {
 void printTree(vertex *root,int dpt){
 
     if(root) {
-        //print_tabs(dpt);
+        print_tabs(dpt);
         print_variable(root->variable_name);
-        if(root->op_sign != NULL) printf("Op: %s ", root->op_sign);
-        if(root->value != NULL) printf("Value: %s  \n",root->value);
-
-        printTree(root->n1, dpt+1);
-        printTree(root->n2, dpt+1);
-        printTree(root->n3, dpt+1);
-        printTree(root->n4, dpt+1);
+        if(root->op_or_type != NULL) printf("(Op/Type:) %s ", root->op_or_type);
+        if(root->value != NULL) printf("(ID/Value:) %s ",root->value);
+        printf("\n");
+        if(root != root->n1) printTree(root->n1, dpt+1);
+        if(root != root->n2) printTree(root->n2, dpt+1);
+        if(root != root->n3) printTree(root->n3, dpt+1);
+        if(root != root->n4) printTree(root->n4, dpt+1);
     }
     
 }
 
 void print_tabs (int tabs){
     for(int i= tabs; i!= 0; i--){
-        printf("\t");
+        printf("-");
     }
 }
+
 void print_variable(int name) {
     switch(name){
-        case 0:
+        case PROGRAM:
             printf(RED"<PROGRAM>DFT");
-            printf("\n\t");
             break;
-        case 3:
-            printf(RED"<VAR_DECLARATION>"DFT);
-            printf("\n\t");
+        case VAR_DECLARATION:
+            printf(RED"(DECLARACAO-VARIAVEL:>"DFT);
             break;
-        case 4:
-            printf(RED"<FUNCTION-DEFINITION>"DFT);
-            printf("\n\t");
+        case FUNCTION_DEFINITION:
+            printf(RED"(DEFINICAO-FUNCAO:>"DFT);
             break;
-        case 12:
-            printf(RED"<STATEMENT>"DFT);
-            printf("\n\t");
+        case PARAMETER_DECL:
+            printf(RED"(DEFINICAO-PARAMETRO:>"DFT);
             break;
-        case 13:
-            printf(RED"<IO_STMT>"DFT);
-            printf("\n\t");
+        case CONSTANT:
+            printf(RED"(CONSTANT:>"DFT);
             break;
-        case 14:
-            printf(RED"<IF_STMT>"DFT);
-            printf("\n\t");
+        case CALL:
+            printf(RED"(CALL:>"DFT);
             break;
-        case 15:
-            printf(RED"<FOR_STMT>"DFT);
-            printf("\n\t");
+        case ARG_LIST:
+            printf(RED"(ARGUMENTOS:>"DFT);
             break;
-        case 16:
-            printf(RED"<RETURN_STMT>"DFT);
-            printf("\n\t");
+        case SET_ADD:
+            printf(RED"(SET_ADD:>"DFT);
             break;
-        case 17:
-            printf(RED"<FORALL_STMT>"DFT);
-            printf("\n\t");
+        case RETURN_STMT:
+            printf(RED"(RETURN:>"DFT);
             break;
-        case 18:
-            printf(RED"<EXPRESSION_STMT>"DFT);
-            printf("\n\t");
+        case IN_OP:
+            printf(RED"(IN:>"DFT);
             break;
-        case 20:
-            printf(RED"<ASSIGN>"DFT);
-            printf("\n\t");
+        case IO_STMT:
+            printf(RED"(IO:>"DFT);
             break;
-        case 21:
-            printf(RED"<BASIC_EXP>"DFT);
-            printf("\n\t");
+        case FORALL_STMT:
+            printf(RED"(FORALL:>"DFT);
             break;
-        case 22:
-            printf(RED"<IN_EXP>"DFT);
-            printf("\n\t");
+        case IDENT:
+            printf(RED"(ID:>"DFT);
             break;
-        case 23:
-            printf(RED"<LOGICAL_EXP>"DFT);
-            printf("\n\t");
+        case BASIC_OP:
+            printf(RED"(BASIC OP:>"DFT);
             break;
-        case 24:
-            printf(RED"<ADD_EXP>"DFT);
-            printf("\n\t");
+        case CONST:
+            printf(RED"(CONST:>"DFT);
             break;
-        case 27:
-            printf(RED"<SET_EXP>"DFT);
-            printf("\n\t");
+        case ASSIGN:
+            printf(RED"(ASSIGN:>"DFT);
             break;
-        case 28:
-            printf(RED"<CONSTANT>"DFT);
-            printf("\n\t");
-            break;
-        case 29:
-            printf(RED"<CALL>"DFT);
-            printf("\n\t");
-            break;
+    }
+}
+
+
+tableEntry* create_entry(char* ID, char* type, int var_or_func) {
+    tableEntry * entry = (tableEntry *) malloc(sizeof(tableEntry));
+    entry->ID = ID;
+    entry->type = type;
+    entry->var_or_func = var_or_func;
+    return entry;
+}
+
+void add_entry(char* ID , char* type , int var_or_func) {
+    tableEntry * entry; 
+    entry = create_entry(ID, type, var_or_func);
+    HASH_ADD_STR(symbolTable,ID,entry);
+}
+
+void printTable(){
+
+    for(tableEntry *entry = symbolTable; entry!= NULL;entry = entry->hh.next){
+        entry->var_or_func==0? printf("ID: %30s | type: %20s | func_or_var: VARIABLE \n", entry->ID, entry->type):
+            printf("ID: %30s | type: %20s | func_or_var: FUNCTION \n", entry->ID, entry->type);
+    }
+
+}
+
+void freeTable(){
+    tableEntry * entry, *tmp;
+    HASH_ITER(hh, symbolTable, entry, tmp) {
+        HASH_DEL(symbolTable, entry);
+        free(entry);
     }
 }

@@ -10,2460 +10,2385 @@ Gramática
     4 declaration: function-definition
     5            | var-declaration
 
-    6 var-declaration: type ID ';'
+    6 var-declaration: TYPE ID ';'
 
-    7 function-definition: type ID '(' parameters ')' compound-stmt
+    7 function-definition: TYPE ID '(' parameters ')' compound-stmt
 
-    8 type: INT
-    9     | FLOAT
-   10     | SET
-   11     | ELEM
+    8 parameters: parameter-list
+    9           | %empty
 
-   12 parameters: parameter-list
-   13           | %empty
+   10 parameter-list: parameter-declaration
+   11               | parameter-list ',' parameter-declaration
 
-   14 parameter-list: parameter-declaration
-   15               | parameter-list ',' parameter-declaration
+   12 parameter-declaration: TYPE ID
 
-   16 parameter-declaration: type ID
+   13 compound-stmt: '{' local-decls-stmts '}'
 
-   17 compound-stmt: '{' local-decls-stmts '}'
+   14 local-decls-stmts: stmts
+   15                  | %empty
 
-   18 local-decls-stmts: stmts
-   19                  | %empty
+   16 stmts: stmts stmt
+   17      | stmt
+   18      | error
 
-   20 stmts: stmts stmt
-   21      | stmt
-   22      | error
+   19 stmt: io-stmt
+   20     | return-stmt
+   21     | compound-stmt
+   22     | if-stmt
+   23     | for-stmt
+   24     | expression-stmt
+   25     | forall-stmt
+   26     | var-declaration
 
-   23 stmt: io-stmt
-   24     | return-stmt
-   25     | compound-stmt
-   26     | if-stmt
-   27     | for-stmt
-   28     | expression-stmt
-   29     | forall-stmt
-   30     | var-declaration
+   27 io-stmt: READ '(' expression ')' ';'
+   28        | WRITE '(' expression ')' ';'
+   29        | WRITELN '(' expression ')' ';'
 
-   31 io-stmt: READ '(' expression ')' ';'
-   32        | WRITE '(' expression ')' ';'
-   33        | WRITELN '(' expression ')' ';'
+   30 if-stmt: IF '(' expression ')' stmt
+   31        | IF '(' expression ')' stmt ELSE stmt
+   32        | IF '(' expression IN expression ')' expression-stmt ELSE expression-stmt
 
-   34 if-stmt: IF '(' expression ')' stmt
-   35        | IF '(' expression ')' stmt ELSE stmt
-   36        | IF '(' expression IN expression ')' expression-stmt ELSE expression-stmt
+   33 for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt ';'
 
-   37 for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt ';'
+   34 return-stmt: RETURN expression ';'
 
-   38 return-stmt: RETURN expression ';'
+   35 forall-stmt: FORALL '(' in-exp ')' compound-stmt
+   36            | FORALL '(' in-exp ')' expression-stmt
 
-   39 forall-stmt: FORALL '(' in-exp ')' compound-stmt
-   40            | FORALL '(' in-exp ')' expression-stmt
+   37 expression-stmt: expression ';'
+   38                | ';'
 
-   41 expression-stmt: expression ';'
-   42                | ';'
+   39 expression: assign-exp
+   40           | expression ',' assign-exp
 
-   43 expression: assign-exp
-   44           | expression ',' assign-exp
+   41 assign-exp: basic-exp
+   42           | basic-exp EQ assign-exp
 
-   45 assign-exp: basic-exp
-   46           | basic-exp EQ assign-exp
+   43 in-exp: expression IN in-exp
+   44       | expression
 
-   47 in-exp: expression IN in-exp
-   48       | expression
+   45 basic-exp: logical-exp
+   46          | logical-exp OR logical-exp
+   47          | logical-exp AND logical-exp
+   48          | NOT logical-exp
 
-   49 basic-exp: logical-exp
-   50          | logical-exp OR logical-exp
-   51          | logical-exp AND logical-exp
-   52          | NOT logical-exp
+   49 logical-exp: add-exp
+   50            | add-exp EQ_TO add-exp
+   51            | add-exp NEQ_TO add-exp
+   52            | add-exp GT add-exp
+   53            | add-exp LT add-exp
+   54            | add-exp GTE add-exp
+   55            | add-exp LTE add-exp
 
-   53 logical-exp: add-exp
-   54            | add-exp EQ_TO add-exp
-   55            | add-exp NEQ_TO add-exp
-   56            | add-exp GT add-exp
-   57            | add-exp LT add-exp
-   58            | add-exp GTE add-exp
-   59            | add-exp LTE add-exp
+   56 add-exp: term
+   57        | term PLUS term
+   58        | term MINUS term
 
-   60 add-exp: term
-   61        | term PLUS term
-   62        | term MINUS term
+   59 term: factor
+   60     | term MULT factor
+   61     | term DIV factor
 
-   63 term: factor
-   64     | term MULT factor
-   65     | term DIV factor
+   62 factor: '(' expression ')'
+   63       | ID
+   64       | constant
+   65       | call
+   66       | set-exp
 
-   66 factor: '(' expression ')'
-   67       | ID
-   68       | constant
-   69       | call
-   70       | set-exp
+   67 set-exp: ADD '(' in-exp ')'
+   68        | REMOVE '(' in-exp ')'
+   69        | EXISTS '(' in-exp ')'
+   70        | IS_SET '(' in-exp ')'
 
-   71 set-exp: ADD '(' in-exp ')'
-   72        | REMOVE '(' in-exp ')'
-   73        | EXISTS '(' in-exp ')'
-   74        | IS_SET '(' in-exp ')'
+   71 constant: INTEGER_CONST
+   72         | FLOAT_CONST
+   73         | EMPTY_CONST
+   74         | STRING
 
-   75 constant: INTEGER_CONST
-   76         | FLOAT_CONST
-   77         | EMPTY_CONST
-   78         | STRING
+   75 call: ID '(' arg-list ')'
+   76     | ID '(' ')'
 
-   79 call: ID '(' arg-list ')'
-   80     | ID '(' ')'
-
-   81 arg-list: factor
-   82         | arg-list ',' factor
+   77 arg-list: factor
+   78         | arg-list ',' factor
 
 
 Terminais, com as regras onde eles aparecem
 
     $end (0) 0
-    '(' (40) 7 31 32 33 34 35 36 37 39 40 66 71 72 73 74 79 80
-    ')' (41) 7 31 32 33 34 35 36 37 39 40 66 71 72 73 74 79 80
-    ',' (44) 15 44 82
-    ';' (59) 6 31 32 33 37 38 41 42
-    '{' (123) 17
-    '}' (125) 17
-    error (256) 22
+    '(' (40) 7 27 28 29 30 31 32 33 35 36 62 67 68 69 70 75 76
+    ')' (41) 7 27 28 29 30 31 32 33 35 36 62 67 68 69 70 75 76
+    ',' (44) 11 40 78
+    ';' (59) 6 27 28 29 33 34 37 38
+    '{' (123) 13
+    '}' (125) 13
+    error (256) 18
     THEN (258)
-    ID <str> (259) 6 7 16 67 79 80
-    STRING <str> (260) 78
-    INTEGER_CONST <str> (261) 75
-    FLOAT_CONST <str> (262) 76
-    EMPTY_CONST <str> (263) 77
-    PLUS <str> (264) 61
-    MINUS <str> (265) 62
-    DIV <str> (266) 65
-    MULT <str> (267) 64
-    EQ <str> (268) 46
-    NOT <str> (269) 52
-    OR <str> (270) 50
-    AND <str> (271) 51
-    EQ_TO <str> (272) 54
-    NEQ_TO <str> (273) 55
-    GT <str> (274) 56
-    LT <str> (275) 57
-    GTE <str> (276) 58
-    LTE <str> (277) 59
-    INT <str> (278) 8
-    FLOAT <str> (279) 9
-    ELEM <str> (280) 11
-    SET <str> (281) 10
-    IF (282) 34 35 36
-    ELSE (283) 35 36
-    FOR (284) 37
-    FORALL (285) 39 40
-    IS_SET (286) 74
-    ADD (287) 71
-    IN (288) 36 47
-    REMOVE (289) 72
-    RETURN (290) 38
-    EXISTS (291) 73
-    READ (292) 31
-    WRITE (293) 32
-    WRITELN (294) 33
+    ID <str> (259) 6 7 12 63 75 76
+    STRING <str> (260) 74
+    INTEGER_CONST <str> (261) 71
+    FLOAT_CONST <str> (262) 72
+    EMPTY_CONST <str> (263) 73
+    PLUS <str> (264) 57
+    MINUS <str> (265) 58
+    DIV <str> (266) 61
+    MULT <str> (267) 60
+    EQ <str> (268) 42
+    NOT <str> (269) 48
+    OR <str> (270) 46
+    AND <str> (271) 47
+    EQ_TO <str> (272) 50
+    NEQ_TO <str> (273) 51
+    GT <str> (274) 52
+    LT <str> (275) 53
+    GTE <str> (276) 54
+    LTE <str> (277) 55
+    TYPE <str> (278) 6 7 12
+    IF (279) 30 31 32
+    ELSE (280) 31 32
+    FOR (281) 33
+    FORALL (282) 35 36
+    IS_SET (283) 70
+    ADD (284) 67
+    IN (285) 32 43
+    REMOVE (286) 68
+    RETURN (287) 34
+    EXISTS (288) 69
+    READ (289) 27
+    WRITE (290) 28
+    WRITELN (291) 29
 
 
 Não terminais com as regras onde eles aparecem
 
-    $accept (46)
+    $accept (43)
         à esquerda: 0
-    program <node> (47)
+    program <node> (44)
         à esquerda: 1
         à direita: 0
-    declaration-list <node> (48)
+    declaration-list <node> (45)
         à esquerda: 2 3
         à direita: 1 2
-    declaration <node> (49)
+    declaration <node> (46)
         à esquerda: 4 5
         à direita: 2 3
-    var-declaration <node> (50)
+    var-declaration <node> (47)
         à esquerda: 6
-        à direita: 5 30
-    function-definition <node> (51)
+        à direita: 5 26
+    function-definition <node> (48)
         à esquerda: 7
         à direita: 4
-    type <node> (52)
-        à esquerda: 8 9 10 11
-        à direita: 6 7 16
-    parameters <node> (53)
-        à esquerda: 12 13
+    parameters <node> (49)
+        à esquerda: 8 9
         à direita: 7
-    parameter-list <node> (54)
+    parameter-list <node> (50)
+        à esquerda: 10 11
+        à direita: 8 11
+    parameter-declaration <node> (51)
+        à esquerda: 12
+        à direita: 10 11
+    compound-stmt <node> (52)
+        à esquerda: 13
+        à direita: 7 21 35
+    local-decls-stmts <node> (53)
         à esquerda: 14 15
-        à direita: 12 15
-    parameter-declaration <node> (55)
-        à esquerda: 16
-        à direita: 14 15
-    compound-stmt <node> (56)
-        à esquerda: 17
-        à direita: 7 25 39
-    local-decls-stmts <node> (57)
-        à esquerda: 18 19
-        à direita: 17
-    stmts <node> (58)
-        à esquerda: 20 21 22
-        à direita: 18 20
-    stmt <node> (59)
-        à esquerda: 23 24 25 26 27 28 29 30
-        à direita: 20 21 34 35 37
-    io-stmt <node> (60)
-        à esquerda: 31 32 33
+        à direita: 13
+    stmts <node> (54)
+        à esquerda: 16 17 18
+        à direita: 14 16
+    stmt <node> (55)
+        à esquerda: 19 20 21 22 23 24 25 26
+        à direita: 16 17 30 31 33
+    io-stmt <node> (56)
+        à esquerda: 27 28 29
+        à direita: 19
+    if-stmt <node> (57)
+        à esquerda: 30 31 32
+        à direita: 22
+    for-stmt <node> (58)
+        à esquerda: 33
         à direita: 23
-    if-stmt <node> (61)
-        à esquerda: 34 35 36
-        à direita: 26
-    for-stmt <node> (62)
-        à esquerda: 37
-        à direita: 27
-    return-stmt <node> (63)
-        à esquerda: 38
-        à direita: 24
-    forall-stmt <node> (64)
+    return-stmt <node> (59)
+        à esquerda: 34
+        à direita: 20
+    forall-stmt <node> (60)
+        à esquerda: 35 36
+        à direita: 25
+    expression-stmt <node> (61)
+        à esquerda: 37 38
+        à direita: 24 32 36
+    expression <node> (62)
         à esquerda: 39 40
-        à direita: 29
-    expression-stmt <node> (65)
+        à direita: 27 28 29 30 31 32 33 34 37 40 43 44 62
+    assign-exp <node> (63)
         à esquerda: 41 42
-        à direita: 28 36 40
-    expression <node> (66)
+        à direita: 39 40 42
+    in-exp <node> (64)
         à esquerda: 43 44
-        à direita: 31 32 33 34 35 36 37 38 41 44 47 48 66
-    assign-exp <node> (67)
-        à esquerda: 45 46
-        à direita: 43 44 46
-    in-exp <node> (68)
-        à esquerda: 47 48
-        à direita: 39 40 47 71 72 73 74
-    basic-exp <node> (69)
-        à esquerda: 49 50 51 52
-        à direita: 45 46
-    logical-exp <node> (70)
-        à esquerda: 53 54 55 56 57 58 59
-        à direita: 49 50 51 52
-    add-exp <node> (71)
-        à esquerda: 60 61 62
-        à direita: 53 54 55 56 57 58 59
-    term <node> (72)
-        à esquerda: 63 64 65
-        à direita: 60 61 62 64 65
-    factor <node> (73)
-        à esquerda: 66 67 68 69 70
-        à direita: 63 64 65 81 82
-    set-exp <node> (74)
+        à direita: 35 36 43 67 68 69 70
+    basic-exp <node> (65)
+        à esquerda: 45 46 47 48
+        à direita: 41 42
+    logical-exp <node> (66)
+        à esquerda: 49 50 51 52 53 54 55
+        à direita: 45 46 47 48
+    add-exp <node> (67)
+        à esquerda: 56 57 58
+        à direita: 49 50 51 52 53 54 55
+    term <node> (68)
+        à esquerda: 59 60 61
+        à direita: 56 57 58 60 61
+    factor <node> (69)
+        à esquerda: 62 63 64 65 66
+        à direita: 59 60 61 77 78
+    set-exp <node> (70)
+        à esquerda: 67 68 69 70
+        à direita: 66
+    constant <node> (71)
         à esquerda: 71 72 73 74
-        à direita: 70
-    constant <node> (75)
-        à esquerda: 75 76 77 78
-        à direita: 68
-    call <node> (76)
-        à esquerda: 79 80
-        à direita: 69
-    arg-list <node> (77)
-        à esquerda: 81 82
-        à direita: 79 82
+        à direita: 64
+    call <node> (72)
+        à esquerda: 75 76
+        à direita: 65
+    arg-list <node> (73)
+        à esquerda: 77 78
+        à direita: 75 78
 
 
 Estado 0
 
     0 $accept: • program $end
 
-    INT    deslocar, e ir ao estado 1
-    FLOAT  deslocar, e ir ao estado 2
-    ELEM   deslocar, e ir ao estado 3
-    SET    deslocar, e ir ao estado 4
+    TYPE  deslocar, e ir ao estado 1
 
-    program              ir ao estado 5
-    declaration-list     ir ao estado 6
-    declaration          ir ao estado 7
-    var-declaration      ir ao estado 8
-    function-definition  ir ao estado 9
-    type                 ir ao estado 10
+    program              ir ao estado 2
+    declaration-list     ir ao estado 3
+    declaration          ir ao estado 4
+    var-declaration      ir ao estado 5
+    function-definition  ir ao estado 6
 
 
 Estado 1
 
-    8 type: INT •
+    6 var-declaration: TYPE • ID ';'
+    7 function-definition: TYPE • ID '(' parameters ')' compound-stmt
 
-    $padrão  reduzir usando a regra 8 (type)
+    ID  deslocar, e ir ao estado 7
 
 
 Estado 2
 
-    9 type: FLOAT •
+    0 $accept: program • $end
 
-    $padrão  reduzir usando a regra 9 (type)
+    $end  deslocar, e ir ao estado 8
 
 
 Estado 3
 
-   11 type: ELEM •
-
-    $padrão  reduzir usando a regra 11 (type)
-
-
-Estado 4
-
-   10 type: SET •
-
-    $padrão  reduzir usando a regra 10 (type)
-
-
-Estado 5
-
-    0 $accept: program • $end
-
-    $end  deslocar, e ir ao estado 11
-
-
-Estado 6
-
     1 program: declaration-list •
     2 declaration-list: declaration-list • declaration
 
-    INT    deslocar, e ir ao estado 1
-    FLOAT  deslocar, e ir ao estado 2
-    ELEM   deslocar, e ir ao estado 3
-    SET    deslocar, e ir ao estado 4
+    TYPE  deslocar, e ir ao estado 1
 
     $padrão  reduzir usando a regra 1 (program)
 
-    declaration          ir ao estado 12
-    var-declaration      ir ao estado 8
-    function-definition  ir ao estado 9
-    type                 ir ao estado 10
+    declaration          ir ao estado 9
+    var-declaration      ir ao estado 5
+    function-definition  ir ao estado 6
 
 
-Estado 7
+Estado 4
 
     3 declaration-list: declaration •
 
     $padrão  reduzir usando a regra 3 (declaration-list)
 
 
-Estado 8
+Estado 5
 
     5 declaration: var-declaration •
 
     $padrão  reduzir usando a regra 5 (declaration)
 
 
-Estado 9
+Estado 6
 
     4 declaration: function-definition •
 
     $padrão  reduzir usando a regra 4 (declaration)
 
 
-Estado 10
+Estado 7
 
-    6 var-declaration: type • ID ';'
-    7 function-definition: type • ID '(' parameters ')' compound-stmt
+    6 var-declaration: TYPE ID • ';'
+    7 function-definition: TYPE ID • '(' parameters ')' compound-stmt
 
-    ID  deslocar, e ir ao estado 13
+    '('  deslocar, e ir ao estado 10
+    ';'  deslocar, e ir ao estado 11
 
 
-Estado 11
+Estado 8
 
     0 $accept: program $end •
 
     $padrão  aceitar
 
 
-Estado 12
+Estado 9
 
     2 declaration-list: declaration-list declaration •
 
     $padrão  reduzir usando a regra 2 (declaration-list)
 
 
-Estado 13
+Estado 10
 
-    6 var-declaration: type ID • ';'
-    7 function-definition: type ID • '(' parameters ')' compound-stmt
+    7 function-definition: TYPE ID '(' • parameters ')' compound-stmt
 
-    '('  deslocar, e ir ao estado 14
-    ';'  deslocar, e ir ao estado 15
+    TYPE  deslocar, e ir ao estado 12
 
+    $padrão  reduzir usando a regra 9 (parameters)
 
-Estado 14
-
-    7 function-definition: type ID '(' • parameters ')' compound-stmt
-
-    INT    deslocar, e ir ao estado 1
-    FLOAT  deslocar, e ir ao estado 2
-    ELEM   deslocar, e ir ao estado 3
-    SET    deslocar, e ir ao estado 4
-
-    $padrão  reduzir usando a regra 13 (parameters)
-
-    type                   ir ao estado 16
-    parameters             ir ao estado 17
-    parameter-list         ir ao estado 18
-    parameter-declaration  ir ao estado 19
+    parameters             ir ao estado 13
+    parameter-list         ir ao estado 14
+    parameter-declaration  ir ao estado 15
 
 
-Estado 15
+Estado 11
 
-    6 var-declaration: type ID ';' •
+    6 var-declaration: TYPE ID ';' •
 
     $padrão  reduzir usando a regra 6 (var-declaration)
 
 
+Estado 12
+
+   12 parameter-declaration: TYPE • ID
+
+    ID  deslocar, e ir ao estado 16
+
+
+Estado 13
+
+    7 function-definition: TYPE ID '(' parameters • ')' compound-stmt
+
+    ')'  deslocar, e ir ao estado 17
+
+
+Estado 14
+
+    8 parameters: parameter-list •
+   11 parameter-list: parameter-list • ',' parameter-declaration
+
+    ','  deslocar, e ir ao estado 18
+
+    $padrão  reduzir usando a regra 8 (parameters)
+
+
+Estado 15
+
+   10 parameter-list: parameter-declaration •
+
+    $padrão  reduzir usando a regra 10 (parameter-list)
+
+
 Estado 16
 
-   16 parameter-declaration: type • ID
+   12 parameter-declaration: TYPE ID •
 
-    ID  deslocar, e ir ao estado 20
+    $padrão  reduzir usando a regra 12 (parameter-declaration)
 
 
 Estado 17
 
-    7 function-definition: type ID '(' parameters • ')' compound-stmt
+    7 function-definition: TYPE ID '(' parameters ')' • compound-stmt
 
-    ')'  deslocar, e ir ao estado 21
+    '{'  deslocar, e ir ao estado 19
+
+    compound-stmt  ir ao estado 20
 
 
 Estado 18
 
-   12 parameters: parameter-list •
-   15 parameter-list: parameter-list • ',' parameter-declaration
+   11 parameter-list: parameter-list ',' • parameter-declaration
 
-    ','  deslocar, e ir ao estado 22
+    TYPE  deslocar, e ir ao estado 12
 
-    $padrão  reduzir usando a regra 12 (parameters)
+    parameter-declaration  ir ao estado 21
 
 
 Estado 19
 
-   14 parameter-list: parameter-declaration •
+   13 compound-stmt: '{' • local-decls-stmts '}'
 
-    $padrão  reduzir usando a regra 14 (parameter-list)
+    error          deslocar, e ir ao estado 22
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    TYPE           deslocar, e ir ao estado 29
+    '('            deslocar, e ir ao estado 30
+    '{'            deslocar, e ir ao estado 19
+    ';'            deslocar, e ir ao estado 31
+    IF             deslocar, e ir ao estado 32
+    FOR            deslocar, e ir ao estado 33
+    FORALL         deslocar, e ir ao estado 34
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    RETURN         deslocar, e ir ao estado 38
+    EXISTS         deslocar, e ir ao estado 39
+    READ           deslocar, e ir ao estado 40
+    WRITE          deslocar, e ir ao estado 41
+    WRITELN        deslocar, e ir ao estado 42
+
+    '}'  reduzir usando a regra 15 (local-decls-stmts)
+
+    var-declaration    ir ao estado 43
+    compound-stmt      ir ao estado 44
+    local-decls-stmts  ir ao estado 45
+    stmts              ir ao estado 46
+    stmt               ir ao estado 47
+    io-stmt            ir ao estado 48
+    if-stmt            ir ao estado 49
+    for-stmt           ir ao estado 50
+    return-stmt        ir ao estado 51
+    forall-stmt        ir ao estado 52
+    expression-stmt    ir ao estado 53
+    expression         ir ao estado 54
+    assign-exp         ir ao estado 55
+    basic-exp          ir ao estado 56
+    logical-exp        ir ao estado 57
+    add-exp            ir ao estado 58
+    term               ir ao estado 59
+    factor             ir ao estado 60
+    set-exp            ir ao estado 61
+    constant           ir ao estado 62
+    call               ir ao estado 63
 
 
 Estado 20
 
-   16 parameter-declaration: type ID •
-
-    $padrão  reduzir usando a regra 16 (parameter-declaration)
-
-
-Estado 21
-
-    7 function-definition: type ID '(' parameters ')' • compound-stmt
-
-    '{'  deslocar, e ir ao estado 23
-
-    compound-stmt  ir ao estado 24
-
-
-Estado 22
-
-   15 parameter-list: parameter-list ',' • parameter-declaration
-
-    INT    deslocar, e ir ao estado 1
-    FLOAT  deslocar, e ir ao estado 2
-    ELEM   deslocar, e ir ao estado 3
-    SET    deslocar, e ir ao estado 4
-
-    type                   ir ao estado 16
-    parameter-declaration  ir ao estado 25
-
-
-Estado 23
-
-   17 compound-stmt: '{' • local-decls-stmts '}'
-
-    error          deslocar, e ir ao estado 26
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
-    '('            deslocar, e ir ao estado 33
-    '{'            deslocar, e ir ao estado 23
-    ';'            deslocar, e ir ao estado 34
-    IF             deslocar, e ir ao estado 35
-    FOR            deslocar, e ir ao estado 36
-    FORALL         deslocar, e ir ao estado 37
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    RETURN         deslocar, e ir ao estado 41
-    EXISTS         deslocar, e ir ao estado 42
-    READ           deslocar, e ir ao estado 43
-    WRITE          deslocar, e ir ao estado 44
-    WRITELN        deslocar, e ir ao estado 45
-
-    '}'  reduzir usando a regra 19 (local-decls-stmts)
-
-    var-declaration    ir ao estado 46
-    type               ir ao estado 47
-    compound-stmt      ir ao estado 48
-    local-decls-stmts  ir ao estado 49
-    stmts              ir ao estado 50
-    stmt               ir ao estado 51
-    io-stmt            ir ao estado 52
-    if-stmt            ir ao estado 53
-    for-stmt           ir ao estado 54
-    return-stmt        ir ao estado 55
-    forall-stmt        ir ao estado 56
-    expression-stmt    ir ao estado 57
-    expression         ir ao estado 58
-    assign-exp         ir ao estado 59
-    basic-exp          ir ao estado 60
-    logical-exp        ir ao estado 61
-    add-exp            ir ao estado 62
-    term               ir ao estado 63
-    factor             ir ao estado 64
-    set-exp            ir ao estado 65
-    constant           ir ao estado 66
-    call               ir ao estado 67
-
-
-Estado 24
-
-    7 function-definition: type ID '(' parameters ')' compound-stmt •
+    7 function-definition: TYPE ID '(' parameters ')' compound-stmt •
 
     $padrão  reduzir usando a regra 7 (function-definition)
 
 
+Estado 21
+
+   11 parameter-list: parameter-list ',' parameter-declaration •
+
+    $padrão  reduzir usando a regra 11 (parameter-list)
+
+
+Estado 22
+
+   18 stmts: error •
+
+    $padrão  reduzir usando a regra 18 (stmts)
+
+
+Estado 23
+
+   63 factor: ID •
+   75 call: ID • '(' arg-list ')'
+   76     | ID • '(' ')'
+
+    '('  deslocar, e ir ao estado 64
+
+    $padrão  reduzir usando a regra 63 (factor)
+
+
+Estado 24
+
+   74 constant: STRING •
+
+    $padrão  reduzir usando a regra 74 (constant)
+
+
 Estado 25
 
-   15 parameter-list: parameter-list ',' parameter-declaration •
+   71 constant: INTEGER_CONST •
 
-    $padrão  reduzir usando a regra 15 (parameter-list)
+    $padrão  reduzir usando a regra 71 (constant)
 
 
 Estado 26
 
-   22 stmts: error •
+   72 constant: FLOAT_CONST •
 
-    $padrão  reduzir usando a regra 22 (stmts)
+    $padrão  reduzir usando a regra 72 (constant)
 
 
 Estado 27
 
-   67 factor: ID •
-   79 call: ID • '(' arg-list ')'
-   80     | ID • '(' ')'
+   73 constant: EMPTY_CONST •
 
-    '('  deslocar, e ir ao estado 68
-
-    $padrão  reduzir usando a regra 67 (factor)
+    $padrão  reduzir usando a regra 73 (constant)
 
 
 Estado 28
 
-   78 constant: STRING •
+   48 basic-exp: NOT • logical-exp
 
-    $padrão  reduzir usando a regra 78 (constant)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    logical-exp  ir ao estado 65
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
 
 
 Estado 29
 
-   75 constant: INTEGER_CONST •
+    6 var-declaration: TYPE • ID ';'
 
-    $padrão  reduzir usando a regra 75 (constant)
+    ID  deslocar, e ir ao estado 66
 
 
 Estado 30
 
-   76 constant: FLOAT_CONST •
+   62 factor: '(' • expression ')'
 
-    $padrão  reduzir usando a regra 76 (constant)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 67
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
 
 
 Estado 31
 
-   77 constant: EMPTY_CONST •
+   38 expression-stmt: ';' •
 
-    $padrão  reduzir usando a regra 77 (constant)
+    $padrão  reduzir usando a regra 38 (expression-stmt)
 
 
 Estado 32
 
-   52 basic-exp: NOT • logical-exp
+   30 if-stmt: IF • '(' expression ')' stmt
+   31        | IF • '(' expression ')' stmt ELSE stmt
+   32        | IF • '(' expression IN expression ')' expression-stmt ELSE expression-stmt
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    logical-exp  ir ao estado 69
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
+    '('  deslocar, e ir ao estado 68
 
 
 Estado 33
 
-   66 factor: '(' • expression ')'
+   33 for-stmt: FOR • '(' expression ';' expression ';' expression ')' stmt ';'
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 70
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
+    '('  deslocar, e ir ao estado 69
 
 
 Estado 34
 
-   42 expression-stmt: ';' •
+   35 forall-stmt: FORALL • '(' in-exp ')' compound-stmt
+   36            | FORALL • '(' in-exp ')' expression-stmt
 
-    $padrão  reduzir usando a regra 42 (expression-stmt)
+    '('  deslocar, e ir ao estado 70
 
 
 Estado 35
 
-   34 if-stmt: IF • '(' expression ')' stmt
-   35        | IF • '(' expression ')' stmt ELSE stmt
-   36        | IF • '(' expression IN expression ')' expression-stmt ELSE expression-stmt
+   70 set-exp: IS_SET • '(' in-exp ')'
 
     '('  deslocar, e ir ao estado 71
 
 
 Estado 36
 
-   37 for-stmt: FOR • '(' expression ';' expression ';' expression ')' stmt ';'
+   67 set-exp: ADD • '(' in-exp ')'
 
     '('  deslocar, e ir ao estado 72
 
 
 Estado 37
 
-   39 forall-stmt: FORALL • '(' in-exp ')' compound-stmt
-   40            | FORALL • '(' in-exp ')' expression-stmt
+   68 set-exp: REMOVE • '(' in-exp ')'
 
     '('  deslocar, e ir ao estado 73
 
 
 Estado 38
 
-   74 set-exp: IS_SET • '(' in-exp ')'
+   34 return-stmt: RETURN • expression ';'
 
-    '('  deslocar, e ir ao estado 74
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 74
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
 
 
 Estado 39
 
-   71 set-exp: ADD • '(' in-exp ')'
+   69 set-exp: EXISTS • '(' in-exp ')'
 
     '('  deslocar, e ir ao estado 75
 
 
 Estado 40
 
-   72 set-exp: REMOVE • '(' in-exp ')'
+   27 io-stmt: READ • '(' expression ')' ';'
 
     '('  deslocar, e ir ao estado 76
 
 
 Estado 41
 
-   38 return-stmt: RETURN • expression ';'
+   28 io-stmt: WRITE • '(' expression ')' ';'
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 77
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
+    '('  deslocar, e ir ao estado 77
 
 
 Estado 42
 
-   73 set-exp: EXISTS • '(' in-exp ')'
+   29 io-stmt: WRITELN • '(' expression ')' ';'
 
     '('  deslocar, e ir ao estado 78
 
 
 Estado 43
 
-   31 io-stmt: READ • '(' expression ')' ';'
-
-    '('  deslocar, e ir ao estado 79
-
-
-Estado 44
-
-   32 io-stmt: WRITE • '(' expression ')' ';'
-
-    '('  deslocar, e ir ao estado 80
-
-
-Estado 45
-
-   33 io-stmt: WRITELN • '(' expression ')' ';'
-
-    '('  deslocar, e ir ao estado 81
-
-
-Estado 46
-
-   30 stmt: var-declaration •
-
-    $padrão  reduzir usando a regra 30 (stmt)
-
-
-Estado 47
-
-    6 var-declaration: type • ID ';'
-
-    ID  deslocar, e ir ao estado 82
-
-
-Estado 48
-
-   25 stmt: compound-stmt •
-
-    $padrão  reduzir usando a regra 25 (stmt)
-
-
-Estado 49
-
-   17 compound-stmt: '{' local-decls-stmts • '}'
-
-    '}'  deslocar, e ir ao estado 83
-
-
-Estado 50
-
-   18 local-decls-stmts: stmts •
-   20 stmts: stmts • stmt
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
-    '('            deslocar, e ir ao estado 33
-    '{'            deslocar, e ir ao estado 23
-    ';'            deslocar, e ir ao estado 34
-    IF             deslocar, e ir ao estado 35
-    FOR            deslocar, e ir ao estado 36
-    FORALL         deslocar, e ir ao estado 37
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    RETURN         deslocar, e ir ao estado 41
-    EXISTS         deslocar, e ir ao estado 42
-    READ           deslocar, e ir ao estado 43
-    WRITE          deslocar, e ir ao estado 44
-    WRITELN        deslocar, e ir ao estado 45
-
-    $padrão  reduzir usando a regra 18 (local-decls-stmts)
-
-    var-declaration  ir ao estado 46
-    type             ir ao estado 47
-    compound-stmt    ir ao estado 48
-    stmt             ir ao estado 84
-    io-stmt          ir ao estado 52
-    if-stmt          ir ao estado 53
-    for-stmt         ir ao estado 54
-    return-stmt      ir ao estado 55
-    forall-stmt      ir ao estado 56
-    expression-stmt  ir ao estado 57
-    expression       ir ao estado 58
-    assign-exp       ir ao estado 59
-    basic-exp        ir ao estado 60
-    logical-exp      ir ao estado 61
-    add-exp          ir ao estado 62
-    term             ir ao estado 63
-    factor           ir ao estado 64
-    set-exp          ir ao estado 65
-    constant         ir ao estado 66
-    call             ir ao estado 67
-
-
-Estado 51
-
-   21 stmts: stmt •
-
-    $padrão  reduzir usando a regra 21 (stmts)
-
-
-Estado 52
-
-   23 stmt: io-stmt •
-
-    $padrão  reduzir usando a regra 23 (stmt)
-
-
-Estado 53
-
-   26 stmt: if-stmt •
+   26 stmt: var-declaration •
 
     $padrão  reduzir usando a regra 26 (stmt)
 
 
-Estado 54
+Estado 44
 
-   27 stmt: for-stmt •
+   21 stmt: compound-stmt •
 
-    $padrão  reduzir usando a regra 27 (stmt)
+    $padrão  reduzir usando a regra 21 (stmt)
 
 
-Estado 55
+Estado 45
 
-   24 stmt: return-stmt •
+   13 compound-stmt: '{' local-decls-stmts • '}'
+
+    '}'  deslocar, e ir ao estado 79
+
+
+Estado 46
+
+   14 local-decls-stmts: stmts •
+   16 stmts: stmts • stmt
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    TYPE           deslocar, e ir ao estado 29
+    '('            deslocar, e ir ao estado 30
+    '{'            deslocar, e ir ao estado 19
+    ';'            deslocar, e ir ao estado 31
+    IF             deslocar, e ir ao estado 32
+    FOR            deslocar, e ir ao estado 33
+    FORALL         deslocar, e ir ao estado 34
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    RETURN         deslocar, e ir ao estado 38
+    EXISTS         deslocar, e ir ao estado 39
+    READ           deslocar, e ir ao estado 40
+    WRITE          deslocar, e ir ao estado 41
+    WRITELN        deslocar, e ir ao estado 42
+
+    $padrão  reduzir usando a regra 14 (local-decls-stmts)
+
+    var-declaration  ir ao estado 43
+    compound-stmt    ir ao estado 44
+    stmt             ir ao estado 80
+    io-stmt          ir ao estado 48
+    if-stmt          ir ao estado 49
+    for-stmt         ir ao estado 50
+    return-stmt      ir ao estado 51
+    forall-stmt      ir ao estado 52
+    expression-stmt  ir ao estado 53
+    expression       ir ao estado 54
+    assign-exp       ir ao estado 55
+    basic-exp        ir ao estado 56
+    logical-exp      ir ao estado 57
+    add-exp          ir ao estado 58
+    term             ir ao estado 59
+    factor           ir ao estado 60
+    set-exp          ir ao estado 61
+    constant         ir ao estado 62
+    call             ir ao estado 63
+
+
+Estado 47
+
+   17 stmts: stmt •
+
+    $padrão  reduzir usando a regra 17 (stmts)
+
+
+Estado 48
+
+   19 stmt: io-stmt •
+
+    $padrão  reduzir usando a regra 19 (stmt)
+
+
+Estado 49
+
+   22 stmt: if-stmt •
+
+    $padrão  reduzir usando a regra 22 (stmt)
+
+
+Estado 50
+
+   23 stmt: for-stmt •
+
+    $padrão  reduzir usando a regra 23 (stmt)
+
+
+Estado 51
+
+   20 stmt: return-stmt •
+
+    $padrão  reduzir usando a regra 20 (stmt)
+
+
+Estado 52
+
+   25 stmt: forall-stmt •
+
+    $padrão  reduzir usando a regra 25 (stmt)
+
+
+Estado 53
+
+   24 stmt: expression-stmt •
 
     $padrão  reduzir usando a regra 24 (stmt)
 
 
+Estado 54
+
+   37 expression-stmt: expression • ';'
+   40 expression: expression • ',' assign-exp
+
+    ';'  deslocar, e ir ao estado 81
+    ','  deslocar, e ir ao estado 82
+
+
+Estado 55
+
+   39 expression: assign-exp •
+
+    $padrão  reduzir usando a regra 39 (expression)
+
+
 Estado 56
 
-   29 stmt: forall-stmt •
+   41 assign-exp: basic-exp •
+   42           | basic-exp • EQ assign-exp
 
-    $padrão  reduzir usando a regra 29 (stmt)
+    EQ  deslocar, e ir ao estado 83
+
+    $padrão  reduzir usando a regra 41 (assign-exp)
 
 
 Estado 57
 
-   28 stmt: expression-stmt •
+   45 basic-exp: logical-exp •
+   46          | logical-exp • OR logical-exp
+   47          | logical-exp • AND logical-exp
 
-    $padrão  reduzir usando a regra 28 (stmt)
+    OR   deslocar, e ir ao estado 84
+    AND  deslocar, e ir ao estado 85
+
+    $padrão  reduzir usando a regra 45 (basic-exp)
 
 
 Estado 58
 
-   41 expression-stmt: expression • ';'
-   44 expression: expression • ',' assign-exp
+   49 logical-exp: add-exp •
+   50            | add-exp • EQ_TO add-exp
+   51            | add-exp • NEQ_TO add-exp
+   52            | add-exp • GT add-exp
+   53            | add-exp • LT add-exp
+   54            | add-exp • GTE add-exp
+   55            | add-exp • LTE add-exp
 
-    ';'  deslocar, e ir ao estado 85
-    ','  deslocar, e ir ao estado 86
+    EQ_TO   deslocar, e ir ao estado 86
+    NEQ_TO  deslocar, e ir ao estado 87
+    GT      deslocar, e ir ao estado 88
+    LT      deslocar, e ir ao estado 89
+    GTE     deslocar, e ir ao estado 90
+    LTE     deslocar, e ir ao estado 91
+
+    $padrão  reduzir usando a regra 49 (logical-exp)
 
 
 Estado 59
 
-   43 expression: assign-exp •
+   56 add-exp: term •
+   57        | term • PLUS term
+   58        | term • MINUS term
+   60 term: term • MULT factor
+   61     | term • DIV factor
 
-    $padrão  reduzir usando a regra 43 (expression)
+    PLUS   deslocar, e ir ao estado 92
+    MINUS  deslocar, e ir ao estado 93
+    DIV    deslocar, e ir ao estado 94
+    MULT   deslocar, e ir ao estado 95
+
+    $padrão  reduzir usando a regra 56 (add-exp)
 
 
 Estado 60
 
-   45 assign-exp: basic-exp •
-   46           | basic-exp • EQ assign-exp
+   59 term: factor •
 
-    EQ  deslocar, e ir ao estado 87
-
-    $padrão  reduzir usando a regra 45 (assign-exp)
+    $padrão  reduzir usando a regra 59 (term)
 
 
 Estado 61
 
-   49 basic-exp: logical-exp •
-   50          | logical-exp • OR logical-exp
-   51          | logical-exp • AND logical-exp
-
-    OR   deslocar, e ir ao estado 88
-    AND  deslocar, e ir ao estado 89
-
-    $padrão  reduzir usando a regra 49 (basic-exp)
-
-
-Estado 62
-
-   53 logical-exp: add-exp •
-   54            | add-exp • EQ_TO add-exp
-   55            | add-exp • NEQ_TO add-exp
-   56            | add-exp • GT add-exp
-   57            | add-exp • LT add-exp
-   58            | add-exp • GTE add-exp
-   59            | add-exp • LTE add-exp
-
-    EQ_TO   deslocar, e ir ao estado 90
-    NEQ_TO  deslocar, e ir ao estado 91
-    GT      deslocar, e ir ao estado 92
-    LT      deslocar, e ir ao estado 93
-    GTE     deslocar, e ir ao estado 94
-    LTE     deslocar, e ir ao estado 95
-
-    $padrão  reduzir usando a regra 53 (logical-exp)
-
-
-Estado 63
-
-   60 add-exp: term •
-   61        | term • PLUS term
-   62        | term • MINUS term
-   64 term: term • MULT factor
-   65     | term • DIV factor
-
-    PLUS   deslocar, e ir ao estado 96
-    MINUS  deslocar, e ir ao estado 97
-    DIV    deslocar, e ir ao estado 98
-    MULT   deslocar, e ir ao estado 99
-
-    $padrão  reduzir usando a regra 60 (add-exp)
-
-
-Estado 64
-
-   63 term: factor •
-
-    $padrão  reduzir usando a regra 63 (term)
-
-
-Estado 65
-
-   70 factor: set-exp •
-
-    $padrão  reduzir usando a regra 70 (factor)
-
-
-Estado 66
-
-   68 factor: constant •
-
-    $padrão  reduzir usando a regra 68 (factor)
-
-
-Estado 67
-
-   69 factor: call •
-
-    $padrão  reduzir usando a regra 69 (factor)
-
-
-Estado 68
-
-   79 call: ID '(' • arg-list ')'
-   80     | ID '(' • ')'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    ')'            deslocar, e ir ao estado 100
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    factor    ir ao estado 101
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-    arg-list  ir ao estado 102
-
-
-Estado 69
-
-   52 basic-exp: NOT logical-exp •
-
-    $padrão  reduzir usando a regra 52 (basic-exp)
-
-
-Estado 70
-
-   44 expression: expression • ',' assign-exp
-   66 factor: '(' expression • ')'
-
-    ')'  deslocar, e ir ao estado 103
-    ','  deslocar, e ir ao estado 86
-
-
-Estado 71
-
-   34 if-stmt: IF '(' • expression ')' stmt
-   35        | IF '(' • expression ')' stmt ELSE stmt
-   36        | IF '(' • expression IN expression ')' expression-stmt ELSE expression-stmt
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 104
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 72
-
-   37 for-stmt: FOR '(' • expression ';' expression ';' expression ')' stmt ';'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 105
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 73
-
-   39 forall-stmt: FORALL '(' • in-exp ')' compound-stmt
-   40            | FORALL '(' • in-exp ')' expression-stmt
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 106
-    assign-exp   ir ao estado 59
-    in-exp       ir ao estado 107
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 74
-
-   74 set-exp: IS_SET '(' • in-exp ')'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 106
-    assign-exp   ir ao estado 59
-    in-exp       ir ao estado 108
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 75
-
-   71 set-exp: ADD '(' • in-exp ')'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 106
-    assign-exp   ir ao estado 59
-    in-exp       ir ao estado 109
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 76
-
-   72 set-exp: REMOVE '(' • in-exp ')'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 106
-    assign-exp   ir ao estado 59
-    in-exp       ir ao estado 110
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 77
-
-   38 return-stmt: RETURN expression • ';'
-   44 expression: expression • ',' assign-exp
-
-    ';'  deslocar, e ir ao estado 111
-    ','  deslocar, e ir ao estado 86
-
-
-Estado 78
-
-   73 set-exp: EXISTS '(' • in-exp ')'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 106
-    assign-exp   ir ao estado 59
-    in-exp       ir ao estado 112
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 79
-
-   31 io-stmt: READ '(' • expression ')' ';'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 113
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 80
-
-   32 io-stmt: WRITE '(' • expression ')' ';'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 114
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 81
-
-   33 io-stmt: WRITELN '(' • expression ')' ';'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 115
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 82
-
-    6 var-declaration: type ID • ';'
-
-    ';'  deslocar, e ir ao estado 15
-
-
-Estado 83
-
-   17 compound-stmt: '{' local-decls-stmts '}' •
-
-    $padrão  reduzir usando a regra 17 (compound-stmt)
-
-
-Estado 84
-
-   20 stmts: stmts stmt •
-
-    $padrão  reduzir usando a regra 20 (stmts)
-
-
-Estado 85
-
-   41 expression-stmt: expression ';' •
-
-    $padrão  reduzir usando a regra 41 (expression-stmt)
-
-
-Estado 86
-
-   44 expression: expression ',' • assign-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    assign-exp   ir ao estado 116
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 87
-
-   46 assign-exp: basic-exp EQ • assign-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    assign-exp   ir ao estado 117
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 88
-
-   50 basic-exp: logical-exp OR • logical-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    logical-exp  ir ao estado 118
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 89
-
-   51 basic-exp: logical-exp AND • logical-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    logical-exp  ir ao estado 119
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
-
-
-Estado 90
-
-   54 logical-exp: add-exp EQ_TO • add-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    add-exp   ir ao estado 120
-    term      ir ao estado 63
-    factor    ir ao estado 64
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 91
-
-   55 logical-exp: add-exp NEQ_TO • add-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    add-exp   ir ao estado 121
-    term      ir ao estado 63
-    factor    ir ao estado 64
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 92
-
-   56 logical-exp: add-exp GT • add-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    add-exp   ir ao estado 122
-    term      ir ao estado 63
-    factor    ir ao estado 64
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 93
-
-   57 logical-exp: add-exp LT • add-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    add-exp   ir ao estado 123
-    term      ir ao estado 63
-    factor    ir ao estado 64
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 94
-
-   58 logical-exp: add-exp GTE • add-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    add-exp   ir ao estado 124
-    term      ir ao estado 63
-    factor    ir ao estado 64
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 95
-
-   59 logical-exp: add-exp LTE • add-exp
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    add-exp   ir ao estado 125
-    term      ir ao estado 63
-    factor    ir ao estado 64
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 96
-
-   61 add-exp: term PLUS • term
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    term      ir ao estado 126
-    factor    ir ao estado 64
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 97
-
-   62 add-exp: term MINUS • term
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    term      ir ao estado 127
-    factor    ir ao estado 64
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 98
-
-   65 term: term DIV • factor
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    factor    ir ao estado 128
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 99
-
-   64 term: term MULT • factor
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    factor    ir ao estado 129
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
-
-
-Estado 100
-
-   80 call: ID '(' ')' •
-
-    $padrão  reduzir usando a regra 80 (call)
-
-
-Estado 101
-
-   81 arg-list: factor •
-
-    $padrão  reduzir usando a regra 81 (arg-list)
-
-
-Estado 102
-
-   79 call: ID '(' arg-list • ')'
-   82 arg-list: arg-list • ',' factor
-
-    ')'  deslocar, e ir ao estado 130
-    ','  deslocar, e ir ao estado 131
-
-
-Estado 103
-
-   66 factor: '(' expression ')' •
+   66 factor: set-exp •
 
     $padrão  reduzir usando a regra 66 (factor)
 
 
-Estado 104
+Estado 62
 
-   34 if-stmt: IF '(' expression • ')' stmt
-   35        | IF '(' expression • ')' stmt ELSE stmt
-   36        | IF '(' expression • IN expression ')' expression-stmt ELSE expression-stmt
-   44 expression: expression • ',' assign-exp
+   64 factor: constant •
+
+    $padrão  reduzir usando a regra 64 (factor)
+
+
+Estado 63
+
+   65 factor: call •
+
+    $padrão  reduzir usando a regra 65 (factor)
+
+
+Estado 64
+
+   75 call: ID '(' • arg-list ')'
+   76     | ID '(' • ')'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    ')'            deslocar, e ir ao estado 96
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    factor    ir ao estado 97
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+    arg-list  ir ao estado 98
+
+
+Estado 65
+
+   48 basic-exp: NOT logical-exp •
+
+    $padrão  reduzir usando a regra 48 (basic-exp)
+
+
+Estado 66
+
+    6 var-declaration: TYPE ID • ';'
+
+    ';'  deslocar, e ir ao estado 11
+
+
+Estado 67
+
+   40 expression: expression • ',' assign-exp
+   62 factor: '(' expression • ')'
+
+    ')'  deslocar, e ir ao estado 99
+    ','  deslocar, e ir ao estado 82
+
+
+Estado 68
+
+   30 if-stmt: IF '(' • expression ')' stmt
+   31        | IF '(' • expression ')' stmt ELSE stmt
+   32        | IF '(' • expression IN expression ')' expression-stmt ELSE expression-stmt
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 100
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 69
+
+   33 for-stmt: FOR '(' • expression ';' expression ';' expression ')' stmt ';'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 101
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 70
+
+   35 forall-stmt: FORALL '(' • in-exp ')' compound-stmt
+   36            | FORALL '(' • in-exp ')' expression-stmt
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 102
+    assign-exp   ir ao estado 55
+    in-exp       ir ao estado 103
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 71
+
+   70 set-exp: IS_SET '(' • in-exp ')'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 102
+    assign-exp   ir ao estado 55
+    in-exp       ir ao estado 104
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 72
+
+   67 set-exp: ADD '(' • in-exp ')'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 102
+    assign-exp   ir ao estado 55
+    in-exp       ir ao estado 105
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 73
+
+   68 set-exp: REMOVE '(' • in-exp ')'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 102
+    assign-exp   ir ao estado 55
+    in-exp       ir ao estado 106
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 74
+
+   34 return-stmt: RETURN expression • ';'
+   40 expression: expression • ',' assign-exp
+
+    ';'  deslocar, e ir ao estado 107
+    ','  deslocar, e ir ao estado 82
+
+
+Estado 75
+
+   69 set-exp: EXISTS '(' • in-exp ')'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 102
+    assign-exp   ir ao estado 55
+    in-exp       ir ao estado 108
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 76
+
+   27 io-stmt: READ '(' • expression ')' ';'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 109
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 77
+
+   28 io-stmt: WRITE '(' • expression ')' ';'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 110
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 78
+
+   29 io-stmt: WRITELN '(' • expression ')' ';'
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 111
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 79
+
+   13 compound-stmt: '{' local-decls-stmts '}' •
+
+    $padrão  reduzir usando a regra 13 (compound-stmt)
+
+
+Estado 80
+
+   16 stmts: stmts stmt •
+
+    $padrão  reduzir usando a regra 16 (stmts)
+
+
+Estado 81
+
+   37 expression-stmt: expression ';' •
+
+    $padrão  reduzir usando a regra 37 (expression-stmt)
+
+
+Estado 82
+
+   40 expression: expression ',' • assign-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    assign-exp   ir ao estado 112
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 83
+
+   42 assign-exp: basic-exp EQ • assign-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    assign-exp   ir ao estado 113
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 84
+
+   46 basic-exp: logical-exp OR • logical-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    logical-exp  ir ao estado 114
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 85
+
+   47 basic-exp: logical-exp AND • logical-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    logical-exp  ir ao estado 115
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
+
+
+Estado 86
+
+   50 logical-exp: add-exp EQ_TO • add-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    add-exp   ir ao estado 116
+    term      ir ao estado 59
+    factor    ir ao estado 60
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 87
+
+   51 logical-exp: add-exp NEQ_TO • add-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    add-exp   ir ao estado 117
+    term      ir ao estado 59
+    factor    ir ao estado 60
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 88
+
+   52 logical-exp: add-exp GT • add-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    add-exp   ir ao estado 118
+    term      ir ao estado 59
+    factor    ir ao estado 60
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 89
+
+   53 logical-exp: add-exp LT • add-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    add-exp   ir ao estado 119
+    term      ir ao estado 59
+    factor    ir ao estado 60
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 90
+
+   54 logical-exp: add-exp GTE • add-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    add-exp   ir ao estado 120
+    term      ir ao estado 59
+    factor    ir ao estado 60
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 91
+
+   55 logical-exp: add-exp LTE • add-exp
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    add-exp   ir ao estado 121
+    term      ir ao estado 59
+    factor    ir ao estado 60
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 92
+
+   57 add-exp: term PLUS • term
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    term      ir ao estado 122
+    factor    ir ao estado 60
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 93
+
+   58 add-exp: term MINUS • term
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    term      ir ao estado 123
+    factor    ir ao estado 60
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 94
+
+   61 term: term DIV • factor
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    factor    ir ao estado 124
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 95
+
+   60 term: term MULT • factor
+
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    factor    ir ao estado 125
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
+
+
+Estado 96
+
+   76 call: ID '(' ')' •
+
+    $padrão  reduzir usando a regra 76 (call)
+
+
+Estado 97
+
+   77 arg-list: factor •
+
+    $padrão  reduzir usando a regra 77 (arg-list)
+
+
+Estado 98
+
+   75 call: ID '(' arg-list • ')'
+   78 arg-list: arg-list • ',' factor
+
+    ')'  deslocar, e ir ao estado 126
+    ','  deslocar, e ir ao estado 127
+
+
+Estado 99
+
+   62 factor: '(' expression ')' •
+
+    $padrão  reduzir usando a regra 62 (factor)
+
+
+Estado 100
+
+   30 if-stmt: IF '(' expression • ')' stmt
+   31        | IF '(' expression • ')' stmt ELSE stmt
+   32        | IF '(' expression • IN expression ')' expression-stmt ELSE expression-stmt
+   40 expression: expression • ',' assign-exp
+
+    ')'  deslocar, e ir ao estado 128
+    ','  deslocar, e ir ao estado 82
+    IN   deslocar, e ir ao estado 129
+
+
+Estado 101
+
+   33 for-stmt: FOR '(' expression • ';' expression ';' expression ')' stmt ';'
+   40 expression: expression • ',' assign-exp
+
+    ';'  deslocar, e ir ao estado 130
+    ','  deslocar, e ir ao estado 82
+
+
+Estado 102
+
+   40 expression: expression • ',' assign-exp
+   43 in-exp: expression • IN in-exp
+   44       | expression •
+
+    ','  deslocar, e ir ao estado 82
+    IN   deslocar, e ir ao estado 131
+
+    $padrão  reduzir usando a regra 44 (in-exp)
+
+
+Estado 103
+
+   35 forall-stmt: FORALL '(' in-exp • ')' compound-stmt
+   36            | FORALL '(' in-exp • ')' expression-stmt
 
     ')'  deslocar, e ir ao estado 132
-    ','  deslocar, e ir ao estado 86
-    IN   deslocar, e ir ao estado 133
+
+
+Estado 104
+
+   70 set-exp: IS_SET '(' in-exp • ')'
+
+    ')'  deslocar, e ir ao estado 133
 
 
 Estado 105
 
-   37 for-stmt: FOR '(' expression • ';' expression ';' expression ')' stmt ';'
-   44 expression: expression • ',' assign-exp
+   67 set-exp: ADD '(' in-exp • ')'
 
-    ';'  deslocar, e ir ao estado 134
-    ','  deslocar, e ir ao estado 86
+    ')'  deslocar, e ir ao estado 134
 
 
 Estado 106
 
-   44 expression: expression • ',' assign-exp
-   47 in-exp: expression • IN in-exp
-   48       | expression •
+   68 set-exp: REMOVE '(' in-exp • ')'
 
-    ','  deslocar, e ir ao estado 86
-    IN   deslocar, e ir ao estado 135
-
-    $padrão  reduzir usando a regra 48 (in-exp)
+    ')'  deslocar, e ir ao estado 135
 
 
 Estado 107
 
-   39 forall-stmt: FORALL '(' in-exp • ')' compound-stmt
-   40            | FORALL '(' in-exp • ')' expression-stmt
+   34 return-stmt: RETURN expression ';' •
 
-    ')'  deslocar, e ir ao estado 136
+    $padrão  reduzir usando a regra 34 (return-stmt)
 
 
 Estado 108
 
-   74 set-exp: IS_SET '(' in-exp • ')'
+   69 set-exp: EXISTS '(' in-exp • ')'
 
-    ')'  deslocar, e ir ao estado 137
+    ')'  deslocar, e ir ao estado 136
 
 
 Estado 109
 
-   71 set-exp: ADD '(' in-exp • ')'
+   27 io-stmt: READ '(' expression • ')' ';'
+   40 expression: expression • ',' assign-exp
 
-    ')'  deslocar, e ir ao estado 138
+    ')'  deslocar, e ir ao estado 137
+    ','  deslocar, e ir ao estado 82
 
 
 Estado 110
 
-   72 set-exp: REMOVE '(' in-exp • ')'
+   28 io-stmt: WRITE '(' expression • ')' ';'
+   40 expression: expression • ',' assign-exp
 
-    ')'  deslocar, e ir ao estado 139
+    ')'  deslocar, e ir ao estado 138
+    ','  deslocar, e ir ao estado 82
 
 
 Estado 111
 
-   38 return-stmt: RETURN expression ';' •
+   29 io-stmt: WRITELN '(' expression • ')' ';'
+   40 expression: expression • ',' assign-exp
 
-    $padrão  reduzir usando a regra 38 (return-stmt)
+    ')'  deslocar, e ir ao estado 139
+    ','  deslocar, e ir ao estado 82
 
 
 Estado 112
 
-   73 set-exp: EXISTS '(' in-exp • ')'
+   40 expression: expression ',' assign-exp •
 
-    ')'  deslocar, e ir ao estado 140
+    $padrão  reduzir usando a regra 40 (expression)
 
 
 Estado 113
 
-   31 io-stmt: READ '(' expression • ')' ';'
-   44 expression: expression • ',' assign-exp
+   42 assign-exp: basic-exp EQ assign-exp •
 
-    ')'  deslocar, e ir ao estado 141
-    ','  deslocar, e ir ao estado 86
+    $padrão  reduzir usando a regra 42 (assign-exp)
 
 
 Estado 114
 
-   32 io-stmt: WRITE '(' expression • ')' ';'
-   44 expression: expression • ',' assign-exp
+   46 basic-exp: logical-exp OR logical-exp •
 
-    ')'  deslocar, e ir ao estado 142
-    ','  deslocar, e ir ao estado 86
+    $padrão  reduzir usando a regra 46 (basic-exp)
 
 
 Estado 115
 
-   33 io-stmt: WRITELN '(' expression • ')' ';'
-   44 expression: expression • ',' assign-exp
+   47 basic-exp: logical-exp AND logical-exp •
 
-    ')'  deslocar, e ir ao estado 143
-    ','  deslocar, e ir ao estado 86
+    $padrão  reduzir usando a regra 47 (basic-exp)
 
 
 Estado 116
 
-   44 expression: expression ',' assign-exp •
+   50 logical-exp: add-exp EQ_TO add-exp •
 
-    $padrão  reduzir usando a regra 44 (expression)
+    $padrão  reduzir usando a regra 50 (logical-exp)
 
 
 Estado 117
 
-   46 assign-exp: basic-exp EQ assign-exp •
+   51 logical-exp: add-exp NEQ_TO add-exp •
 
-    $padrão  reduzir usando a regra 46 (assign-exp)
+    $padrão  reduzir usando a regra 51 (logical-exp)
 
 
 Estado 118
 
-   50 basic-exp: logical-exp OR logical-exp •
+   52 logical-exp: add-exp GT add-exp •
 
-    $padrão  reduzir usando a regra 50 (basic-exp)
+    $padrão  reduzir usando a regra 52 (logical-exp)
 
 
 Estado 119
 
-   51 basic-exp: logical-exp AND logical-exp •
+   53 logical-exp: add-exp LT add-exp •
 
-    $padrão  reduzir usando a regra 51 (basic-exp)
+    $padrão  reduzir usando a regra 53 (logical-exp)
 
 
 Estado 120
 
-   54 logical-exp: add-exp EQ_TO add-exp •
+   54 logical-exp: add-exp GTE add-exp •
 
     $padrão  reduzir usando a regra 54 (logical-exp)
 
 
 Estado 121
 
-   55 logical-exp: add-exp NEQ_TO add-exp •
+   55 logical-exp: add-exp LTE add-exp •
 
     $padrão  reduzir usando a regra 55 (logical-exp)
 
 
 Estado 122
 
-   56 logical-exp: add-exp GT add-exp •
+   57 add-exp: term PLUS term •
+   60 term: term • MULT factor
+   61     | term • DIV factor
 
-    $padrão  reduzir usando a regra 56 (logical-exp)
+    DIV   deslocar, e ir ao estado 94
+    MULT  deslocar, e ir ao estado 95
+
+    $padrão  reduzir usando a regra 57 (add-exp)
 
 
 Estado 123
 
-   57 logical-exp: add-exp LT add-exp •
+   58 add-exp: term MINUS term •
+   60 term: term • MULT factor
+   61     | term • DIV factor
 
-    $padrão  reduzir usando a regra 57 (logical-exp)
+    DIV   deslocar, e ir ao estado 94
+    MULT  deslocar, e ir ao estado 95
+
+    $padrão  reduzir usando a regra 58 (add-exp)
 
 
 Estado 124
 
-   58 logical-exp: add-exp GTE add-exp •
+   61 term: term DIV factor •
 
-    $padrão  reduzir usando a regra 58 (logical-exp)
+    $padrão  reduzir usando a regra 61 (term)
 
 
 Estado 125
 
-   59 logical-exp: add-exp LTE add-exp •
+   60 term: term MULT factor •
 
-    $padrão  reduzir usando a regra 59 (logical-exp)
+    $padrão  reduzir usando a regra 60 (term)
 
 
 Estado 126
 
-   61 add-exp: term PLUS term •
-   64 term: term • MULT factor
-   65     | term • DIV factor
+   75 call: ID '(' arg-list ')' •
 
-    DIV   deslocar, e ir ao estado 98
-    MULT  deslocar, e ir ao estado 99
-
-    $padrão  reduzir usando a regra 61 (add-exp)
+    $padrão  reduzir usando a regra 75 (call)
 
 
 Estado 127
 
-   62 add-exp: term MINUS term •
-   64 term: term • MULT factor
-   65     | term • DIV factor
+   78 arg-list: arg-list ',' • factor
 
-    DIV   deslocar, e ir ao estado 98
-    MULT  deslocar, e ir ao estado 99
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
 
-    $padrão  reduzir usando a regra 62 (add-exp)
+    factor    ir ao estado 140
+    set-exp   ir ao estado 61
+    constant  ir ao estado 62
+    call      ir ao estado 63
 
 
 Estado 128
 
-   65 term: term DIV factor •
+   30 if-stmt: IF '(' expression ')' • stmt
+   31        | IF '(' expression ')' • stmt ELSE stmt
 
-    $padrão  reduzir usando a regra 65 (term)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    TYPE           deslocar, e ir ao estado 29
+    '('            deslocar, e ir ao estado 30
+    '{'            deslocar, e ir ao estado 19
+    ';'            deslocar, e ir ao estado 31
+    IF             deslocar, e ir ao estado 32
+    FOR            deslocar, e ir ao estado 33
+    FORALL         deslocar, e ir ao estado 34
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    RETURN         deslocar, e ir ao estado 38
+    EXISTS         deslocar, e ir ao estado 39
+    READ           deslocar, e ir ao estado 40
+    WRITE          deslocar, e ir ao estado 41
+    WRITELN        deslocar, e ir ao estado 42
+
+    var-declaration  ir ao estado 43
+    compound-stmt    ir ao estado 44
+    stmt             ir ao estado 141
+    io-stmt          ir ao estado 48
+    if-stmt          ir ao estado 49
+    for-stmt         ir ao estado 50
+    return-stmt      ir ao estado 51
+    forall-stmt      ir ao estado 52
+    expression-stmt  ir ao estado 53
+    expression       ir ao estado 54
+    assign-exp       ir ao estado 55
+    basic-exp        ir ao estado 56
+    logical-exp      ir ao estado 57
+    add-exp          ir ao estado 58
+    term             ir ao estado 59
+    factor           ir ao estado 60
+    set-exp          ir ao estado 61
+    constant         ir ao estado 62
+    call             ir ao estado 63
 
 
 Estado 129
 
-   64 term: term MULT factor •
+   32 if-stmt: IF '(' expression IN • expression ')' expression-stmt ELSE expression-stmt
 
-    $padrão  reduzir usando a regra 64 (term)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 142
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
 
 
 Estado 130
 
-   79 call: ID '(' arg-list ')' •
+   33 for-stmt: FOR '(' expression ';' • expression ';' expression ')' stmt ';'
 
-    $padrão  reduzir usando a regra 79 (call)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 143
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
 
 
 Estado 131
 
-   82 arg-list: arg-list ',' • factor
+   43 in-exp: expression IN • in-exp
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
 
-    factor    ir ao estado 144
-    set-exp   ir ao estado 65
-    constant  ir ao estado 66
-    call      ir ao estado 67
+    expression   ir ao estado 102
+    assign-exp   ir ao estado 55
+    in-exp       ir ao estado 144
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
 
 
 Estado 132
 
-   34 if-stmt: IF '(' expression ')' • stmt
-   35        | IF '(' expression ')' • stmt ELSE stmt
+   35 forall-stmt: FORALL '(' in-exp ')' • compound-stmt
+   36            | FORALL '(' in-exp ')' • expression-stmt
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
-    '('            deslocar, e ir ao estado 33
-    '{'            deslocar, e ir ao estado 23
-    ';'            deslocar, e ir ao estado 34
-    IF             deslocar, e ir ao estado 35
-    FOR            deslocar, e ir ao estado 36
-    FORALL         deslocar, e ir ao estado 37
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    RETURN         deslocar, e ir ao estado 41
-    EXISTS         deslocar, e ir ao estado 42
-    READ           deslocar, e ir ao estado 43
-    WRITE          deslocar, e ir ao estado 44
-    WRITELN        deslocar, e ir ao estado 45
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    '{'            deslocar, e ir ao estado 19
+    ';'            deslocar, e ir ao estado 31
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
 
-    var-declaration  ir ao estado 46
-    type             ir ao estado 47
-    compound-stmt    ir ao estado 48
-    stmt             ir ao estado 145
-    io-stmt          ir ao estado 52
-    if-stmt          ir ao estado 53
-    for-stmt         ir ao estado 54
-    return-stmt      ir ao estado 55
-    forall-stmt      ir ao estado 56
-    expression-stmt  ir ao estado 57
-    expression       ir ao estado 58
-    assign-exp       ir ao estado 59
-    basic-exp        ir ao estado 60
-    logical-exp      ir ao estado 61
-    add-exp          ir ao estado 62
-    term             ir ao estado 63
-    factor           ir ao estado 64
-    set-exp          ir ao estado 65
-    constant         ir ao estado 66
-    call             ir ao estado 67
+    compound-stmt    ir ao estado 145
+    expression-stmt  ir ao estado 146
+    expression       ir ao estado 54
+    assign-exp       ir ao estado 55
+    basic-exp        ir ao estado 56
+    logical-exp      ir ao estado 57
+    add-exp          ir ao estado 58
+    term             ir ao estado 59
+    factor           ir ao estado 60
+    set-exp          ir ao estado 61
+    constant         ir ao estado 62
+    call             ir ao estado 63
 
 
 Estado 133
 
-   36 if-stmt: IF '(' expression IN • expression ')' expression-stmt ELSE expression-stmt
+   70 set-exp: IS_SET '(' in-exp ')' •
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 146
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
+    $padrão  reduzir usando a regra 70 (set-exp)
 
 
 Estado 134
 
-   37 for-stmt: FOR '(' expression ';' • expression ';' expression ')' stmt ';'
+   67 set-exp: ADD '(' in-exp ')' •
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 147
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
+    $padrão  reduzir usando a regra 67 (set-exp)
 
 
 Estado 135
 
-   47 in-exp: expression IN • in-exp
+   68 set-exp: REMOVE '(' in-exp ')' •
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression   ir ao estado 106
-    assign-exp   ir ao estado 59
-    in-exp       ir ao estado 148
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
+    $padrão  reduzir usando a regra 68 (set-exp)
 
 
 Estado 136
 
-   39 forall-stmt: FORALL '(' in-exp ')' • compound-stmt
-   40            | FORALL '(' in-exp ')' • expression-stmt
+   69 set-exp: EXISTS '(' in-exp ')' •
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    '{'            deslocar, e ir ao estado 23
-    ';'            deslocar, e ir ao estado 34
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    compound-stmt    ir ao estado 149
-    expression-stmt  ir ao estado 150
-    expression       ir ao estado 58
-    assign-exp       ir ao estado 59
-    basic-exp        ir ao estado 60
-    logical-exp      ir ao estado 61
-    add-exp          ir ao estado 62
-    term             ir ao estado 63
-    factor           ir ao estado 64
-    set-exp          ir ao estado 65
-    constant         ir ao estado 66
-    call             ir ao estado 67
+    $padrão  reduzir usando a regra 69 (set-exp)
 
 
 Estado 137
 
-   74 set-exp: IS_SET '(' in-exp ')' •
+   27 io-stmt: READ '(' expression ')' • ';'
 
-    $padrão  reduzir usando a regra 74 (set-exp)
+    ';'  deslocar, e ir ao estado 147
 
 
 Estado 138
 
-   71 set-exp: ADD '(' in-exp ')' •
+   28 io-stmt: WRITE '(' expression ')' • ';'
 
-    $padrão  reduzir usando a regra 71 (set-exp)
+    ';'  deslocar, e ir ao estado 148
 
 
 Estado 139
 
-   72 set-exp: REMOVE '(' in-exp ')' •
+   29 io-stmt: WRITELN '(' expression ')' • ';'
 
-    $padrão  reduzir usando a regra 72 (set-exp)
+    ';'  deslocar, e ir ao estado 149
 
 
 Estado 140
 
-   73 set-exp: EXISTS '(' in-exp ')' •
+   78 arg-list: arg-list ',' factor •
 
-    $padrão  reduzir usando a regra 73 (set-exp)
+    $padrão  reduzir usando a regra 78 (arg-list)
 
 
 Estado 141
 
-   31 io-stmt: READ '(' expression ')' • ';'
+   30 if-stmt: IF '(' expression ')' stmt •
+   31        | IF '(' expression ')' stmt • ELSE stmt
 
-    ';'  deslocar, e ir ao estado 151
+    ELSE  deslocar, e ir ao estado 150
+
+    $padrão  reduzir usando a regra 30 (if-stmt)
 
 
 Estado 142
 
-   32 io-stmt: WRITE '(' expression ')' • ';'
+   32 if-stmt: IF '(' expression IN expression • ')' expression-stmt ELSE expression-stmt
+   40 expression: expression • ',' assign-exp
 
-    ';'  deslocar, e ir ao estado 152
+    ')'  deslocar, e ir ao estado 151
+    ','  deslocar, e ir ao estado 82
 
 
 Estado 143
 
-   33 io-stmt: WRITELN '(' expression ')' • ';'
+   33 for-stmt: FOR '(' expression ';' expression • ';' expression ')' stmt ';'
+   40 expression: expression • ',' assign-exp
 
-    ';'  deslocar, e ir ao estado 153
+    ';'  deslocar, e ir ao estado 152
+    ','  deslocar, e ir ao estado 82
 
 
 Estado 144
 
-   82 arg-list: arg-list ',' factor •
+   43 in-exp: expression IN in-exp •
 
-    $padrão  reduzir usando a regra 82 (arg-list)
+    $padrão  reduzir usando a regra 43 (in-exp)
 
 
 Estado 145
 
-   34 if-stmt: IF '(' expression ')' stmt •
-   35        | IF '(' expression ')' stmt • ELSE stmt
+   35 forall-stmt: FORALL '(' in-exp ')' compound-stmt •
 
-    ELSE  deslocar, e ir ao estado 154
-
-    $padrão  reduzir usando a regra 34 (if-stmt)
+    $padrão  reduzir usando a regra 35 (forall-stmt)
 
 
 Estado 146
 
-   36 if-stmt: IF '(' expression IN expression • ')' expression-stmt ELSE expression-stmt
-   44 expression: expression • ',' assign-exp
+   36 forall-stmt: FORALL '(' in-exp ')' expression-stmt •
 
-    ')'  deslocar, e ir ao estado 155
-    ','  deslocar, e ir ao estado 86
+    $padrão  reduzir usando a regra 36 (forall-stmt)
 
 
 Estado 147
 
-   37 for-stmt: FOR '(' expression ';' expression • ';' expression ')' stmt ';'
-   44 expression: expression • ',' assign-exp
+   27 io-stmt: READ '(' expression ')' ';' •
 
-    ';'  deslocar, e ir ao estado 156
-    ','  deslocar, e ir ao estado 86
+    $padrão  reduzir usando a regra 27 (io-stmt)
 
 
 Estado 148
 
-   47 in-exp: expression IN in-exp •
+   28 io-stmt: WRITE '(' expression ')' ';' •
 
-    $padrão  reduzir usando a regra 47 (in-exp)
+    $padrão  reduzir usando a regra 28 (io-stmt)
 
 
 Estado 149
 
-   39 forall-stmt: FORALL '(' in-exp ')' compound-stmt •
+   29 io-stmt: WRITELN '(' expression ')' ';' •
 
-    $padrão  reduzir usando a regra 39 (forall-stmt)
+    $padrão  reduzir usando a regra 29 (io-stmt)
 
 
 Estado 150
 
-   40 forall-stmt: FORALL '(' in-exp ')' expression-stmt •
+   31 if-stmt: IF '(' expression ')' stmt ELSE • stmt
 
-    $padrão  reduzir usando a regra 40 (forall-stmt)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    TYPE           deslocar, e ir ao estado 29
+    '('            deslocar, e ir ao estado 30
+    '{'            deslocar, e ir ao estado 19
+    ';'            deslocar, e ir ao estado 31
+    IF             deslocar, e ir ao estado 32
+    FOR            deslocar, e ir ao estado 33
+    FORALL         deslocar, e ir ao estado 34
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    RETURN         deslocar, e ir ao estado 38
+    EXISTS         deslocar, e ir ao estado 39
+    READ           deslocar, e ir ao estado 40
+    WRITE          deslocar, e ir ao estado 41
+    WRITELN        deslocar, e ir ao estado 42
+
+    var-declaration  ir ao estado 43
+    compound-stmt    ir ao estado 44
+    stmt             ir ao estado 153
+    io-stmt          ir ao estado 48
+    if-stmt          ir ao estado 49
+    for-stmt         ir ao estado 50
+    return-stmt      ir ao estado 51
+    forall-stmt      ir ao estado 52
+    expression-stmt  ir ao estado 53
+    expression       ir ao estado 54
+    assign-exp       ir ao estado 55
+    basic-exp        ir ao estado 56
+    logical-exp      ir ao estado 57
+    add-exp          ir ao estado 58
+    term             ir ao estado 59
+    factor           ir ao estado 60
+    set-exp          ir ao estado 61
+    constant         ir ao estado 62
+    call             ir ao estado 63
 
 
 Estado 151
 
-   31 io-stmt: READ '(' expression ')' ';' •
+   32 if-stmt: IF '(' expression IN expression ')' • expression-stmt ELSE expression-stmt
 
-    $padrão  reduzir usando a regra 31 (io-stmt)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    ';'            deslocar, e ir ao estado 31
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression-stmt  ir ao estado 154
+    expression       ir ao estado 54
+    assign-exp       ir ao estado 55
+    basic-exp        ir ao estado 56
+    logical-exp      ir ao estado 57
+    add-exp          ir ao estado 58
+    term             ir ao estado 59
+    factor           ir ao estado 60
+    set-exp          ir ao estado 61
+    constant         ir ao estado 62
+    call             ir ao estado 63
 
 
 Estado 152
 
-   32 io-stmt: WRITE '(' expression ')' ';' •
+   33 for-stmt: FOR '(' expression ';' expression ';' • expression ')' stmt ';'
 
-    $padrão  reduzir usando a regra 32 (io-stmt)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
+
+    expression   ir ao estado 155
+    assign-exp   ir ao estado 55
+    basic-exp    ir ao estado 56
+    logical-exp  ir ao estado 57
+    add-exp      ir ao estado 58
+    term         ir ao estado 59
+    factor       ir ao estado 60
+    set-exp      ir ao estado 61
+    constant     ir ao estado 62
+    call         ir ao estado 63
 
 
 Estado 153
 
-   33 io-stmt: WRITELN '(' expression ')' ';' •
+   31 if-stmt: IF '(' expression ')' stmt ELSE stmt •
 
-    $padrão  reduzir usando a regra 33 (io-stmt)
+    $padrão  reduzir usando a regra 31 (if-stmt)
 
 
 Estado 154
 
-   35 if-stmt: IF '(' expression ')' stmt ELSE • stmt
+   32 if-stmt: IF '(' expression IN expression ')' expression-stmt • ELSE expression-stmt
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
-    '('            deslocar, e ir ao estado 33
-    '{'            deslocar, e ir ao estado 23
-    ';'            deslocar, e ir ao estado 34
-    IF             deslocar, e ir ao estado 35
-    FOR            deslocar, e ir ao estado 36
-    FORALL         deslocar, e ir ao estado 37
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    RETURN         deslocar, e ir ao estado 41
-    EXISTS         deslocar, e ir ao estado 42
-    READ           deslocar, e ir ao estado 43
-    WRITE          deslocar, e ir ao estado 44
-    WRITELN        deslocar, e ir ao estado 45
-
-    var-declaration  ir ao estado 46
-    type             ir ao estado 47
-    compound-stmt    ir ao estado 48
-    stmt             ir ao estado 157
-    io-stmt          ir ao estado 52
-    if-stmt          ir ao estado 53
-    for-stmt         ir ao estado 54
-    return-stmt      ir ao estado 55
-    forall-stmt      ir ao estado 56
-    expression-stmt  ir ao estado 57
-    expression       ir ao estado 58
-    assign-exp       ir ao estado 59
-    basic-exp        ir ao estado 60
-    logical-exp      ir ao estado 61
-    add-exp          ir ao estado 62
-    term             ir ao estado 63
-    factor           ir ao estado 64
-    set-exp          ir ao estado 65
-    constant         ir ao estado 66
-    call             ir ao estado 67
+    ELSE  deslocar, e ir ao estado 156
 
 
 Estado 155
 
-   36 if-stmt: IF '(' expression IN expression ')' • expression-stmt ELSE expression-stmt
+   33 for-stmt: FOR '(' expression ';' expression ';' expression • ')' stmt ';'
+   40 expression: expression • ',' assign-exp
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    ';'            deslocar, e ir ao estado 34
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression-stmt  ir ao estado 158
-    expression       ir ao estado 58
-    assign-exp       ir ao estado 59
-    basic-exp        ir ao estado 60
-    logical-exp      ir ao estado 61
-    add-exp          ir ao estado 62
-    term             ir ao estado 63
-    factor           ir ao estado 64
-    set-exp          ir ao estado 65
-    constant         ir ao estado 66
-    call             ir ao estado 67
+    ')'  deslocar, e ir ao estado 157
+    ','  deslocar, e ir ao estado 82
 
 
 Estado 156
 
-   37 for-stmt: FOR '(' expression ';' expression ';' • expression ')' stmt ';'
+   32 if-stmt: IF '(' expression IN expression ')' expression-stmt ELSE • expression-stmt
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    '('            deslocar, e ir ao estado 30
+    ';'            deslocar, e ir ao estado 31
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    EXISTS         deslocar, e ir ao estado 39
 
-    expression   ir ao estado 159
-    assign-exp   ir ao estado 59
-    basic-exp    ir ao estado 60
-    logical-exp  ir ao estado 61
-    add-exp      ir ao estado 62
-    term         ir ao estado 63
-    factor       ir ao estado 64
-    set-exp      ir ao estado 65
-    constant     ir ao estado 66
-    call         ir ao estado 67
+    expression-stmt  ir ao estado 158
+    expression       ir ao estado 54
+    assign-exp       ir ao estado 55
+    basic-exp        ir ao estado 56
+    logical-exp      ir ao estado 57
+    add-exp          ir ao estado 58
+    term             ir ao estado 59
+    factor           ir ao estado 60
+    set-exp          ir ao estado 61
+    constant         ir ao estado 62
+    call             ir ao estado 63
 
 
 Estado 157
 
-   35 if-stmt: IF '(' expression ')' stmt ELSE stmt •
+   33 for-stmt: FOR '(' expression ';' expression ';' expression ')' • stmt ';'
 
-    $padrão  reduzir usando a regra 35 (if-stmt)
+    ID             deslocar, e ir ao estado 23
+    STRING         deslocar, e ir ao estado 24
+    INTEGER_CONST  deslocar, e ir ao estado 25
+    FLOAT_CONST    deslocar, e ir ao estado 26
+    EMPTY_CONST    deslocar, e ir ao estado 27
+    NOT            deslocar, e ir ao estado 28
+    TYPE           deslocar, e ir ao estado 29
+    '('            deslocar, e ir ao estado 30
+    '{'            deslocar, e ir ao estado 19
+    ';'            deslocar, e ir ao estado 31
+    IF             deslocar, e ir ao estado 32
+    FOR            deslocar, e ir ao estado 33
+    FORALL         deslocar, e ir ao estado 34
+    IS_SET         deslocar, e ir ao estado 35
+    ADD            deslocar, e ir ao estado 36
+    REMOVE         deslocar, e ir ao estado 37
+    RETURN         deslocar, e ir ao estado 38
+    EXISTS         deslocar, e ir ao estado 39
+    READ           deslocar, e ir ao estado 40
+    WRITE          deslocar, e ir ao estado 41
+    WRITELN        deslocar, e ir ao estado 42
+
+    var-declaration  ir ao estado 43
+    compound-stmt    ir ao estado 44
+    stmt             ir ao estado 159
+    io-stmt          ir ao estado 48
+    if-stmt          ir ao estado 49
+    for-stmt         ir ao estado 50
+    return-stmt      ir ao estado 51
+    forall-stmt      ir ao estado 52
+    expression-stmt  ir ao estado 53
+    expression       ir ao estado 54
+    assign-exp       ir ao estado 55
+    basic-exp        ir ao estado 56
+    logical-exp      ir ao estado 57
+    add-exp          ir ao estado 58
+    term             ir ao estado 59
+    factor           ir ao estado 60
+    set-exp          ir ao estado 61
+    constant         ir ao estado 62
+    call             ir ao estado 63
 
 
 Estado 158
 
-   36 if-stmt: IF '(' expression IN expression ')' expression-stmt • ELSE expression-stmt
+   32 if-stmt: IF '(' expression IN expression ')' expression-stmt ELSE expression-stmt •
 
-    ELSE  deslocar, e ir ao estado 160
+    $padrão  reduzir usando a regra 32 (if-stmt)
 
 
 Estado 159
 
-   37 for-stmt: FOR '(' expression ';' expression ';' expression • ')' stmt ';'
-   44 expression: expression • ',' assign-exp
+   33 for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt • ';'
 
-    ')'  deslocar, e ir ao estado 161
-    ','  deslocar, e ir ao estado 86
+    ';'  deslocar, e ir ao estado 160
 
 
 Estado 160
 
-   36 if-stmt: IF '(' expression IN expression ')' expression-stmt ELSE • expression-stmt
+   33 for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt ';' •
 
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    '('            deslocar, e ir ao estado 33
-    ';'            deslocar, e ir ao estado 34
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    EXISTS         deslocar, e ir ao estado 42
-
-    expression-stmt  ir ao estado 162
-    expression       ir ao estado 58
-    assign-exp       ir ao estado 59
-    basic-exp        ir ao estado 60
-    logical-exp      ir ao estado 61
-    add-exp          ir ao estado 62
-    term             ir ao estado 63
-    factor           ir ao estado 64
-    set-exp          ir ao estado 65
-    constant         ir ao estado 66
-    call             ir ao estado 67
-
-
-Estado 161
-
-   37 for-stmt: FOR '(' expression ';' expression ';' expression ')' • stmt ';'
-
-    ID             deslocar, e ir ao estado 27
-    STRING         deslocar, e ir ao estado 28
-    INTEGER_CONST  deslocar, e ir ao estado 29
-    FLOAT_CONST    deslocar, e ir ao estado 30
-    EMPTY_CONST    deslocar, e ir ao estado 31
-    NOT            deslocar, e ir ao estado 32
-    INT            deslocar, e ir ao estado 1
-    FLOAT          deslocar, e ir ao estado 2
-    ELEM           deslocar, e ir ao estado 3
-    SET            deslocar, e ir ao estado 4
-    '('            deslocar, e ir ao estado 33
-    '{'            deslocar, e ir ao estado 23
-    ';'            deslocar, e ir ao estado 34
-    IF             deslocar, e ir ao estado 35
-    FOR            deslocar, e ir ao estado 36
-    FORALL         deslocar, e ir ao estado 37
-    IS_SET         deslocar, e ir ao estado 38
-    ADD            deslocar, e ir ao estado 39
-    REMOVE         deslocar, e ir ao estado 40
-    RETURN         deslocar, e ir ao estado 41
-    EXISTS         deslocar, e ir ao estado 42
-    READ           deslocar, e ir ao estado 43
-    WRITE          deslocar, e ir ao estado 44
-    WRITELN        deslocar, e ir ao estado 45
-
-    var-declaration  ir ao estado 46
-    type             ir ao estado 47
-    compound-stmt    ir ao estado 48
-    stmt             ir ao estado 163
-    io-stmt          ir ao estado 52
-    if-stmt          ir ao estado 53
-    for-stmt         ir ao estado 54
-    return-stmt      ir ao estado 55
-    forall-stmt      ir ao estado 56
-    expression-stmt  ir ao estado 57
-    expression       ir ao estado 58
-    assign-exp       ir ao estado 59
-    basic-exp        ir ao estado 60
-    logical-exp      ir ao estado 61
-    add-exp          ir ao estado 62
-    term             ir ao estado 63
-    factor           ir ao estado 64
-    set-exp          ir ao estado 65
-    constant         ir ao estado 66
-    call             ir ao estado 67
-
-
-Estado 162
-
-   36 if-stmt: IF '(' expression IN expression ')' expression-stmt ELSE expression-stmt •
-
-    $padrão  reduzir usando a regra 36 (if-stmt)
-
-
-Estado 163
-
-   37 for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt • ';'
-
-    ';'  deslocar, e ir ao estado 164
-
-
-Estado 164
-
-   37 for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt ';' •
-
-    $padrão  reduzir usando a regra 37 (for-stmt)
+    $padrão  reduzir usando a regra 33 (for-stmt)

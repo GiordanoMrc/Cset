@@ -74,23 +74,20 @@ extern int yydebug;
     LT = 275,                      /* LT  */
     GTE = 276,                     /* GTE  */
     LTE = 277,                     /* LTE  */
-    INT = 278,                     /* INT  */
-    FLOAT = 279,                   /* FLOAT  */
-    ELEM = 280,                    /* ELEM  */
-    SET = 281,                     /* SET  */
-    IF = 282,                      /* IF  */
-    ELSE = 283,                    /* ELSE  */
-    FOR = 284,                     /* FOR  */
-    FORALL = 285,                  /* FORALL  */
-    IS_SET = 286,                  /* IS_SET  */
-    ADD = 287,                     /* ADD  */
-    IN = 288,                      /* IN  */
-    REMOVE = 289,                  /* REMOVE  */
-    RETURN = 290,                  /* RETURN  */
-    EXISTS = 291,                  /* EXISTS  */
-    READ = 292,                    /* READ  */
-    WRITE = 293,                   /* WRITE  */
-    WRITELN = 294                  /* WRITELN  */
+    TYPE = 278,                    /* TYPE  */
+    IF = 279,                      /* IF  */
+    ELSE = 280,                    /* ELSE  */
+    FOR = 281,                     /* FOR  */
+    FORALL = 282,                  /* FORALL  */
+    IS_SET = 283,                  /* IS_SET  */
+    ADD = 284,                     /* ADD  */
+    IN = 285,                      /* IN  */
+    REMOVE = 286,                  /* REMOVE  */
+    RETURN = 287,                  /* RETURN  */
+    EXISTS = 288,                  /* EXISTS  */
+    READ = 289,                    /* READ  */
+    WRITE = 290,                   /* WRITE  */
+    WRITELN = 291                  /* WRITELN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -104,7 +101,7 @@ union YYSTYPE
     char* str;
     struct vertex* node;
 
-#line 108 "c7synt.tab.h"
+#line 105 "c7synt.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
