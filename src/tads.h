@@ -2,9 +2,16 @@
 #define TADS
 
 #include "uthash/uthash.h"
+#include "uthash/utstack.h"
 
 #define DFT  "\x1B[0m"
 #define RED  "\x1B[31m"
+#define CYN  "\x1B[36m"
+#define YEL  "\x1B[33m"
+#define BLU  "\x1B[34m"
+#define KGRN  "\x1B[32m"
+#define KMAG  "\x1B[35m"
+#define KWHT  "\x1B[37m"
 
 typedef enum variable_names{
     PROGRAM,
@@ -61,7 +68,8 @@ typedef enum variable_names{
 
 enum table_type {
     VAR,
-    FUNC
+    FUNC,
+    PARAM
 };
 
 
@@ -108,5 +116,13 @@ void add_entry (char* ID , char* type , int var_or_func);
 void printTable();
 
 void freeTable();
+
+
+// pilha de escopo
+
+typedef struct scope {
+    
+}
+
 
 #endif

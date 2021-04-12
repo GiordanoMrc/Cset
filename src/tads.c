@@ -47,59 +47,62 @@ void printTree(vertex *root,int dpt){
 
 void print_tabs (int tabs){
     for(int i= tabs; i!= 0; i--){
-        printf("-");
+        printf("_");
     }
 }
 
 void print_variable(int name) {
     switch(name){
         case PROGRAM:
-            printf(RED"<PROGRAM>DFT");
+            printf(CYN"\nPROGRAM:"DFT);
             break;
         case VAR_DECLARATION:
-            printf(RED"(DECLARACAO-VARIAVEL:>"DFT);
+            printf(YEL"(DECLARACAO-VARIAVEL:>"DFT);
             break;
         case FUNCTION_DEFINITION:
-            printf(RED"(DEFINICAO-FUNCAO:>"DFT);
+            printf(YEL"(DEFINICAO-FUNCAO:>"DFT);
             break;
         case PARAMETER_DECL:
-            printf(RED"(DEFINICAO-PARAMETRO:>"DFT);
+            printf(YEL"(DEFINICAO-PARAMETRO:>"DFT);
             break;
         case CONSTANT:
-            printf(RED"(CONSTANT:>"DFT);
+            printf(YEL"(CONSTANT:>"DFT);
             break;
         case CALL:
-            printf(RED"(CALL:>"DFT);
+            printf(YEL"(CALL:>"DFT);
             break;
         case ARG_LIST:
-            printf(RED"(ARGUMENTOS:>"DFT);
+            printf(YEL"(ARGUMENTOS:>"DFT);
             break;
         case SET_ADD:
-            printf(RED"(SET_ADD:>"DFT);
+            printf(YEL"(SET_ADD:>"DFT);
             break;
         case RETURN_STMT:
-            printf(RED"(RETURN:>"DFT);
+            printf(YEL"(RETURN:>"DFT);
             break;
         case IN_OP:
-            printf(RED"(IN:>"DFT);
+            printf(YEL"(IN:>"DFT);
             break;
         case IO_STMT:
-            printf(RED"(IO:>"DFT);
+            printf(YEL"(IO:>"DFT);
             break;
         case FORALL_STMT:
-            printf(RED"(FORALL:>"DFT);
+            printf(YEL"(FORALL:>"DFT);
             break;
         case IDENT:
-            printf(RED"(ID:>"DFT);
+            printf(YEL"(ID:>"DFT);
             break;
         case BASIC_OP:
-            printf(RED"(BASIC OP:>"DFT);
+            printf(YEL"(BASIC OP:>"DFT);
             break;
         case CONST:
-            printf(RED"(CONST:>"DFT);
+            printf(YEL"(CONST:>"DFT);
             break;
         case ASSIGN:
-            printf(RED"(ASSIGN:>"DFT);
+            printf(YEL"(ASSIGN:>"DFT);
+            break;
+        case STMT:
+            printf(CYN"\n\n(STATEMENT:>"DFT);
             break;
     }
 }
@@ -120,10 +123,19 @@ void add_entry(char* ID , char* type , int var_or_func) {
 }
 
 void printTable(){
-
+    printf("\n|  %15s |  %5s | Declaration Type |\n","ID", "TYPE");
     for(tableEntry *entry = symbolTable; entry!= NULL;entry = entry->hh.next){
-        entry->var_or_func==0? printf("ID: %30s | type: %20s | func_or_var: VARIABLE \n", entry->ID, entry->type):
-            printf("ID: %30s | type: %20s | func_or_var: FUNCTION \n", entry->ID, entry->type);
+        switch(entry->var_or_func){
+            case VAR:
+                printf("ID:  %15s |type:  %5s | Declaration Type: VARIABLE \n", entry->ID, entry->type);
+                break;
+            case FUNC:
+                printf("ID:  %15s | type:  %5s | Declaration Type: FUNCTION \n", entry->ID, entry->type);
+                break;
+            case PARAM:
+                printf("ID:  %15s | type:  %5s | Declaration Type: PARAMETER \n", entry->ID, entry->type);
+                break;
+        }     
     }
 
 }

@@ -57,6 +57,7 @@
 %token WRITE
 %token WRITELN
 
+%type <node> begin 
 %type <node> program 
 %type <node> declaration-list
 %type <node> declaration
@@ -88,12 +89,18 @@
 %type <node> call
 %type <node> arg-list
 
-%start program
+%start begin
 
 %%
+begin:program {
+    $$ = createNode(PROGRAM,NULL,NULL,$1,NULL,NULL,NULL);
+    root = $$;
+    }
+;
+
 program: declaration-list {
-        root = $1;
-        if(PARSETREE) printf("tree-root ->program\n\n\n - end of parse tree - \n");
+        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,NULL,NULL,NULL);
+        if(PARSETREE) printf("begin ->program\n\n\n - end of parse tree - \n");
     }
 ;
 
@@ -154,7 +161,7 @@ parameter-list: parameter-declaration {
 parameter-declaration: TYPE ID {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
         $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL,NULL,NULL);
-        add_entry($2,$1,FUNC);
+        add_entry($2,$1,PARAM);
     }
 ;
 compound-stmt: '{' local-decls-stmts'}' {
@@ -178,6 +185,7 @@ stmts: stmts stmt {
     }
     | stmt {
         if(PARSETREE) printf("stmts -> stmts stmt\n");
+        $1 = createNode(STMT , NULL ,NULL,$1, NULL,NULL,NULL);
         $$ = $1;
         
     }
@@ -501,9 +509,9 @@ int main( int argc, char **argv ) {
     yyparse();
 
     if(error_count!=0) {
-        printf("\n\n\n___________________________ARVORE SINTATICA ABSTRATA_______________________________\t\n");
+        printf(YEL"\n\n___________________________ARVORE SINTATICA ABSTRATA_______________________________\t\n"DFT);
         printTree(root,0);
-        printf("\n\n\n___________________________TABELA DE SIMBOLOS______________________________________\t\n");
+        printf(BLU"\n\n___________________________TABELA DE SIMBOLOS______________________________________\t\n"DFT);
         printTable();
     }
     if (!root) freeVertex(root);
