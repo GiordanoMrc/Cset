@@ -85,8 +85,8 @@
     extern int yylex_destroy();
     extern FILE *yyin;
 
-    extern int line;
-    extern int col;
+    int line= 1;
+    int col= 1;
     int error_count=0;
     
 
@@ -2637,7 +2637,7 @@ yyreturn:
 
 
 int yyerror(const char *s){
-    printf("yyerror: %s , line: %d , col: %d \n",s, line, col);
+    printf("yyerror: %s , line: %d , col: %d, Error count %d\n",s, line, col, error_count);
     return 10;
 }
 
@@ -2650,7 +2650,7 @@ int main( int argc, char **argv ) {
     
     yyparse();
 
-    if(error_count!=0) {
+    if(error_count==0) {
         printf(YEL"\n\n___________________________ARVORE SINTATICA ABSTRATA_______________________________\t\n"DFT);
         printTree(root,0);
         printf(BLU"\n\n___________________________TABELA DE SIMBOLOS______________________________________\t\n"DFT);

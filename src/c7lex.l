@@ -1,6 +1,7 @@
 %option noinput 
 %option nounput 
 %option noyywrap
+
 %{
 #include <string.h>
 #include <stdlib.h>
@@ -8,8 +9,9 @@
 #include "c7synt.tab.h"
 #include "tads.h"
 
-int col =1;
-int line =1;
+extern int col;
+extern int line;
+extern int error_count;
 %}
 
 
@@ -67,13 +69,13 @@ STRING                   \"[^\"]*\"|'[^']*'
 
 {EOL}                   {line++;col=1;}
 {INLINE_COMMENT}        {line++;}
-{WS}                    {col++;}
-"{"                     {col++; return '{';}
-"}"                     {col++; return '}';} 
-"("                     {col++; return '(';}
-")"                     {col++; return ')';}   
-","                     {col++; return ',';}    
-";"                     {col++; return ';';}
+{WS}                    {col+= yyleng;}
+"{"                     {col+= yyleng; return '{';}
+"}"                     {col+= yyleng; return '}';} 
+"("                     {col+= yyleng; return '(';}
+")"                     {col+= yyleng; return ')';}   
+","                     {col+= yyleng; return ',';}    
+";"                     {col+= yyleng; return ';';}
 {INTEGER_CONST}         {col+= yyleng; yylval.str =(char *) strdup(yytext);return INTEGER_CONST;}
 {FLOAT_CONST}           {col+= yyleng; yylval.str =(char *) strdup(yytext);return FLOAT_CONST;}
 {EMPTY_CONST}           {col+= yyleng; yylval.str =(char *) strdup(yytext);return EMPTY_CONST;}
@@ -108,7 +110,7 @@ STRING                   \"[^\"]*\"|'[^']*'
 {ID}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return ID;}
 {STRING}                {col+= yyleng; yylval.str =(char *) strdup(yytext);return STRING;}
 .                       {   
-                            printf("Lexical error at: line %d ; col  %d \n", line, col);
+                            printf("Lexical error at: line %d , col  %d , Unexpected: %s \n", line, col, yytext);
                             col+= yyleng;
                         }
 "/*" {

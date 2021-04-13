@@ -122,7 +122,7 @@ void freeTable();
 
 typedef struct scope {
     
-}
+} scope;
 
 
 #endif

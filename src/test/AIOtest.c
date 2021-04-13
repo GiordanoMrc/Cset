@@ -30,7 +30,7 @@ set subsum(set s, int target, int cur_sum, set ans) {
        int el;
        remove((exists (el in s)) in s);
        if(subsum(s, target, cur_sum, ans)) return ans;
-       cur_sum += el;
+       cur_sum == el;
        add(el in ans);
        if(subsum(s, target, cur_sum, ans)) return ans;
        add(el in s);
@@ -89,7 +89,7 @@ int main() {
     forall(x in s) {
         if (!is_set(x)) {
            acc = acc + x;
-       accf = accf + x
+       accf = accf + x;
     }   
     }
     write("oi");
@@ -123,18 +123,18 @@ int main() {
     three = succ(two);
 }
 
-elem test(){
-    elem testvar;
+int test(){
+    int testvar;
     testvar = 0;
     if(EMPTY){
-    testvar = -15 + 14 - 12;
+    testvar = -15 + (-14 - -5);
     }
 
     return testvar;
 }
 
 int test2(){
-    int y
+    int y;
     y = 0;
 
     return 0;
