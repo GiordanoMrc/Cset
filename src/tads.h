@@ -62,7 +62,8 @@ typedef enum variable_names{
     IN_OP,
     BASIC_OP,
     IDENT,
-    CONST
+    CONST,
+    FOR_COND
 
 }variable_names;
 
@@ -81,13 +82,12 @@ typedef struct vertex
     struct vertex *n1;
     struct vertex *n2;
     struct vertex *n3;
-    struct vertex *n4;
 
 } vertex;
 
 vertex* root;
 
-vertex* createNode(int variable_name,char* op_or_type, char *value, struct vertex *v1, vertex *v2, vertex *v3, vertex *v4);
+vertex* createNode(int variable_name,char* op_or_type, char *value, struct vertex *v1, vertex *v2, vertex *v3);
 
 void print_tabs (int tabs);
 
@@ -104,7 +104,7 @@ typedef struct tableEntry {
     char* ID;                      
     char* type;                     
     int   var_or_func; 
-    UT_hash_handle hh;        
+    UT_hash_handle hh;
 } tableEntry;
 
 struct tableEntry * symbolTable;

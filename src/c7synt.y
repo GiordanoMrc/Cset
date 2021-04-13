@@ -88,25 +88,27 @@
 %type <node> constant
 %type <node> call
 %type <node> arg-list
+%type <node> condition
+%type <node> for-conditions
 
 %start begin
 
 %%
 begin:program {
-    $$ = createNode(PROGRAM,NULL,NULL,$1,NULL,NULL,NULL);
+    $$ = createNode(PROGRAM,NULL,NULL,$1,NULL,NULL);
     root = $$;
     }
 ;
 
 program: declaration-list {
-        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,NULL,NULL,NULL);
+        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,NULL,NULL);
         if(PARSETREE) printf("begin ->program\n\n\n - end of parse tree - \n");
     }
 ;
 
 declaration-list: declaration-list declaration {
                         if (PARSETREE) printf("declaration-list -> declaration-list declaration \n");
-                        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,$2,NULL,NULL);
+                        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,$2,NULL);
                     }
                 | declaration {
                         if(PARSETREE) printf("declaration-list -> declaration\n");
@@ -125,14 +127,14 @@ declaration: function-definition {
 
 var-declaration: TYPE ID ';' {
         if(PARSETREE) printf("var-declaration -> type ID\n");
-        $$ = createNode(VAR_DECLARATION, $1 , $2, NULL , NULL , NULL, NULL);
+        $$ = createNode(VAR_DECLARATION, $1 , $2, NULL , NULL , NULL);
         add_entry($2,$1,VAR);
     }
 ; 
 
 function-definition: TYPE ID '(' parameters ')'  compound-stmt {
         if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
-        $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $4 , $6, NULL, NULL);   
+        $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $4 , $6, NULL);   
         add_entry($2,$1,FUNC);
     }
 ;
@@ -154,13 +156,13 @@ parameter-list: parameter-declaration {
     }
     | parameter-list ',' parameter-declaration {
         if(PARSETREE) printf("parameter-list -> parameter-list ',' parameter-declaration\n");
-        $$ = createNode(PARAMETER_LIST , NULL, NULL ,$1, $3 , NULL , NULL);
+        $$ = createNode(PARAMETER_LIST , NULL, NULL ,$1, $3 , NULL);
 
     }
 ;
 parameter-declaration: TYPE ID {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
-        $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL,NULL,NULL);
+        $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL,NULL);
         add_entry($2,$1,PARAM);
     }
 ;
@@ -181,11 +183,11 @@ local-decls-stmts: stmts  {
 ;
 stmts: stmts stmt {
         if(PARSETREE) printf("stmts -> stmts stmt\n");
-        $$ = createNode(STMTS , NULL ,NULL,$1, $2,NULL,NULL);
+        $$ = createNode(STMTS , NULL ,NULL,$1, $2,NULL);
     }
     | stmt {
         if(PARSETREE) printf("stmts -> stmts stmt\n");
-        $1 = createNode(STMT , NULL ,NULL,$1, NULL,NULL,NULL);
+        $1 = createNode(STMT , NULL ,NULL,$1, NULL,NULL);
         $$ = $1;
         
     }
@@ -234,53 +236,60 @@ stmt: io-stmt {
 
 io-stmt: READ '(' expression ')' ';' {
             if(PARSETREE) printf("io-stmt -> read ( exp ) \n");
-            $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL,NULL);
+            $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL);
             
         }
         | WRITE '(' expression ')' ';' {
            if(PARSETREE) printf("io-stmt -> write ( exp ) \n");
-           $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL,NULL);
+           $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL);
 
         }
        | WRITELN '(' expression ')' ';' {
            if(PARSETREE) printf("io-stmt -> writeln ( exp )\n");
-           $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL,NULL);
+           $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL);
         }
 ;
 
-if-stmt: IF '(' expression ')'   stmt        %prec THEN {
+if-stmt: IF condition   stmt        %prec THEN {
             if(PARSETREE) printf("if-stmt\n");
-            $$ = createNode(IF_STMT , NULL ,NULL,$3,$5,NULL,NULL);
+            $$ = createNode(IF_STMT , NULL ,NULL,$2,$3,NULL);
         }
-        | IF '(' expression ')'   stmt ELSE stmt {
+        | IF condition  stmt ELSE stmt {
            if(PARSETREE) printf("if-stmt\n");
-           $$ = createNode(IF_STMT , NULL ,NULL,$3,$5,$7,NULL);
-       }
-       | IF '(' expression IN expression')' expression-stmt ELSE expression-stmt {
-            if(PARSETREE) printf("if-stmt\n");
-            $$ = createNode(IF_STMT , NULL ,NULL,$3,$5,$7,$9);
+           $$ = createNode(IF_STMT , NULL ,NULL,$2,$3,$5);
        }
 ;
 
-for-stmt: FOR '(' expression ';' expression ';' expression ')' stmt ';' {
-        if(PARSETREE) printf("for-stmt -> for\n");
-        $$ = createNode(FOR_STMT , NULL ,NULL,$3,$5,$7,$9);
+condition: '(' expression ')'{
+        $$ = $2;
     }
+;
+
+for-stmt: FOR for-conditions stmt  {
+        if(PARSETREE) printf("for-stmt -> for\n");
+        $$ = createNode(FOR_STMT , NULL ,NULL,$2,$3,NULL);
+    }
+;
+
+for-conditions: '(' expression ';' expression ';' expression ')'{
+        $$ = createNode(FOR_COND,NULL,NULL,$2,$4,$6);
+    }
+
 ;
 
 return-stmt: RETURN expression ';' {
         if(PARSETREE) printf("return-stmt -> return exp ;\n");
-        $$ = createNode(RETURN_STMT , NULL,NULL,$2, NULL,NULL,NULL);
+        $$ = createNode(RETURN_STMT , NULL,NULL,$2, NULL,NULL);
     }
 ;
 
 forall-stmt: FORALL '(' in-exp ')' compound-stmt {
         if(PARSETREE) printf("forall-stmt ->FORALL (in-exp) compound\n");
-        $$ = createNode(FORALL_STMT, NULL,NULL,$3, $5,NULL,NULL);
+        $$ = createNode(FORALL_STMT, NULL,NULL,$3, $5,NULL);
     }
     | FORALL '(' in-exp ')' expression-stmt {
         if(PARSETREE) printf("forall-stmt -> FORALL ( in-exp )\n");
-       $$ = createNode(FORALL_STMT , NULL,NULL,$3, $5,NULL,NULL);
+       $$ = createNode(FORALL_STMT , NULL,NULL,$3, $5,NULL);
     }
 ;
 
@@ -297,7 +306,7 @@ expression: assign-exp  {
     }
     | expression  ',' assign-exp {
         if(PARSETREE) printf("expression -> exp , assign\n");
-        $$ = createNode(EXPRESSION , NULL,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(EXPRESSION , NULL,NULL,$1, $3,NULL);
     }      
 ;
 assign-exp: basic-exp {
@@ -307,14 +316,14 @@ assign-exp: basic-exp {
     }
     | basic-exp EQ assign-exp {
         if (PARSETREE) printf("assign -> ID EQ assign\n");
-        $$ = createNode(ASSIGN , $2 ,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(ASSIGN , $2 ,NULL,$1, $3,NULL);
        
     }
 ;
 
 in-exp: expression IN in-exp {
         if(PARSETREE) printf("in-exp -> expression IN in-exp\n");
-        $$ = createNode(IN_OP,NULL,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(IN_OP,NULL,NULL,$1, $3,NULL);
 
     }
     | expression {
@@ -328,18 +337,18 @@ basic-exp: logical-exp {
         $$ = $1;
  
     }
-    | logical-exp OR logical-exp {
+    | basic-exp OR logical-exp {
         if(PARSETREE) printf("basic-exp -> logical OR logical\n");
-        $$ = createNode(BASIC_OP , $2 ,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP , $2 ,NULL,$1, $3,NULL);
     }
-    | logical-exp AND logical-exp {
+    | basic-exp AND logical-exp {
         if(PARSETREE) printf("basic-exp -> logical AND logical\n");
-        $$ = createNode(BASIC_OP , $2 ,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP , $2 ,NULL,$1, $3,NULL);
 
     }
     | NOT logical-exp {
         if(PARSETREE) printf("basic-exp -> NOT logical\n");
-        $$ = createNode(BASIC_OP,$1,NULL,$2, NULL,NULL,NULL);
+        $$ = createNode(BASIC_OP,$1,NULL,$2, NULL,NULL);
     }
 ;
 
@@ -347,30 +356,30 @@ logical-exp: add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp\n");
         $$ = $1;
     }
-    | add-exp EQ_TO add-exp {
+    | logical-exp EQ_TO add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
 
     }
-    | add-exp NEQ_TO add-exp {
+    | logical-exp NEQ_TO add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
     }
-    | add-exp GT add-exp {
+    | logical-exp GT add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
     }
-    | add-exp LT add-exp {
+    | logical-exp LT add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-       $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL,NULL);
+       $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
     }
-    | add-exp GTE add-exp {
+    | logical-exp GTE add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
     }
-    | add-exp LTE add-exp {
+    | logical-exp LTE add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP , NULL,$2,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP , NULL,$2,$1, $3,NULL);
     }
 ;
 
@@ -378,13 +387,13 @@ add-exp: term {
             if(PARSETREE)printf(" add-exp -> term\n");
             $$ = $1;
         }
-        | term PLUS term {
+        | add-exp PLUS term {
             if(PARSETREE)printf(" add-exp -> term PLUS term\n");
-            $$ = createNode(BASIC_OP , $2,NULL,$1, $3,NULL,NULL);
+            $$ = createNode(BASIC_OP , $2,NULL,$1, $3,NULL);
         }
-        | term MINUS term {
+        | add-exp MINUS term {
             if(PARSETREE) printf(" add-exp -> term MINUS term\n");
-            $$ = createNode(BASIC_OP , NULL,$2,$1, $3,NULL,NULL);
+            $$ = createNode(BASIC_OP , NULL,$2,$1, $3,NULL);
  
         }
 ;
@@ -394,11 +403,11 @@ term: factor {
     }
     | term MULT factor {
         if(PARSETREE) printf(" term -> term mul-op factor\n");
-        $$ = createNode(BASIC_OP ,$2,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP ,$2,NULL,$1, $3,NULL);
     }
     | term DIV factor {
         if(PARSETREE) printf(" term -> term mul-op factor\n");
-        $$ = createNode(BASIC_OP ,$2,NULL,$1, $3,NULL,NULL);
+        $$ = createNode(BASIC_OP ,$2,NULL,$1, $3,NULL);
 
     }
 ;
@@ -410,7 +419,7 @@ factor: '(' expression ')' {
     }
     | ID {
         if(PARSETREE) printf(" factor -> ID\n");
-        $$ = createNode(IDENT , NULL,$1,NULL, NULL,NULL,NULL);
+        $$ = createNode(IDENT , NULL,$1,NULL, NULL,NULL);
 
     }
     | constant {
@@ -451,33 +460,33 @@ set-exp: ADD '(' in-exp ')'  {
 
 constant: INTEGER_CONST {
             if(PARSETREE)printf(" constant -> INTEGER_CONST\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL,NULL);
+            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL);
              
         }
         | FLOAT_CONST {
             if(PARSETREE) printf(" constant -> FLOAT_CONST\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL,NULL);
+            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL);
              
         }
         | EMPTY_CONST {
             if(PARSETREE) printf(" constant -> EMPTY_CONST\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL,NULL);
+            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL);
              
         }
         | STRING {
             if(PARSETREE) printf(" constant -> STRING\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL,NULL);   
+            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL);   
         }
 ;
 call: ID '(' arg-list ')' {
         if(PARSETREE)printf(" call -> ID (args)\n");
-        $$ = createNode(CALL , NULL,$1,$3, NULL,NULL,NULL);
+        $$ = createNode(CALL , NULL,$1,$3, NULL,NULL);
          
          
     }
     | ID '('')' {
         if(PARSETREE)printf(" call -> ID (args)\n");
-        $$ = createNode(CALL , NULL,$1,NULL, NULL,NULL,NULL);
+        $$ = createNode(CALL , NULL,$1,NULL, NULL,NULL);
     }
 ;
 arg-list: factor {
@@ -486,7 +495,7 @@ arg-list: factor {
         }
         | arg-list ',' factor {
             if(PARSETREE) printf("arg-list");
-            $$ = createNode(ARG_LIST , NULL,NULL,$1, $3,NULL,NULL);
+            $$ = createNode(ARG_LIST , NULL,NULL,$1, $3,NULL);
         }
 ;
 
