@@ -110,7 +110,7 @@ STRING                   \"[^\"]*\"|'[^']*'
 {ID}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return ID;}
 {STRING}                {col+= yyleng; yylval.str =(char *) strdup(yytext);return STRING;}
 .                       {   
-                            printf("Lexical error at: line %d , col  %d , Unexpected: %s \n", line, col, yytext);
+                            printf("lexical error: line %d , col  %d , Unexpected: %s \n", line, col, yytext);
                             col+= yyleng;
                         }
 "/*" {

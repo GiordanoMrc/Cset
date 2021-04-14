@@ -4,16 +4,17 @@
 #include "uthash/uthash.h"
 #include "uthash/utstack.h"
 
-#define DFT  "\x1B[0m"
-#define RED  "\x1B[31m"
-#define CYN  "\x1B[36m"
-#define YEL  "\x1B[33m"
-#define BLU  "\x1B[34m"
-#define KGRN  "\x1B[32m"
-#define KMAG  "\x1B[35m"
-#define KWHT  "\x1B[37m"
+#define DFT "\x1B[0m"
+#define RED "\x1B[31m"
+#define CYN "\x1B[36m"
+#define YEL "\x1B[33m"
+#define BLU "\x1B[34m"
+#define KGRN "\x1B[32m"
+#define KMAG "\x1B[35m"
+#define KWHT "\x1B[37m"
 
-typedef enum variable_names{
+typedef enum variable_names
+{
     PROGRAM,
     DECLARATION_LIST,
     DECLARATION,
@@ -26,20 +27,20 @@ typedef enum variable_names{
     LOCAL_STMT,
     STMTS,
     STMT,
-    IO_STMT, 
+    IO_STMT,
     IF_STMT,
     FOR_STMT,
     RETURN_STMT,
     FORALL_STMT,
     EXPRESSION_STMT,
-    EXPRESSION, 
-    ASSIGN, 
+    EXPRESSION,
+    ASSIGN,
     BASIC_EXP,
     IN_EXP,
     LOGICAL_EXP,
     ADD_EXP,
     TERM,
-    FACTOR, 
+    FACTOR,
     SET_EXP,
     CONSTANT,
     CALL,
@@ -63,66 +64,68 @@ typedef enum variable_names{
     BASIC_OP,
     IDENT,
     CONST,
-    FOR_COND
+    FOR_COND,
+    IF_ELSE_STMT
 
-}variable_names;
+} variable_names;
 
-enum table_type {
+enum table_type
+{
     VAR,
     FUNC,
     PARAM
 };
 
+typedef struct Scope {
+    char* scope_name;
+    char* type;
+    struct Scope * nxt;
+} Scope;
+
+typedef struct Symbol
+{
+    int var_or_func;
+    char *key; // id#scope_name
+    char *ID;
+    char *type;
+    char * scope_name;
+    UT_hash_handle hh;
+} Symbol;
 
 typedef struct vertex
 {
     int variable_name;
-    char* op_or_type;
-    char* value;
+    char *op_or_type;
+    char *value;
     struct vertex *n1;
     struct vertex *n2;
     struct vertex *n3;
-
 } vertex;
 
-vertex* root;
+vertex * root;
+Scope * stack;
+Symbol * symbolTable;
 
-vertex* createNode(int variable_name,char* op_or_type, char *value, struct vertex *v1, vertex *v2, vertex *v3);
-
-void print_tabs (int tabs);
-
+vertex *createNode(int variable_name, char *op_or_type, char *value, struct vertex *v1, vertex *v2, vertex *v3);
+void print_tabs(int tabs);
 void print_variable(int name);
-
 void freeVertex(vertex *root);
-
 void printTree(vertex *root, int dpt);
 
 // tabela de simbolos
 
 // ID , type , func or variable
-typedef struct tableEntry {
-    char* ID;                      
-    char* type;                     
-    int   var_or_func; 
-    UT_hash_handle hh;
-} tableEntry;
 
-struct tableEntry * symbolTable;
-
-tableEntry * create_entry (char* ID , char * type , int var_or_func);
-
-void add_entry (char* ID , char* type , int var_or_func);
-
+Symbol * create_symbol(char *ID, char *type, int var_or_func);
+void add_entry(char *ID, char *type, int var_or_func);
 void printTable();
-
 void freeTable();
 
-
 // pilha de escopo
-
-typedef struct scope {
-    
-} scope;
+void push_global();
+void push (char * scope_name ,char* type);
+void pop();
+Scope* top();
 
 
 #endif

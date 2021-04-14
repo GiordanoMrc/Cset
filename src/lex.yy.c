@@ -1022,7 +1022,7 @@ case 43:
 YY_RULE_SETUP
 #line 112 "c7lex.l"
 {   
-                            printf("Lexical error at: line %d , col  %d , Unexpected: %s \n", line, col, yytext);
+                            printf("lexical error: line %d , col  %d , Unexpected: %s \n", line, col, yytext);
                             col+= yyleng;
                         }
 	YY_BREAK

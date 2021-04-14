@@ -22,8 +22,6 @@
     int line= 1;
     int col= 1;
     int error_count=0;
-    
-
 %}
 
 %union {
@@ -250,17 +248,18 @@ io-stmt: READ '(' expression ')' ';' {
         }
 ;
 
-if-stmt: IF condition   stmt        %prec THEN {
+if-stmt: IF condition stmt        %prec THEN {
             if(PARSETREE) printf("if-stmt\n");
             $$ = createNode(IF_STMT , NULL ,NULL,$2,$3,NULL);
         }
-        | IF condition  stmt ELSE stmt {
+        | IF condition stmt ELSE stmt {
            if(PARSETREE) printf("if-stmt\n");
-           $$ = createNode(IF_STMT , NULL ,NULL,$2,$3,$5);
+           $$ = createNode(IF_ELSE_STMT , NULL ,NULL,$2,$3,$5);
        }
 ;
 
 condition: '(' expression ')'{
+        if(PARSETREE) printf("condition -> (exp)\n");
         $$ = $2;
     }
 ;
@@ -272,6 +271,7 @@ for-stmt: FOR for-conditions stmt  {
 ;
 
 for-conditions: '(' expression ';' expression ';' expression ')'{
+        if(PARSETREE) printf("for-stmt ->for-cond\n");
         $$ = createNode(FOR_COND,NULL,NULL,$2,$4,$6);
     }
 
@@ -504,7 +504,7 @@ arg-list: factor {
 
 
 int yyerror(const char *s){
-    printf("yyerror: %s , line: %d , col: %d, Error count %d\n",s, line, col, error_count);
+    printf("syntax error: %s , line: %d , col: %d, Error count %d\n",s, line, col, error_count);
     return 10;
 }
 
@@ -515,6 +515,12 @@ int main( int argc, char **argv ) {
     else
         yyin = stdin;
     
+    root = NULL;
+    stack = NULL;
+    symbolTable = NULL;
+    
+    push_global();
+
     yyparse();
 
     if(error_count==0) {

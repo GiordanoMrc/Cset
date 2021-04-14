@@ -4,7 +4,7 @@
 #include "tads.h"
 
 
-vertex* createNode(int variable_name,char* op_or_type, char* value, vertex* n1, vertex* n2, vertex* n3, vertex* n4)
+vertex* createNode(int variable_name,char* op_or_type, char* value, vertex* n1, vertex* n2, vertex* n3)
 {
     vertex *node = (vertex *) malloc (sizeof(vertex));
     
@@ -14,7 +14,7 @@ vertex* createNode(int variable_name,char* op_or_type, char* value, vertex* n1, 
     node->n1 = n1;
     node->n2 = n2;
     node->n3 = n3;
-    node->n4 = n4;
+
     return node;
 }
 
@@ -23,7 +23,6 @@ void freeVertex(vertex* root) {
     if(root->n1 != NULL) freeVertex(root->n1);
     if(root->n2 != NULL) freeVertex(root->n2);
     if(root->n3 != NULL) freeVertex(root->n3);
-    if(root->n4 != NULL) freeVertex(root->n4);
     if(root->op_or_type != NULL) free(root->op_or_type);
     if(root->value != NULL) free(root->value);  
     free(root);
@@ -34,13 +33,12 @@ void printTree(vertex *root,int dpt){
     if(root) {
         print_tabs(dpt);
         print_variable(root->variable_name);
-        if(root->op_or_type != NULL) printf("(Op/Type:) %s ", root->op_or_type);
-        if(root->value != NULL) printf("(ID/Value:) %s ",root->value);
+        if(root->op_or_type != NULL) printf(" %s ", root->op_or_type);
+        if(root->value != NULL) printf(" %s ",root->value);
         printf("\n");
         if(root != root->n1) printTree(root->n1, dpt+1);
         if(root != root->n2) printTree(root->n2, dpt+1);
         if(root != root->n3) printTree(root->n3, dpt+1);
-        if(root != root->n4) printTree(root->n4, dpt+1);
     }
     
 }
@@ -57,10 +55,10 @@ void print_variable(int name) {
             printf(CYN"\nPROGRAM:"DFT);
             break;
         case VAR_DECLARATION:
-            printf(YEL"(DECLARACAO-VARIAVEL:>"DFT);
+            printf(BLU"(DECLARACAO-VARIAVEL:>"DFT);
             break;
         case FUNCTION_DEFINITION:
-            printf(YEL"(DEFINICAO-FUNCAO:>"DFT);
+            printf(BLU"(DEFINICAO-FUNCAO:>"DFT);
             break;
         case PARAMETER_DECL:
             printf(YEL"(DEFINICAO-PARAMETRO:>"DFT);
@@ -84,10 +82,10 @@ void print_variable(int name) {
             printf(YEL"(IN:>"DFT);
             break;
         case IO_STMT:
-            printf(YEL"(IO:>"DFT);
+            printf(BLU"(IO:>"DFT);
             break;
         case FORALL_STMT:
-            printf(YEL"(FORALL:>"DFT);
+            printf(BLU"(FORALL:>"DFT);
             break;
         case IDENT:
             printf(YEL"(ID:>"DFT);
@@ -101,30 +99,42 @@ void print_variable(int name) {
         case ASSIGN:
             printf(YEL"(ASSIGN:>"DFT);
             break;
+        case IF_STMT:
+            printf(BLU"(IF:>"DFT);
+            break;
+        case IF_ELSE_STMT:
+            printf(BLU"(IF_ELSE:>"DFT);
+            break;
+        case FOR_STMT:
+            printf(BLU"(FOR:>"DFT);
+            break;
         case STMT:
-            printf(CYN"\n\n(STATEMENT:>"DFT);
+            printf(CYN"(STATEMENT:>"DFT);
             break;
     }
 }
 
 
-tableEntry* create_entry(char* ID, char* type, int var_or_func) {
-    tableEntry * entry = (tableEntry *) malloc(sizeof(tableEntry));
+Symbol* create_symbol(char* ID, char* type, int var_or_func) {
+    Symbol * entry = (Symbol *) malloc(sizeof(Symbol));
     entry->ID = ID;
     entry->type = type;
     entry->var_or_func = var_or_func;
+    
     return entry;
 }
 
 void add_entry(char* ID , char* type , int var_or_func) {
-    tableEntry * entry; 
-    entry = create_entry(ID, type, var_or_func);
+    Symbol * entry;
+    //Scope * S = get_stack_top();
+
+    entry = create_symbol(ID, type, var_or_func);
     HASH_ADD_STR(symbolTable,ID,entry);
 }
 
 void printTable(){
-    printf("\n|  %15s |  %5s | Declaration Type |\n","ID", "TYPE");
-    for(tableEntry *entry = symbolTable; entry!= NULL;entry = entry->hh.next){
+    //printf("\n|  %15s |  %5s | Declaration Type |\n","ID", "TYPE");
+    for(Symbol *entry = symbolTable; entry!= NULL;entry = entry->hh.next){
         switch(entry->var_or_func){
             case VAR:
                 printf("ID:  %15s |type:  %5s | Declaration Type: VARIABLE \n", entry->ID, entry->type);
@@ -141,9 +151,46 @@ void printTable(){
 }
 
 void freeTable(){
-    tableEntry * entry, *tmp;
+    Symbol * entry, *tmp;
     HASH_ITER(hh, symbolTable, entry, tmp) {
         HASH_DEL(symbolTable, entry);
         free(entry);
     }
+}
+
+
+// scope pile functions
+
+Scope* top() {
+    Scope* head = stack;
+    while(head->nxt != NULL) {
+        head = head->nxt;
+    }
+    return head;
+}
+
+void push_global(){
+    Scope* g = (Scope*) malloc (sizeof(Scope));
+    g->scope_name = "global";
+    stack = g;
+}
+
+void pop(){
+    Scope* s = stack;
+    if ((strcmp(s->scope_name, "global")==0) && s->nxt==NULL) return;
+    while(s->nxt->nxt != NULL) 
+        s = s->nxt;
+    free(s->nxt);
+    s->nxt = NULL;
+}
+
+void push(char * scope_name, char * type){
+    Scope * s = (Scope *) malloc(sizeof(Scope));
+    Scope * head;
+
+    s->type = type;
+    s->scope_name = scope_name;
+
+    head = top();
+    head->nxt = s;
 }
