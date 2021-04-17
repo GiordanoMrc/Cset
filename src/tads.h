@@ -39,6 +39,9 @@ typedef enum variable_names
     IN_EXP,
     LOGICAL_EXP,
     ADD_EXP,
+    ADD_OP,
+    MUL_OP,
+    DIV_OP,
     TERM,
     FACTOR,
     SET_EXP,
@@ -65,7 +68,9 @@ typedef enum variable_names
     IDENT,
     CONST,
     FOR_COND,
-    IF_ELSE_STMT
+    IF_ELSE_STMT,
+    REL_OP,
+    IS_SET_EXP
 
 } variable_names;
 

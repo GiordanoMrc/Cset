@@ -58,7 +58,7 @@ void print_tabs(int tabs)
 {
     for (int i = tabs; i != 0; i--)
     {
-        printf("_");
+        printf(KGRN "_" DFT);
     }
 }
 
@@ -90,11 +90,36 @@ void print_variable(int name)
     case SET_ADD:
         printf(YEL "(SET_ADD:>" DFT);
         break;
+    case SET_REMOVE:
+        printf(YEL "(SET_REMOVE:>" DFT);
+        break;
+    case SET_EXISTS:
+        printf(YEL "(SET_EXISTS:>" DFT);
+        break;
+    case IS_SET_EXP:
+        printf(YEL "(IS_SET:>" DFT);
+        break;
+
     case RETURN_STMT:
         printf(YEL "(RETURN:>" DFT);
         break;
     case IN_OP:
         printf(YEL "(IN:>" DFT);
+        break;
+    case REL_OP:
+        printf(YEL "(REL_OP:>" DFT);
+        break;
+    case LOGICAL_EXP:
+        printf(YEL "(LOGICAL_OP:>" DFT);
+        break;
+    case ADD_OP:
+        printf(YEL "(ADD_OP:>" DFT);
+        break;
+    case MUL_OP:
+        printf(YEL "(MUL_OP:>" DFT);
+        break;
+    case DIV_OP:
+        printf(YEL "(DIV_OP:>" DFT);
         break;
     case IO_STMT:
         printf(BLU "(IO:>" DFT);
@@ -147,8 +172,8 @@ void addEntry(char *ID, char *type, int var_or_func)
     //HASH_FIND_STR(symbolTable, ID, entry);
     //if (entry == NULL)
     //{
-        entry = createSymbol(ID, type, var_or_func, STACK_TOP(head)->scope_id);
-        HASH_ADD_STR(symbolTable, ID, entry);
+    entry = createSymbol(ID, type, var_or_func, STACK_TOP(head)->scope_id);
+    HASH_ADD_STR(symbolTable, ID, entry);
     //} else if (entry->scope == STACK_TOP(head)->scope_id) {
     //    printf("redefinição");
     //}
@@ -202,6 +227,7 @@ void initGlobalScope()
     g->next = NULL;
     push(g);
 }
+
 void push(Scope *scope)
 {
     STACK_PUSH(head, scope);

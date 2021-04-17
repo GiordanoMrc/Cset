@@ -342,16 +342,16 @@ basic-exp: logical-exp {
     }
     | basic-exp OR logical-exp {
         if(PARSETREE) printf("basic-exp -> logical OR logical\n");
-        $$ = createNode(BASIC_OP , $2 ,NULL,$1, $3,NULL);
+        $$ = createNode(LOGICAL_EXP , $2 ,NULL,$1, $3,NULL);
     }
     | basic-exp AND logical-exp {
         if(PARSETREE) printf("basic-exp -> logical AND logical\n");
-        $$ = createNode(BASIC_OP , $2 ,NULL,$1, $3,NULL);
+        $$ = createNode(LOGICAL_EXP , $2 ,NULL,$1, $3,NULL);
 
     }
     | NOT logical-exp {
         if(PARSETREE) printf("basic-exp -> NOT logical\n");
-        $$ = createNode(BASIC_OP,$1,NULL,$2, NULL,NULL);
+        $$ = createNode(LOGICAL_EXP,$1,NULL,$2, NULL,NULL);
     }
 ;
 
@@ -361,28 +361,28 @@ logical-exp: add-exp {
     }
     | logical-exp EQ_TO add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
+        $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
 
     }
     | logical-exp NEQ_TO add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
+        $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
     }
     | logical-exp GT add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
+        $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
     }
     | logical-exp LT add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-       $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
+       $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
     }
     | logical-exp GTE add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP, $2,NULL,$1, $3,NULL);
+        $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
     }
     | logical-exp LTE add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(BASIC_OP , NULL,$2,$1, $3,NULL);
+        $$ = createNode(REL_OP , NULL,$2,$1, $3,NULL);
     }
 ;
 
@@ -392,11 +392,11 @@ add-exp: term {
         }
         | add-exp PLUS term {
             if(PARSETREE)printf(" add-exp -> term PLUS term\n");
-            $$ = createNode(BASIC_OP , $2,NULL,$1, $3,NULL);
+            $$ = createNode(ADD_OP , $2,NULL,$1, $3,NULL);
         }
         | add-exp MINUS term {
             if(PARSETREE) printf(" add-exp -> term MINUS term\n");
-            $$ = createNode(BASIC_OP , NULL,$2,$1, $3,NULL);
+            $$ = createNode(ADD_OP , NULL,$2,$1, $3,NULL);
  
         }
 ;
@@ -406,11 +406,11 @@ term: factor {
     }
     | term MULT factor {
         if(PARSETREE) printf(" term -> term mul-op factor\n");
-        $$ = createNode(BASIC_OP ,$2,NULL,$1, $3,NULL);
+        $$ = createNode(MUL_OP ,$2,NULL,$1, $3,NULL);
     }
     | term DIV factor {
         if(PARSETREE) printf(" term -> term mul-op factor\n");
-        $$ = createNode(BASIC_OP ,$2,NULL,$1, $3,NULL);
+        $$ = createNode(DIV_OP ,$2,NULL,$1, $3,NULL);
 
     }
 ;
@@ -443,20 +443,24 @@ factor: '(' expression ')' {
 ;
 set-exp: ADD '(' in-exp ')'  {
         if(PARSETREE) printf(" set-op -> ADD (in-exp)\n");
+        $3 = createNode(SET_ADD , NULL,NULL,$3, NULL,NULL);
         $$ = $3;
     
     }   
     | REMOVE '(' in-exp ')' {
         if(PARSETREE) printf(" set-op -> REMOVE (in-exp)\n");
+        $3 = createNode(SET_REMOVE, NULL,NULL,$3, NULL,NULL);
         $$ = $3;
         
     }
     | EXISTS '(' in-exp ')' {
         if(PARSETREE) printf(" set-op -> EXISTS (in-exp)\n");
+        $3 = createNode(SET_EXISTS , NULL,NULL,$3, NULL,NULL);
         $$ = $3;
     }
     | IS_SET '(' in-exp ')' {
         if(PARSETREE) printf(" set-op -> IS_SET (in-exp)\n");
+        $3 = createNode(IS_SET_EXP , NULL,NULL,$3, NULL,NULL);
         $$ = $3;
     }
 ;
@@ -534,6 +538,8 @@ int main( int argc, char **argv ) {
     if (!root) freeVertex(root);
     freeTable();
     pop();
+
+    //the number of the beast
     return 666;
 
 }
