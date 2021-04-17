@@ -126,14 +126,15 @@ declaration: function-definition {
 var-declaration: TYPE ID ';' {
         if(PARSETREE) printf("var-declaration -> type ID\n");
         $$ = createNode(VAR_DECLARATION, $1 , $2, NULL , NULL , NULL);
-        add_entry($2,$1,VAR);
+        addEntry($2,$1,VAR);
     }
 ; 
 
-function-definition: TYPE ID '(' parameters ')'  compound-stmt {
+function-definition: TYPE ID {
+        addEntry($2,$1,FUNC);
+    }'(' parameters ')' compound-stmt {
         if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
-        $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $4 , $6, NULL);   
-        add_entry($2,$1,FUNC);
+        $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $5 , $7, NULL);
     }
 ;
 
@@ -161,13 +162,16 @@ parameter-list: parameter-declaration {
 parameter-declaration: TYPE ID {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
         $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL,NULL);
-        add_entry($2,$1,PARAM);
+        addEntry($2,$1,PARAM);
     }
 ;
-compound-stmt: '{' local-decls-stmts'}' {
-        if(PARSETREE) printf("C-stmt -> '{' local-decls-stmts'}'\n");
-        $$ = $2;
-    }
+compound-stmt: '{' {
+                createScope();
+            } local-decls-stmts '}' {
+                if(PARSETREE) printf("C-stmt -> '{' local-decls-stmts'}'\n");
+                $$ = $3;
+                pop();
+            }
 ;
 
 local-decls-stmts: stmts  {
@@ -210,7 +214,6 @@ stmt: io-stmt {
     | if-stmt {
         if(PARSETREE) printf("stmt -> if-stmt\n");
         $$ = $1;
-        
     }
     | for-stmt {
         if(PARSETREE) printf("stmt -> for-stmt\n");
@@ -397,7 +400,7 @@ add-exp: term {
  
         }
 ;
-term: factor {
+term: factor { 
         if(PARSETREE) printf(" term -> factor\n");
         $$ = $1;
     }
@@ -505,7 +508,7 @@ arg-list: factor {
 
 int yyerror(const char *s){
     printf("syntax error: %s , line: %d , col: %d, Error count %d\n",s, line, col, error_count);
-    return 10;
+    return 666;
 }
 
 int main( int argc, char **argv ) {
@@ -514,24 +517,23 @@ int main( int argc, char **argv ) {
         yyin = fopen( argv[0], "r" );
     else
         yyin = stdin;
-    
-    root = NULL;
-    stack = NULL;
-    symbolTable = NULL;
-    
-    push_global();
 
+    initGlobalScope();
     yyparse();
 
     if(error_count==0) {
-        printf(YEL"\n\n___________________________ARVORE SINTATICA ABSTRATA_______________________________\t\n"DFT);
+        printf(RED"\n\n::>ARVORE SINTATICA ABSTRATA<::\t\n"DFT);
         printTree(root,0);
-        printf(BLU"\n\n___________________________TABELA DE SIMBOLOS______________________________________\t\n"DFT);
+        printf(RED"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
         printTable();
     }
-    if (!root) freeVertex(root);
+
     fclose(yyin);
     yylex_destroy();
-    return 0;
+
+    if (!root) freeVertex(root);
+    freeTable();
+    pop();
+    return 666;
 
 }

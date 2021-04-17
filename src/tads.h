@@ -76,21 +76,24 @@ enum table_type
     PARAM
 };
 
-typedef struct Scope {
-    char* scope_name;
-    char* type;
-    struct Scope * nxt;
+typedef struct Scope
+{
+    int scope_id;
+    struct Scope *next;
 } Scope;
+
+Scope *head;
 
 typedef struct Symbol
 {
-    int var_or_func;
-    char *key; // id#scope_name
     char *ID;
     char *type;
-    char * scope_name;
+    int var_or_func;
+    int scope;
     UT_hash_handle hh;
 } Symbol;
+
+Symbol *symbolTable;
 
 typedef struct vertex
 {
@@ -102,10 +105,9 @@ typedef struct vertex
     struct vertex *n3;
 } vertex;
 
-vertex * root;
-Scope * stack;
-Symbol * symbolTable;
+vertex *root;
 
+int scope_counter;
 vertex *createNode(int variable_name, char *op_or_type, char *value, struct vertex *v1, vertex *v2, vertex *v3);
 void print_tabs(int tabs);
 void print_variable(int name);
@@ -116,16 +118,15 @@ void printTree(vertex *root, int dpt);
 
 // ID , type , func or variable
 
-Symbol * create_symbol(char *ID, char *type, int var_or_func);
-void add_entry(char *ID, char *type, int var_or_func);
+Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id);
+void addEntry(char *ID, char *type, int var_or_func);
 void printTable();
 void freeTable();
 
 // pilha de escopo
-void push_global();
-void push (char * scope_name ,char* type);
+void initGlobalScope();
+void createScope();
+void push(Scope *scope);
 void pop();
-Scope* top();
-
 
 #endif

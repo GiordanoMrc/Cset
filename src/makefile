@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -g -Wall -fsanitize=address
+CFLAGS = -g -Wall 
 DEPS = tads.h
 LEX = flex
 LFLAGS= -w     
