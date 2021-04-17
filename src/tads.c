@@ -168,15 +168,16 @@ Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id)
 void addEntry(char *ID, char *type, int var_or_func)
 {
     Symbol *entry;
+    Scope * h = STACK_TOP(head);
 
-    //HASH_FIND_STR(symbolTable, ID, entry);
-    //if (entry == NULL)
-    //{
-    entry = createSymbol(ID, type, var_or_func, STACK_TOP(head)->scope_id);
-    HASH_ADD_STR(symbolTable, ID, entry);
-    //} else if (entry->scope == STACK_TOP(head)->scope_id) {
-    //    printf("redefinição");
-    //}
+    HASH_FIND_STR(symbolTable, ID, entry);
+    if (entry == NULL || entry->scope != h->scope_id )
+    {
+        entry = createSymbol(ID, type, var_or_func, STACK_TOP(head)->scope_id);
+        HASH_ADD_STR(symbolTable, ID, entry);
+    } else {
+        printf("redeclaração!\n");
+    }
 }
 
 void printTable()

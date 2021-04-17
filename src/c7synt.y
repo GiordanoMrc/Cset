@@ -8,6 +8,7 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include "tads.h"
+    #include "semantic_checks.h"
     
     // define
     #define PARSETREE 0
@@ -527,7 +528,7 @@ int main( int argc, char **argv ) {
 
     if(error_count==0) {
         printf(RED"\n\n::>ARVORE SINTATICA ABSTRATA<::\t\n"DFT);
-        printTree(root,0);
+        //printTree(root,0);
         printf(RED"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
         printTable();
     }

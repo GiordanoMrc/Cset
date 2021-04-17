@@ -1,23 +1,26 @@
 int j;
 int HHH;
-//0
-int main(){//1
+int z;
+int main(){
+   int var;
+   int var;
    int var;
 
-   if ( 5 ) {//2
+   if ( 5 ) {
         int x;
-   }//1
+   }
 
-   if ( 6 ) {//3
+   if ( 6 ) {
         int y;
-   }//2
+   }
    z = 5;
-}//1
-//0
-int f() {//4
-    int r;
-}//0
+}
 
-int v() {//5
+int f() {
+    int r;
+}
+
+
+int v() {
     int k;
-}//0
+}
