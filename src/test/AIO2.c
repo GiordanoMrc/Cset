@@ -1,7 +1,10 @@
 int j;
 int HHH;
+int a;
+elem a;
 int z;
-int main(){
+
+int f(int void){
    int var;
    int var;
    int var;
@@ -16,11 +19,13 @@ int main(){
    z = 5;
 }
 
-int f() {
+int f2(set a, int b, int c, int d) {
     int r;
 }
 
 
 int v() {
-    int k;
+    int r;
 }
+
+

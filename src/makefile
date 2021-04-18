@@ -9,8 +9,8 @@ YFLAGS= -vdt -Wconflicts-sr -Wcounterexamples
 
 RM = /bin/rm -f
 
-c7: c7synt.tab.o lex.yy.o tads.o
-	${CC} ${CFLAGS}  lex.yy.o c7synt.tab.o tads.o -o c7
+c7: c7synt.tab.o lex.yy.o tads.o semantic_raises.o
+	${CC} ${CFLAGS}  lex.yy.o c7synt.tab.o tads.o semantic_raises.o -o c7
 
 c7synt.tab.o: c7synt.y
 	${YACC} ${YFLAGS} c7synt.y

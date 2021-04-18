@@ -3,6 +3,7 @@
 
 #include "uthash/uthash.h"
 #include "uthash/utstack.h"
+#include "semantic_raises.h"
 
 #define DFT "\x1B[0m"
 #define RED "\x1B[31m"
@@ -93,6 +94,8 @@ typedef struct Symbol
 {
     char *ID;
     char *type;
+    int line;
+    int col;
     int var_or_func;
     int scope;
     UT_hash_handle hh;
@@ -123,8 +126,8 @@ void printTree(vertex *root, int dpt);
 
 // ID , type , func or variable
 
-Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id);
-void addEntry(char *ID, char *type, int var_or_func);
+Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id , int line, int col);
+void addEntry(char *ID, char *type, int var_or_func, int line, int col);
 void printTable();
 void freeTable();
 
@@ -133,5 +136,11 @@ void initGlobalScope();
 void createScope();
 void push(Scope *scope);
 void pop();
+
+
+//SEMANTIC CHECKS
+
+void checkNoMain();
+
 
 #endif

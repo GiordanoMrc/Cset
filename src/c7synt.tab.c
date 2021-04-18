@@ -74,7 +74,6 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include "tads.h"
-    #include "semantic_checks.h"
     
     // define
     #define PARSETREE 0
@@ -90,7 +89,7 @@
     int col= 1;
     int error_count=0;
 
-#line 94 "c7synt.tab.c"
+#line 93 "c7synt.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -583,7 +582,7 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    96,    96,   102,   108,   112,   117,   121,   127,   134,
+       0,    95,    95,   102,   108,   112,   117,   121,   127,   134,
      134,   143,   147,   152,   157,   163,   169,   169,   178,   182,
      187,   191,   197,   202,   206,   210,   215,   219,   224,   229,
      233,   239,   244,   249,   255,   259,   265,   271,   277,   284,
@@ -1655,10 +1654,11 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* begin: program  */
-#line 96 "c7synt.y"
+#line 95 "c7synt.y"
               {
     (yyval.node) = createNode(PROGRAM,NULL,NULL,(yyvsp[0].node),NULL,NULL);
     root = (yyval.node);
+    checkNoMain();
     }
 #line 1664 "c7synt.tab.c"
     break;
@@ -1713,7 +1713,7 @@ yyreduce:
                              {
         if(PARSETREE) printf("var-declaration -> type ID\n");
         (yyval.node) = createNode(VAR_DECLARATION, (yyvsp[-2].str) , (yyvsp[-1].str), NULL , NULL , NULL);
-        addEntry((yyvsp[-1].str),(yyvsp[-2].str),VAR);
+        addEntry((yyvsp[-1].str),(yyvsp[-2].str),VAR, line, col);
     }
 #line 1719 "c7synt.tab.c"
     break;
@@ -1721,7 +1721,7 @@ yyreduce:
   case 9: /* $@1: %empty  */
 #line 134 "c7synt.y"
                              {
-        addEntry((yyvsp[0].str),(yyvsp[-1].str),FUNC);
+        addEntry((yyvsp[0].str),(yyvsp[-1].str),FUNC, line, col);
     }
 #line 1727 "c7synt.tab.c"
     break;
@@ -1778,7 +1778,7 @@ yyreduce:
                                {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
         (yyval.node) = createNode(PARAMETER_DECL, (yyvsp[-1].str),(yyvsp[0].str), NULL, NULL,NULL);
-        addEntry((yyvsp[0].str),(yyvsp[-1].str),PARAM);
+        addEntry((yyvsp[0].str),(yyvsp[-1].str),PARAM, line,col);
     }
 #line 1784 "c7synt.tab.c"
     break;
@@ -2672,15 +2672,17 @@ int main( int argc, char **argv ) {
     else
         yyin = stdin;
 
+    printf(RED"::>ERROS SEMANTICOS<::\t\n"DFT);
     initGlobalScope();
     yyparse();
 
     if(error_count==0) {
         printf(RED"\n\n::>ARVORE SINTATICA ABSTRATA<::\t\n"DFT);
-        //printTree(root,0);
-        printf(RED"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
-        printTable();
+        printTree(root,0);
     }
+
+    printf(RED"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
+    printTable();
 
     fclose(yyin);
     yylex_destroy();

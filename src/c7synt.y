@@ -8,7 +8,6 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include "tads.h"
-    #include "semantic_checks.h"
     
     // define
     #define PARSETREE 0
@@ -96,6 +95,7 @@
 begin:program {
     $$ = createNode(PROGRAM,NULL,NULL,$1,NULL,NULL);
     root = $$;
+    checkNoMain();
     }
 ;
 
@@ -127,12 +127,12 @@ declaration: function-definition {
 var-declaration: TYPE ID ';' {
         if(PARSETREE) printf("var-declaration -> type ID\n");
         $$ = createNode(VAR_DECLARATION, $1 , $2, NULL , NULL , NULL);
-        addEntry($2,$1,VAR);
+        addEntry($2,$1,VAR, line, col);
     }
 ; 
 
 function-definition: TYPE ID {
-        addEntry($2,$1,FUNC);
+        addEntry($2,$1,FUNC, line, col);
     }'(' parameters ')' compound-stmt {
         if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
         $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $5 , $7, NULL);
@@ -163,7 +163,7 @@ parameter-list: parameter-declaration {
 parameter-declaration: TYPE ID {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
         $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL,NULL);
-        addEntry($2,$1,PARAM);
+        addEntry($2,$1,PARAM, line,col);
     }
 ;
 compound-stmt: '{' {
@@ -523,15 +523,17 @@ int main( int argc, char **argv ) {
     else
         yyin = stdin;
 
+    printf(RED"::>ERROS SEMANTICOS<::\t\n"DFT);
     initGlobalScope();
     yyparse();
 
     if(error_count==0) {
         printf(RED"\n\n::>ARVORE SINTATICA ABSTRATA<::\t\n"DFT);
-        //printTree(root,0);
-        printf(RED"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
-        printTable();
+        printTree(root,0);
     }
+
+    printf(RED"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
+    printTable();
 
     fclose(yyin);
     yylex_destroy();

@@ -35,16 +35,15 @@ void freeVertex(vertex *root)
 
 void printTree(vertex *root, int dpt)
 {
-
     if (root)
     {
+        printf("\n");
         print_tabs(dpt);
         print_variable(root->variable_name);
         if (root->op_or_type != NULL)
             printf(" %s ", root->op_or_type);
         if (root->value != NULL)
             printf(" %s ", root->value);
-        printf("\n");
         if (root != root->n1)
             printTree(root->n1, dpt + 1);
         if (root != root->n2)
@@ -154,47 +153,59 @@ void print_variable(int name)
     }
 }
 
-Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id)
+Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id ,int line ,int col)
 {
     Symbol *entry = (Symbol *)malloc(sizeof(Symbol));
     entry->ID = ID;
     entry->type = type;
     entry->var_or_func = var_or_func;
     entry->scope = scope_id;
+    entry->line = line;
+    entry->col = col;
 
     return entry;
 }
 
-void addEntry(char *ID, char *type, int var_or_func)
+void addEntry(char *ID, char *type, int var_or_func, int line, int col)
 {
     Symbol *entry;
     Scope * h = STACK_TOP(head);
-
-    HASH_FIND_STR(symbolTable, ID, entry);
-    if (entry == NULL || entry->scope != h->scope_id )
-    {
-        entry = createSymbol(ID, type, var_or_func, STACK_TOP(head)->scope_id);
-        HASH_ADD_STR(symbolTable, ID, entry);
+    if(var_or_func !=PARAM) {
+        HASH_FIND_STR(symbolTable, ID, entry);
+        if (entry != NULL && entry->scope == h->scope_id && entry->type == type)
+        {
+            raiseRedecl(line,col);
+        } else {
+            entry = createSymbol(ID, type, var_or_func, (h->scope_id),line, col);
+            HASH_ADD_STR(symbolTable, ID, entry);
+        }
     } else {
-        printf("redeclaração!\n");
+        HASH_FIND_STR(symbolTable, ID, entry);
+        if (entry != NULL && entry->scope == (h->scope_id+1) && entry->type == type)
+        {
+            raiseRedecl(line,col);
+        } else {
+            entry = createSymbol(ID, type, var_or_func, (h->scope_id+1),line, col);
+            HASH_ADD_STR(symbolTable, ID, entry);
+        }
     }
 }
 
 void printTable()
-{
-    printf("\n");
+{   printf("\nID   %15s | %4s:%4s | type   %10s | scope  %4s | Declaration Type  %5s\t\n", "" ,"lin","col","" , "" , "");
+    printf("_____________________________________________________________________________________________________________\n");
     for (Symbol *entry = symbolTable; entry != NULL; entry = entry->hh.next)
     {
         switch (entry->var_or_func)
         {
         case VAR:
-            printf("ID:  %20s | type:  %10s | scope: %10d | Declaration Type: VARIABLE \n", entry->ID, entry->type, entry->scope);
+            printf("ID:  %15s | %4d:%4d | type:  %10s | scope: %4d | Declaration Type: VARIABLE \n", entry->ID,entry->line,entry->col, entry->type, entry->scope);
             break;
         case FUNC:
-            printf("ID:  %20s | type:  %10s | scope: %10d | Declaration Type: FUNCTION \n", entry->ID, entry->type, entry->scope);
+            printf("ID:  %15s | %4d:%4d | type:  %10s | scope: %4d | Declaration Type: FUNCTION \n", entry->ID,entry->line,entry->col, entry->type, entry->scope);
             break;
         case PARAM:
-            printf("ID:  %20s | type:  %10s | scope: %10d | Declaration Type: PARAMETER \n", entry->ID, entry->type, entry->scope);
+            printf("ID:  %15s | %4d:%4d | type:  %10s | scope: %4d | Declaration Type: PARAMETER \n", entry->ID,entry->line,entry->col, entry->type, entry->scope);
             break;
         }
     }
@@ -240,6 +251,18 @@ void pop()
     STACK_POP(head, res);
     free(res);
 }
+
+
+//SEMANTIC CHECKS
+
+void checkNoMain() {
+    Symbol * entry;
+    HASH_FIND_STR(symbolTable, "main", entry);
+    if (entry == NULL) 
+        raiseNoMain();
+}
+
+
 
 vertex *root = NULL;
 Scope *head = NULL;
