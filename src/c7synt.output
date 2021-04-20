@@ -116,8 +116,8 @@ Gramática
    79 call: ID '(' arg-list ')'
    80     | ID '(' ')'
 
-   81 arg-list: factor
-   82         | arg-list ',' factor
+   81 arg-list: assign-exp
+   82         | arg-list ',' assign-exp
 
 
 Terminais, com as regras onde eles aparecem
@@ -244,7 +244,7 @@ Não terminais com as regras onde eles aparecem
         à direita: 30 31 32 35 37 38 41 44 47 48 66
     assign-exp <node> (68)
         à esquerda: 45 46
-        à direita: 43 44 46
+        à direita: 43 44 46 81 82
     in-exp <node> (69)
         à esquerda: 47 48
         à direita: 39 40 47 71 72 73 74
@@ -262,7 +262,7 @@ Não terminais com as regras onde eles aparecem
         à direita: 60 61 62 64 65
     factor <node> (74)
         à esquerda: 66 67 68 69 70
-        à direita: 63 64 65 81 82
+        à direita: 63 64 65
     set-exp <node> (75)
         à esquerda: 71 72 73 74
         à direita: 70
@@ -980,6 +980,7 @@ Estado 67
     INTEGER_CONST  deslocar, e ir ao estado 28
     FLOAT_CONST    deslocar, e ir ao estado 29
     EMPTY_CONST    deslocar, e ir ao estado 30
+    NOT            deslocar, e ir ao estado 31
     '('            deslocar, e ir ao estado 33
     ')'            deslocar, e ir ao estado 101
     IS_SET         deslocar, e ir ao estado 38
@@ -987,11 +988,16 @@ Estado 67
     REMOVE         deslocar, e ir ao estado 40
     EXISTS         deslocar, e ir ao estado 42
 
-    factor    ir ao estado 102
-    set-exp   ir ao estado 64
-    constant  ir ao estado 65
-    call      ir ao estado 66
-    arg-list  ir ao estado 103
+    assign-exp   ir ao estado 102
+    basic-exp    ir ao estado 59
+    logical-exp  ir ao estado 60
+    add-exp      ir ao estado 61
+    term         ir ao estado 62
+    factor       ir ao estado 63
+    set-exp      ir ao estado 64
+    constant     ir ao estado 65
+    call         ir ao estado 66
+    arg-list     ir ao estado 103
 
 
 Estado 68
@@ -1776,7 +1782,7 @@ Estado 101
 
 Estado 102
 
-   81 arg-list: factor •
+   81 arg-list: assign-exp •
 
     $padrão  reduzir usando a regra 81 (arg-list)
 
@@ -1784,7 +1790,7 @@ Estado 102
 Estado 103
 
    79 call: ID '(' arg-list • ')'
-   82 arg-list: arg-list • ',' factor
+   82 arg-list: arg-list • ',' assign-exp
 
     ')'  deslocar, e ir ao estado 133
     ','  deslocar, e ir ao estado 134
@@ -2087,23 +2093,29 @@ Estado 133
 
 Estado 134
 
-   82 arg-list: arg-list ',' • factor
+   82 arg-list: arg-list ',' • assign-exp
 
     ID             deslocar, e ir ao estado 26
     STRING         deslocar, e ir ao estado 27
     INTEGER_CONST  deslocar, e ir ao estado 28
     FLOAT_CONST    deslocar, e ir ao estado 29
     EMPTY_CONST    deslocar, e ir ao estado 30
+    NOT            deslocar, e ir ao estado 31
     '('            deslocar, e ir ao estado 33
     IS_SET         deslocar, e ir ao estado 38
     ADD            deslocar, e ir ao estado 39
     REMOVE         deslocar, e ir ao estado 40
     EXISTS         deslocar, e ir ao estado 42
 
-    factor    ir ao estado 147
-    set-exp   ir ao estado 64
-    constant  ir ao estado 65
-    call      ir ao estado 66
+    assign-exp   ir ao estado 147
+    basic-exp    ir ao estado 59
+    logical-exp  ir ao estado 60
+    add-exp      ir ao estado 61
+    term         ir ao estado 62
+    factor       ir ao estado 63
+    set-exp      ir ao estado 64
+    constant     ir ao estado 65
+    call         ir ao estado 66
 
 
 Estado 135
@@ -2301,7 +2313,7 @@ Estado 146
 
 Estado 147
 
-   82 arg-list: arg-list ',' factor •
+   82 arg-list: arg-list ',' assign-exp •
 
     $padrão  reduzir usando a regra 82 (arg-list)
 

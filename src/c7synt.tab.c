@@ -85,11 +85,9 @@
     extern int yylex_destroy();
     extern FILE *yyin;
 
-    int line= 1;
-    int col= 1;
     int error_count=0;
 
-#line 93 "c7synt.tab.c"
+#line 91 "c7synt.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -520,7 +518,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   230
+#define YYLAST   233
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  43
@@ -582,15 +580,15 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    95,    95,   102,   108,   112,   117,   121,   127,   134,
-     134,   143,   147,   152,   157,   163,   169,   169,   178,   182,
-     187,   191,   197,   202,   206,   210,   215,   219,   224,   229,
-     233,   239,   244,   249,   255,   259,   265,   271,   277,   284,
-     290,   294,   300,   304,   306,   311,   316,   321,   328,   333,
-     339,   344,   348,   353,   359,   363,   368,   372,   376,   380,
-     384,   390,   394,   398,   404,   408,   412,   419,   424,   429,
-     434,   439,   445,   451,   457,   462,   469,   474,   479,   484,
-     489,   495,   500,   504
+       0,    93,    93,   100,   106,   110,   115,   119,   125,   132,
+     132,   141,   145,   150,   155,   161,   167,   167,   176,   180,
+     185,   189,   195,   200,   204,   208,   213,   217,   222,   227,
+     231,   237,   242,   247,   253,   257,   263,   269,   275,   282,
+     288,   292,   298,   302,   304,   309,   314,   319,   326,   331,
+     336,   341,   345,   350,   356,   360,   365,   369,   373,   377,
+     381,   387,   391,   395,   400,   404,   408,   415,   420,   424,
+     429,   434,   440,   445,   451,   456,   463,   468,   473,   478,
+     483,   489,   494,   498
 };
 #endif
 
@@ -641,7 +639,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-74)
+#define YYPACT_NINF (-72)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -655,22 +653,22 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      11,    35,    46,   -74,    11,   -74,   -74,   -74,    38,   -74,
-     -74,   -74,    50,    36,    74,    58,    56,   -74,   -74,    77,
-      36,   -74,   -74,   -74,    92,   -74,    68,   -74,   -74,   -74,
-     -74,   184,   105,   170,   -74,    88,    89,    90,    93,   104,
-     116,   170,   117,   118,   119,   120,   -74,   -74,   121,   131,
-     -74,   -74,   -74,   -74,   -74,   -74,   -74,     3,   -74,    64,
-      -6,    48,    76,   -74,   -74,   -74,   -74,   191,    -6,    38,
-      -1,   170,   131,   170,   131,   170,   170,   170,   170,    62,
-     170,   170,   170,   170,   -74,   -74,   -74,   170,   170,   184,
-     184,   184,   184,   184,   184,   184,   184,   184,   184,   184,
-     184,   -74,   -74,     1,   -74,     4,   115,    66,   -74,   -19,
-     122,   124,   125,   126,   -74,   127,    12,    31,    39,   -74,
-     -74,    -6,    -6,    48,    48,    48,    48,    48,    48,    76,
-      76,   -74,   -74,   -74,   184,   -74,   131,   170,   170,    47,
-     -74,   -74,   -74,   -74,   128,   130,   132,   -74,   -74,    73,
-     -74,   -74,   -74,   -74,   -74,   -74,   170,    40,   -74
+      -2,    22,    34,   -72,    -2,   -72,   -72,   -72,     8,   -72,
+     -72,   -72,    35,    23,    79,    41,    56,   -72,   -72,    77,
+      23,   -72,   -72,   -72,    92,   -72,    68,   -72,   -72,   -72,
+     -72,   194,   103,   182,   -72,    86,    87,    90,    93,   104,
+     116,   182,   117,   118,   119,   120,   -72,   -72,   121,   131,
+     -72,   -72,   -72,   -72,   -72,   -72,   -72,    -9,   -72,    64,
+      -6,    48,    76,   -72,   -72,   -72,   -72,   170,    -6,     8,
+      -7,   182,   131,   182,   131,   182,   182,   182,   182,    62,
+     182,   182,   182,   182,   -72,   -72,   -72,   182,   182,   194,
+     194,   194,   194,   194,   194,   194,   194,   194,   194,   194,
+     194,   -72,   -72,    10,   -72,    12,   115,    66,   -72,   -19,
+     122,   124,   125,   126,   -72,   127,    31,    39,    40,   -72,
+     -72,    -6,    -6,    48,    48,    48,    48,    48,    48,    76,
+      76,   -72,   -72,   -72,   182,   -72,   131,   182,   182,    47,
+     -72,   -72,   -72,   -72,   128,   130,   132,   -72,   -72,    73,
+     -72,   -72,   -72,   -72,   -72,   -72,   182,    49,   -72
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -699,10 +697,10 @@ static const yytype_int8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-     -74,   -74,   -74,   -74,   149,    72,   -74,   -74,   -74,   -74,
-     142,   -18,   -74,   -74,   -74,   -47,   -74,   -74,   -74,   -74,
-     -74,   -74,   -74,    28,   -33,    20,   -71,   -74,   -27,   -73,
-      13,   -64,   -74,   -74,   -74,   -74
+     -72,   -72,   -72,   -72,   149,    72,   -72,   -72,   -72,   -72,
+     142,   -18,   -72,   -72,   -72,   -47,   -72,   -72,   -72,   -72,
+     -72,   -72,   -72,    28,   -33,   -64,   -71,   -72,   -27,   -63,
+      11,    13,   -72,   -72,   -72,   -72
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -720,57 +718,57 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int16 yytable[] =
 {
       70,    22,    85,   102,    68,   111,   112,   113,    79,   115,
-      87,    91,    92,    93,    94,    95,    96,   138,   123,   124,
-     125,   126,   127,   128,   104,   106,   133,   108,    87,   135,
-     134,    86,    87,    87,     1,   131,   132,   144,   105,     8,
-     107,    87,   109,   109,   109,   109,     9,   109,   116,   117,
-     118,    26,    27,    28,    29,    30,   145,    97,    98,    14,
-      87,    31,   121,   122,   146,   158,    11,   150,    87,    87,
-     147,    33,     6,    21,    13,    34,     6,    88,    18,    89,
-      90,    38,    39,    19,    40,    20,    42,    99,   100,   148,
+      87,    91,    92,    93,    94,    95,    96,   138,   104,    86,
+      87,     1,    87,   119,   120,   106,     8,   108,   123,   124,
+     125,   126,   127,   128,     9,   133,    11,   135,   105,   134,
+     107,    87,   109,   109,   109,   109,    14,   109,   116,   117,
+     118,    26,    27,    28,    29,    30,   144,    97,    98,    13,
+      87,    31,   121,   122,   145,   146,    19,   150,    87,    87,
+     147,    33,     6,    21,   158,    34,     6,    88,    87,    89,
+      90,    38,    39,    18,    40,    20,    42,    99,   100,   148,
      114,    87,    67,    25,   137,    87,    26,    27,    28,    29,
-      30,   156,    87,    21,   149,   109,    31,   119,   120,    69,
-     129,   130,    71,    73,    75,    32,    33,    76,    21,   -19,
+      30,   156,    87,    21,   149,   109,    31,    69,   129,   130,
+      71,    73,   131,   132,    75,    32,    33,    76,    21,   -19,
       34,   151,    35,   157,    36,    37,    38,    39,    77,    40,
       41,    42,    43,    44,    45,    26,    27,    28,    29,    30,
       78,    80,    81,    82,    83,    31,   136,   139,    84,   140,
      141,   142,   143,    10,    32,    33,   153,    21,   154,    34,
      155,    35,    23,    36,    37,    38,    39,   152,    40,    41,
       42,    43,    44,    45,    26,    27,    28,    29,    30,     0,
-       0,     0,     0,     0,    31,     0,     0,     0,    26,    27,
-      28,    29,    30,     0,    33,    26,    27,    28,    29,    30,
-       0,     0,     0,     0,    38,    39,     0,    40,    33,    42,
-       0,     0,     0,     0,     0,    33,   101,     0,    38,    39,
-       0,    40,     0,    42,     0,    38,    39,     0,    40,     0,
-      42
+       0,     0,     0,     0,    31,     0,    26,    27,    28,    29,
+      30,     0,     0,     0,    33,   101,    31,     0,    26,    27,
+      28,    29,    30,     0,    38,    39,    33,    40,     0,    42,
+       0,     0,     0,     0,     0,     0,    38,    39,    33,    40,
+       0,    42,     0,     0,     0,     0,     0,     0,    38,    39,
+       0,    40,     0,    42
 };
 
 static const yytype_int16 yycheck[] =
 {
       33,    19,    49,    67,    31,    76,    77,    78,    41,    80,
-      29,    17,    18,    19,    20,    21,    22,    36,    91,    92,
-      93,    94,    95,    96,    25,    72,    25,    74,    29,    25,
-      29,    28,    29,    29,    23,    99,   100,    25,    71,     4,
-      73,    29,    75,    76,    77,    78,     0,    80,    81,    82,
-      83,     4,     5,     6,     7,     8,    25,     9,    10,    23,
-      29,    14,    89,    90,    25,    25,    28,   138,    29,    29,
-     134,    24,     0,    26,    24,    28,     4,    13,     4,    15,
-      16,    34,    35,    25,    37,    29,    39,    11,    12,   136,
+      29,    17,    18,    19,    20,    21,    22,    36,    25,    28,
+      29,    23,    29,    87,    88,    72,     4,    74,    91,    92,
+      93,    94,    95,    96,     0,    25,    28,    25,    71,    29,
+      73,    29,    75,    76,    77,    78,    23,    80,    81,    82,
+      83,     4,     5,     6,     7,     8,    25,     9,    10,    24,
+      29,    14,    89,    90,    25,    25,    25,   138,    29,    29,
+     134,    24,     0,    26,    25,    28,     4,    13,    29,    15,
+      16,    34,    35,     4,    37,    29,    39,    11,    12,   136,
       28,    29,    24,     1,    28,    29,     4,     5,     6,     7,
-       8,    28,    29,    26,   137,   138,    14,    87,    88,     4,
-      97,    98,    24,    24,    24,    23,    24,    24,    26,    27,
+       8,    28,    29,    26,   137,   138,    14,     4,    97,    98,
+      24,    24,    99,   100,    24,    23,    24,    24,    26,    27,
       28,   139,    30,   156,    32,    33,    34,    35,    24,    37,
       38,    39,    40,    41,    42,     4,     5,     6,     7,     8,
       24,    24,    24,    24,    24,    14,    31,    25,    27,    25,
       25,    25,    25,     4,    23,    24,    28,    26,    28,    28,
       28,    30,    20,    32,    33,    34,    35,   139,    37,    38,
       39,    40,    41,    42,     4,     5,     6,     7,     8,    -1,
-      -1,    -1,    -1,    -1,    14,    -1,    -1,    -1,     4,     5,
-       6,     7,     8,    -1,    24,     4,     5,     6,     7,     8,
-      -1,    -1,    -1,    -1,    34,    35,    -1,    37,    24,    39,
-      -1,    -1,    -1,    -1,    -1,    24,    25,    -1,    34,    35,
-      -1,    37,    -1,    39,    -1,    34,    35,    -1,    37,    -1,
-      39
+      -1,    -1,    -1,    -1,    14,    -1,     4,     5,     6,     7,
+       8,    -1,    -1,    -1,    24,    25,    14,    -1,     4,     5,
+       6,     7,     8,    -1,    34,    35,    24,    37,    -1,    39,
+      -1,    -1,    -1,    -1,    -1,    -1,    34,    35,    24,    37,
+      -1,    39,    -1,    -1,    -1,    -1,    -1,    -1,    34,    35,
+      -1,    37,    -1,    39
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -787,11 +785,11 @@ static const yytype_int8 yystos[] =
       67,    24,    61,    24,    63,    24,    24,    24,    24,    67,
       24,    24,    24,    24,    27,    58,    28,    29,    13,    15,
       16,    17,    18,    19,    20,    21,    22,     9,    10,    11,
-      12,    25,    74,    78,    25,    67,    58,    67,    58,    67,
+      12,    25,    68,    78,    25,    67,    58,    67,    58,    67,
       69,    69,    69,    69,    28,    69,    67,    67,    67,    68,
       68,    71,    71,    72,    72,    72,    72,    72,    72,    73,
       73,    74,    74,    25,    29,    25,    31,    28,    36,    25,
-      25,    25,    25,    25,    25,    25,    25,    74,    58,    67,
+      25,    25,    25,    25,    25,    25,    25,    68,    58,    67,
       69,    54,    66,    28,    28,    28,    28,    67,    25
 };
 
@@ -1654,779 +1652,775 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* begin: program  */
-#line 95 "c7synt.y"
+#line 93 "c7synt.y"
               {
     (yyval.node) = createNode(PROGRAM,NULL,NULL,(yyvsp[0].node),NULL,NULL);
     root = (yyval.node);
     checkNoMain();
     }
-#line 1664 "c7synt.tab.c"
+#line 1662 "c7synt.tab.c"
     break;
 
   case 3: /* program: declaration-list  */
-#line 102 "c7synt.y"
+#line 100 "c7synt.y"
                           {
         (yyval.node) = createNode(DECLARATION_LIST,NULL,NULL,(yyvsp[0].node),NULL,NULL);
         if(PARSETREE) printf("begin ->program\n\n\n - end of parse tree - \n");
     }
-#line 1673 "c7synt.tab.c"
+#line 1671 "c7synt.tab.c"
     break;
 
   case 4: /* declaration-list: declaration-list declaration  */
-#line 108 "c7synt.y"
+#line 106 "c7synt.y"
                                                {
                         if (PARSETREE) printf("declaration-list -> declaration-list declaration \n");
                         (yyval.node) = createNode(DECLARATION_LIST,NULL,NULL,(yyvsp[-1].node),(yyvsp[0].node),NULL);
                     }
-#line 1682 "c7synt.tab.c"
+#line 1680 "c7synt.tab.c"
     break;
 
   case 5: /* declaration-list: declaration  */
-#line 112 "c7synt.y"
+#line 110 "c7synt.y"
                               {
                         if(PARSETREE) printf("declaration-list -> declaration\n");
                         (yyval.node) = (yyvsp[0].node);   
                     }
-#line 1691 "c7synt.tab.c"
+#line 1689 "c7synt.tab.c"
     break;
 
   case 6: /* declaration: function-definition  */
-#line 117 "c7synt.y"
+#line 115 "c7synt.y"
                                  {
                 if(PARSETREE) printf("declaration -> function-definition\n");
                 (yyval.node) = (yyvsp[0].node);
             }
-#line 1700 "c7synt.tab.c"
+#line 1698 "c7synt.tab.c"
     break;
 
   case 7: /* declaration: var-declaration  */
-#line 121 "c7synt.y"
+#line 119 "c7synt.y"
                              {
                 if(PARSETREE) printf("declaration -> var-declaration\n");
                 (yyval.node) = (yyvsp[0].node);
             }
-#line 1709 "c7synt.tab.c"
+#line 1707 "c7synt.tab.c"
     break;
 
   case 8: /* var-declaration: TYPE ID ';'  */
-#line 127 "c7synt.y"
+#line 125 "c7synt.y"
                              {
         if(PARSETREE) printf("var-declaration -> type ID\n");
         (yyval.node) = createNode(VAR_DECLARATION, (yyvsp[-2].str) , (yyvsp[-1].str), NULL , NULL , NULL);
-        addEntry((yyvsp[-1].str),(yyvsp[-2].str),VAR, line, col);
+        addEntry((yyvsp[-1].str),(yyvsp[-2].str),VAR);
     }
-#line 1719 "c7synt.tab.c"
+#line 1717 "c7synt.tab.c"
     break;
 
   case 9: /* $@1: %empty  */
-#line 134 "c7synt.y"
+#line 132 "c7synt.y"
                              {
-        addEntry((yyvsp[0].str),(yyvsp[-1].str),FUNC, line, col);
+        addEntry((yyvsp[0].str),(yyvsp[-1].str),FUNC);
     }
-#line 1727 "c7synt.tab.c"
+#line 1725 "c7synt.tab.c"
     break;
 
   case 10: /* function-definition: TYPE ID $@1 '(' parameters ')' compound-stmt  */
-#line 136 "c7synt.y"
+#line 134 "c7synt.y"
                                       {
         if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
         (yyval.node) = createNode(FUNCTION_DEFINITION ,(yyvsp[-6].str), (yyvsp[-5].str),  (yyvsp[-2].node) , (yyvsp[0].node), NULL);
     }
-#line 1736 "c7synt.tab.c"
+#line 1734 "c7synt.tab.c"
     break;
 
   case 11: /* parameters: parameter-list  */
-#line 143 "c7synt.y"
+#line 141 "c7synt.y"
                            {
         if(PARSETREE) printf("parameters -> param-list\n");
             (yyval.node) = (yyvsp[0].node);
         }
-#line 1745 "c7synt.tab.c"
+#line 1743 "c7synt.tab.c"
     break;
 
   case 12: /* parameters: %empty  */
-#line 147 "c7synt.y"
+#line 145 "c7synt.y"
                  { 
             if(PARSETREE) printf("empty\n");
             (yyval.node) = NULL;
         }
-#line 1754 "c7synt.tab.c"
+#line 1752 "c7synt.tab.c"
     break;
 
   case 13: /* parameter-list: parameter-declaration  */
-#line 152 "c7synt.y"
+#line 150 "c7synt.y"
                                       {
         if(PARSETREE) printf("parameter-list -> parameter-declaration\n");
         (yyval.node) = (yyvsp[0].node);
         
     }
-#line 1764 "c7synt.tab.c"
+#line 1762 "c7synt.tab.c"
     break;
 
   case 14: /* parameter-list: parameter-list ',' parameter-declaration  */
-#line 157 "c7synt.y"
+#line 155 "c7synt.y"
                                                {
         if(PARSETREE) printf("parameter-list -> parameter-list ',' parameter-declaration\n");
         (yyval.node) = createNode(PARAMETER_LIST , NULL, NULL ,(yyvsp[-2].node), (yyvsp[0].node) , NULL);
 
     }
-#line 1774 "c7synt.tab.c"
+#line 1772 "c7synt.tab.c"
     break;
 
   case 15: /* parameter-declaration: TYPE ID  */
-#line 163 "c7synt.y"
+#line 161 "c7synt.y"
                                {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
         (yyval.node) = createNode(PARAMETER_DECL, (yyvsp[-1].str),(yyvsp[0].str), NULL, NULL,NULL);
-        addEntry((yyvsp[0].str),(yyvsp[-1].str),PARAM, line,col);
+        addEntry((yyvsp[0].str),(yyvsp[-1].str),PARAM);
     }
-#line 1784 "c7synt.tab.c"
+#line 1782 "c7synt.tab.c"
     break;
 
   case 16: /* $@2: %empty  */
-#line 169 "c7synt.y"
+#line 167 "c7synt.y"
                    {
-                createScope();
+                    createScope();
             }
-#line 1792 "c7synt.tab.c"
+#line 1790 "c7synt.tab.c"
     break;
 
   case 17: /* compound-stmt: '{' $@2 local-decls-stmts '}'  */
-#line 171 "c7synt.y"
+#line 169 "c7synt.y"
                                     {
                 if(PARSETREE) printf("C-stmt -> '{' local-decls-stmts'}'\n");
                 (yyval.node) = (yyvsp[-1].node);
                 pop();
             }
-#line 1802 "c7synt.tab.c"
+#line 1800 "c7synt.tab.c"
     break;
 
   case 18: /* local-decls-stmts: stmts  */
-#line 178 "c7synt.y"
+#line 176 "c7synt.y"
                           {
         if (PARSETREE) printf("local-stmts -> stmts\n");
         (yyval.node) = (yyvsp[0].node);
     }
-#line 1811 "c7synt.tab.c"
+#line 1809 "c7synt.tab.c"
     break;
 
   case 19: /* local-decls-stmts: %empty  */
-#line 182 "c7synt.y"
+#line 180 "c7synt.y"
              {
         if(PARSETREE) printf("empty\n");
         (yyval.node) = NULL;
     }
-#line 1820 "c7synt.tab.c"
+#line 1818 "c7synt.tab.c"
     break;
 
   case 20: /* stmts: stmts stmt  */
-#line 187 "c7synt.y"
+#line 185 "c7synt.y"
                   {
         if(PARSETREE) printf("stmts -> stmts stmt\n");
         (yyval.node) = createNode(STMTS , NULL ,NULL,(yyvsp[-1].node), (yyvsp[0].node),NULL);
     }
-#line 1829 "c7synt.tab.c"
+#line 1827 "c7synt.tab.c"
     break;
 
   case 21: /* stmts: stmt  */
-#line 191 "c7synt.y"
+#line 189 "c7synt.y"
            {
         if(PARSETREE) printf("stmts -> stmts stmt\n");
         (yyvsp[0].node) = createNode(STMT , NULL ,NULL,(yyvsp[0].node), NULL,NULL);
         (yyval.node) = (yyvsp[0].node);
         
     }
-#line 1840 "c7synt.tab.c"
+#line 1838 "c7synt.tab.c"
     break;
 
   case 22: /* stmts: error  */
-#line 197 "c7synt.y"
+#line 195 "c7synt.y"
             {
         (yyval.node)= NULL;
         error_count++;
     }
-#line 1849 "c7synt.tab.c"
+#line 1847 "c7synt.tab.c"
     break;
 
   case 23: /* stmt: io-stmt  */
-#line 202 "c7synt.y"
+#line 200 "c7synt.y"
               {
         if(PARSETREE) printf("stmt -> io-stmt\n");
         (yyval.node) = (yyvsp[0].node);
     }
-#line 1858 "c7synt.tab.c"
+#line 1856 "c7synt.tab.c"
     break;
 
   case 24: /* stmt: return-stmt  */
-#line 206 "c7synt.y"
+#line 204 "c7synt.y"
                   {
         if(PARSETREE) printf("stmt -> return-stmt\n");
         (yyval.node) = (yyvsp[0].node);
     }
-#line 1867 "c7synt.tab.c"
+#line 1865 "c7synt.tab.c"
     break;
 
   case 25: /* stmt: compound-stmt  */
-#line 210 "c7synt.y"
+#line 208 "c7synt.y"
                     {
         if(PARSETREE) printf("stmt -> cp-stmt\n");
         (yyval.node) = (yyvsp[0].node);
         
     }
-#line 1877 "c7synt.tab.c"
+#line 1875 "c7synt.tab.c"
     break;
 
   case 26: /* stmt: if-stmt  */
-#line 215 "c7synt.y"
+#line 213 "c7synt.y"
               {
         if(PARSETREE) printf("stmt -> if-stmt\n");
         (yyval.node) = (yyvsp[0].node);
     }
-#line 1886 "c7synt.tab.c"
+#line 1884 "c7synt.tab.c"
     break;
 
   case 27: /* stmt: for-stmt  */
-#line 219 "c7synt.y"
+#line 217 "c7synt.y"
                {
         if(PARSETREE) printf("stmt -> for-stmt\n");
         (yyval.node) = (yyvsp[0].node);
         
     }
-#line 1896 "c7synt.tab.c"
+#line 1894 "c7synt.tab.c"
     break;
 
   case 28: /* stmt: expression-stmt  */
-#line 224 "c7synt.y"
+#line 222 "c7synt.y"
                       {
         if(PARSETREE) printf("stmt -> expression-stmt\n");
         (yyval.node) = (yyvsp[0].node);
         
     }
-#line 1906 "c7synt.tab.c"
+#line 1904 "c7synt.tab.c"
     break;
 
   case 29: /* stmt: forall-stmt  */
-#line 229 "c7synt.y"
+#line 227 "c7synt.y"
                   {
         if(PARSETREE) printf("stmt -> forall-stmt\n");
         (yyval.node) = (yyvsp[0].node);
     }
-#line 1915 "c7synt.tab.c"
+#line 1913 "c7synt.tab.c"
     break;
 
   case 30: /* stmt: var-declaration  */
-#line 233 "c7synt.y"
+#line 231 "c7synt.y"
                       {
         if(PARSETREE) printf("stmt -> var-decl\n");
         (yyval.node) = (yyvsp[0].node);
     }
-#line 1924 "c7synt.tab.c"
+#line 1922 "c7synt.tab.c"
     break;
 
   case 31: /* io-stmt: READ '(' expression ')' ';'  */
-#line 239 "c7synt.y"
+#line 237 "c7synt.y"
                                      {
             if(PARSETREE) printf("io-stmt -> read ( exp ) \n");
             (yyval.node) = createNode(IO_STMT , NULL ,NULL,(yyvsp[-2].node), NULL,NULL);
             
         }
-#line 1934 "c7synt.tab.c"
+#line 1932 "c7synt.tab.c"
     break;
 
   case 32: /* io-stmt: WRITE '(' expression ')' ';'  */
-#line 244 "c7synt.y"
+#line 242 "c7synt.y"
                                        {
            if(PARSETREE) printf("io-stmt -> write ( exp ) \n");
            (yyval.node) = createNode(IO_STMT , NULL ,NULL,(yyvsp[-2].node), NULL,NULL);
 
         }
-#line 1944 "c7synt.tab.c"
+#line 1942 "c7synt.tab.c"
     break;
 
   case 33: /* io-stmt: WRITELN '(' expression ')' ';'  */
-#line 249 "c7synt.y"
+#line 247 "c7synt.y"
                                         {
            if(PARSETREE) printf("io-stmt -> writeln ( exp )\n");
            (yyval.node) = createNode(IO_STMT , NULL ,NULL,(yyvsp[-2].node), NULL,NULL);
         }
-#line 1953 "c7synt.tab.c"
+#line 1951 "c7synt.tab.c"
     break;
 
   case 34: /* if-stmt: IF condition stmt  */
-#line 255 "c7synt.y"
+#line 253 "c7synt.y"
                                              {
             if(PARSETREE) printf("if-stmt\n");
             (yyval.node) = createNode(IF_STMT , NULL ,NULL,(yyvsp[-1].node),(yyvsp[0].node),NULL);
         }
-#line 1962 "c7synt.tab.c"
+#line 1960 "c7synt.tab.c"
     break;
 
   case 35: /* if-stmt: IF condition stmt ELSE stmt  */
-#line 259 "c7synt.y"
+#line 257 "c7synt.y"
                                       {
            if(PARSETREE) printf("if-stmt\n");
            (yyval.node) = createNode(IF_ELSE_STMT , NULL ,NULL,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[0].node));
        }
-#line 1971 "c7synt.tab.c"
+#line 1969 "c7synt.tab.c"
     break;
 
   case 36: /* condition: '(' expression ')'  */
-#line 265 "c7synt.y"
+#line 263 "c7synt.y"
                              {
         if(PARSETREE) printf("condition -> (exp)\n");
         (yyval.node) = (yyvsp[-1].node);
     }
-#line 1980 "c7synt.tab.c"
+#line 1978 "c7synt.tab.c"
     break;
 
   case 37: /* for-stmt: FOR for-conditions stmt  */
-#line 271 "c7synt.y"
+#line 269 "c7synt.y"
                                    {
         if(PARSETREE) printf("for-stmt -> for\n");
         (yyval.node) = createNode(FOR_STMT , NULL ,NULL,(yyvsp[-1].node),(yyvsp[0].node),NULL);
     }
-#line 1989 "c7synt.tab.c"
+#line 1987 "c7synt.tab.c"
     break;
 
   case 38: /* for-conditions: '(' expression ';' expression ';' expression ')'  */
-#line 277 "c7synt.y"
+#line 275 "c7synt.y"
                                                                 {
         if(PARSETREE) printf("for-stmt ->for-cond\n");
         (yyval.node) = createNode(FOR_COND,NULL,NULL,(yyvsp[-5].node),(yyvsp[-3].node),(yyvsp[-1].node));
     }
-#line 1998 "c7synt.tab.c"
+#line 1996 "c7synt.tab.c"
     break;
 
   case 39: /* return-stmt: RETURN expression ';'  */
-#line 284 "c7synt.y"
+#line 282 "c7synt.y"
                                    {
         if(PARSETREE) printf("return-stmt -> return exp ;\n");
         (yyval.node) = createNode(RETURN_STMT , NULL,NULL,(yyvsp[-1].node), NULL,NULL);
     }
-#line 2007 "c7synt.tab.c"
+#line 2005 "c7synt.tab.c"
     break;
 
   case 40: /* forall-stmt: FORALL '(' in-exp ')' compound-stmt  */
-#line 290 "c7synt.y"
+#line 288 "c7synt.y"
                                                  {
         if(PARSETREE) printf("forall-stmt ->FORALL (in-exp) compound\n");
         (yyval.node) = createNode(FORALL_STMT, NULL,NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2016 "c7synt.tab.c"
+#line 2014 "c7synt.tab.c"
     break;
 
   case 41: /* forall-stmt: FORALL '(' in-exp ')' expression-stmt  */
-#line 294 "c7synt.y"
+#line 292 "c7synt.y"
                                             {
         if(PARSETREE) printf("forall-stmt -> FORALL ( in-exp )\n");
        (yyval.node) = createNode(FORALL_STMT , NULL,NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2025 "c7synt.tab.c"
+#line 2023 "c7synt.tab.c"
     break;
 
   case 42: /* expression-stmt: expression ';'  */
-#line 300 "c7synt.y"
+#line 298 "c7synt.y"
                                     {
         if(PARSETREE) printf("expression-stmt -> expression ;\n");
         (yyval.node) =(yyvsp[-1].node);
     }
-#line 2034 "c7synt.tab.c"
+#line 2032 "c7synt.tab.c"
     break;
 
   case 43: /* expression-stmt: ';'  */
-#line 304 "c7synt.y"
-          { (yyval.node) =NULL;}
-#line 2040 "c7synt.tab.c"
+#line 302 "c7synt.y"
+          { (yyval.node) = NULL;}
+#line 2038 "c7synt.tab.c"
     break;
 
   case 44: /* expression: assign-exp  */
-#line 306 "c7synt.y"
+#line 304 "c7synt.y"
                         {
         if(PARSETREE) printf("expression-> assign \n");
         (yyval.node) = (yyvsp[0].node);
         
     }
-#line 2050 "c7synt.tab.c"
+#line 2048 "c7synt.tab.c"
     break;
 
   case 45: /* expression: expression ',' assign-exp  */
-#line 311 "c7synt.y"
+#line 309 "c7synt.y"
                                  {
         if(PARSETREE) printf("expression -> exp , assign\n");
         (yyval.node) = createNode(EXPRESSION , NULL,NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2059 "c7synt.tab.c"
+#line 2057 "c7synt.tab.c"
     break;
 
   case 46: /* assign-exp: basic-exp  */
-#line 316 "c7synt.y"
+#line 314 "c7synt.y"
                       {
         if(PARSETREE) printf("assign-exp -> basic-exp\n");
         (yyval.node) = (yyvsp[0].node);
         
     }
-#line 2069 "c7synt.tab.c"
+#line 2067 "c7synt.tab.c"
     break;
 
   case 47: /* assign-exp: basic-exp EQ assign-exp  */
-#line 321 "c7synt.y"
+#line 319 "c7synt.y"
                               {
         if (PARSETREE) printf("assign -> ID EQ assign\n");
         (yyval.node) = createNode(ASSIGN , (yyvsp[-1].str) ,NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
        
     }
-#line 2079 "c7synt.tab.c"
+#line 2077 "c7synt.tab.c"
     break;
 
   case 48: /* in-exp: expression IN in-exp  */
-#line 328 "c7synt.y"
+#line 326 "c7synt.y"
                              {
         if(PARSETREE) printf("in-exp -> expression IN in-exp\n");
         (yyval.node) = createNode(IN_OP,NULL,NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
 
     }
-#line 2089 "c7synt.tab.c"
+#line 2087 "c7synt.tab.c"
     break;
 
   case 49: /* in-exp: expression  */
-#line 333 "c7synt.y"
+#line 331 "c7synt.y"
                  {
         if(PARSETREE) printf("in-exp -> expression\n");
         (yyval.node) = (yyvsp[0].node);
-
     }
-#line 2099 "c7synt.tab.c"
+#line 2096 "c7synt.tab.c"
     break;
 
   case 50: /* basic-exp: logical-exp  */
-#line 339 "c7synt.y"
+#line 336 "c7synt.y"
                        {
         if(PARSETREE) printf("basic-exp -> logical\n");
         (yyval.node) = (yyvsp[0].node);
  
     }
-#line 2109 "c7synt.tab.c"
+#line 2106 "c7synt.tab.c"
     break;
 
   case 51: /* basic-exp: basic-exp OR logical-exp  */
-#line 344 "c7synt.y"
+#line 341 "c7synt.y"
                                {
         if(PARSETREE) printf("basic-exp -> logical OR logical\n");
         (yyval.node) = createNode(LOGICAL_EXP , (yyvsp[-1].str) ,NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2118 "c7synt.tab.c"
+#line 2115 "c7synt.tab.c"
     break;
 
   case 52: /* basic-exp: basic-exp AND logical-exp  */
-#line 348 "c7synt.y"
+#line 345 "c7synt.y"
                                 {
         if(PARSETREE) printf("basic-exp -> logical AND logical\n");
         (yyval.node) = createNode(LOGICAL_EXP , (yyvsp[-1].str) ,NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
 
     }
-#line 2128 "c7synt.tab.c"
+#line 2125 "c7synt.tab.c"
     break;
 
   case 53: /* basic-exp: NOT logical-exp  */
-#line 353 "c7synt.y"
+#line 350 "c7synt.y"
                       {
         if(PARSETREE) printf("basic-exp -> NOT logical\n");
         (yyval.node) = createNode(LOGICAL_EXP,(yyvsp[-1].str),NULL,(yyvsp[0].node), NULL,NULL);
     }
-#line 2137 "c7synt.tab.c"
+#line 2134 "c7synt.tab.c"
     break;
 
   case 54: /* logical-exp: add-exp  */
-#line 359 "c7synt.y"
+#line 356 "c7synt.y"
                      {
         if(PARSETREE) printf(" basic-exp -> add-exp\n");
         (yyval.node) = (yyvsp[0].node);
     }
-#line 2146 "c7synt.tab.c"
+#line 2143 "c7synt.tab.c"
     break;
 
   case 55: /* logical-exp: logical-exp EQ_TO add-exp  */
-#line 363 "c7synt.y"
+#line 360 "c7synt.y"
                                 {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
         (yyval.node) = createNode(REL_OP, (yyvsp[-1].str),NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
 
     }
-#line 2156 "c7synt.tab.c"
+#line 2153 "c7synt.tab.c"
     break;
 
   case 56: /* logical-exp: logical-exp NEQ_TO add-exp  */
-#line 368 "c7synt.y"
+#line 365 "c7synt.y"
                                  {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
         (yyval.node) = createNode(REL_OP, (yyvsp[-1].str),NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2165 "c7synt.tab.c"
+#line 2162 "c7synt.tab.c"
     break;
 
   case 57: /* logical-exp: logical-exp GT add-exp  */
-#line 372 "c7synt.y"
+#line 369 "c7synt.y"
                              {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
         (yyval.node) = createNode(REL_OP, (yyvsp[-1].str),NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2174 "c7synt.tab.c"
+#line 2171 "c7synt.tab.c"
     break;
 
   case 58: /* logical-exp: logical-exp LT add-exp  */
-#line 376 "c7synt.y"
+#line 373 "c7synt.y"
                              {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
        (yyval.node) = createNode(REL_OP, (yyvsp[-1].str),NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2183 "c7synt.tab.c"
+#line 2180 "c7synt.tab.c"
     break;
 
   case 59: /* logical-exp: logical-exp GTE add-exp  */
-#line 380 "c7synt.y"
+#line 377 "c7synt.y"
                               {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
         (yyval.node) = createNode(REL_OP, (yyvsp[-1].str),NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2192 "c7synt.tab.c"
+#line 2189 "c7synt.tab.c"
     break;
 
   case 60: /* logical-exp: logical-exp LTE add-exp  */
-#line 384 "c7synt.y"
+#line 381 "c7synt.y"
                               {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
         (yyval.node) = createNode(REL_OP , NULL,(yyvsp[-1].str),(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2201 "c7synt.tab.c"
+#line 2198 "c7synt.tab.c"
     break;
 
   case 61: /* add-exp: term  */
-#line 390 "c7synt.y"
+#line 387 "c7synt.y"
               {
             if(PARSETREE)printf(" add-exp -> term\n");
             (yyval.node) = (yyvsp[0].node);
         }
-#line 2210 "c7synt.tab.c"
+#line 2207 "c7synt.tab.c"
     break;
 
   case 62: /* add-exp: add-exp PLUS term  */
-#line 394 "c7synt.y"
+#line 391 "c7synt.y"
                             {
             if(PARSETREE)printf(" add-exp -> term PLUS term\n");
             (yyval.node) = createNode(ADD_OP , (yyvsp[-1].str),NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
         }
-#line 2219 "c7synt.tab.c"
+#line 2216 "c7synt.tab.c"
     break;
 
   case 63: /* add-exp: add-exp MINUS term  */
-#line 398 "c7synt.y"
+#line 395 "c7synt.y"
                              {
             if(PARSETREE) printf(" add-exp -> term MINUS term\n");
             (yyval.node) = createNode(ADD_OP , NULL,(yyvsp[-1].str),(yyvsp[-2].node), (yyvsp[0].node),NULL);
- 
         }
-#line 2229 "c7synt.tab.c"
+#line 2225 "c7synt.tab.c"
     break;
 
   case 64: /* term: factor  */
-#line 404 "c7synt.y"
+#line 400 "c7synt.y"
              { 
         if(PARSETREE) printf(" term -> factor\n");
         (yyval.node) = (yyvsp[0].node);
     }
-#line 2238 "c7synt.tab.c"
+#line 2234 "c7synt.tab.c"
     break;
 
   case 65: /* term: term MULT factor  */
-#line 408 "c7synt.y"
+#line 404 "c7synt.y"
                        {
         if(PARSETREE) printf(" term -> term mul-op factor\n");
         (yyval.node) = createNode(MUL_OP ,(yyvsp[-1].str),NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
     }
-#line 2247 "c7synt.tab.c"
+#line 2243 "c7synt.tab.c"
     break;
 
   case 66: /* term: term DIV factor  */
-#line 412 "c7synt.y"
+#line 408 "c7synt.y"
                       {
         if(PARSETREE) printf(" term -> term mul-op factor\n");
         (yyval.node) = createNode(DIV_OP ,(yyvsp[-1].str),NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
 
     }
-#line 2257 "c7synt.tab.c"
+#line 2253 "c7synt.tab.c"
     break;
 
   case 67: /* factor: '(' expression ')'  */
-#line 419 "c7synt.y"
+#line 415 "c7synt.y"
                            {
         if(PARSETREE) printf(" factor -> ( expression )\n");
         (yyval.node) = (yyvsp[-1].node);
-
+        
     }
-#line 2267 "c7synt.tab.c"
+#line 2263 "c7synt.tab.c"
     break;
 
   case 68: /* factor: ID  */
-#line 424 "c7synt.y"
+#line 420 "c7synt.y"
          {
         if(PARSETREE) printf(" factor -> ID\n");
         (yyval.node) = createNode(IDENT , NULL,(yyvsp[0].str),NULL, NULL,NULL);
-
     }
-#line 2277 "c7synt.tab.c"
+#line 2272 "c7synt.tab.c"
     break;
 
   case 69: /* factor: constant  */
-#line 429 "c7synt.y"
+#line 424 "c7synt.y"
                {
         if(PARSETREE) printf(" factor -> constant\n");
         (yyval.node) = (yyvsp[0].node);
-
+        
     }
-#line 2287 "c7synt.tab.c"
+#line 2282 "c7synt.tab.c"
     break;
 
   case 70: /* factor: call  */
-#line 434 "c7synt.y"
+#line 429 "c7synt.y"
            {
         if(PARSETREE) printf("factor -> call\n");
         (yyval.node) = (yyvsp[0].node);
-    
+        
     }
-#line 2297 "c7synt.tab.c"
+#line 2292 "c7synt.tab.c"
     break;
 
   case 71: /* factor: set-exp  */
-#line 439 "c7synt.y"
+#line 434 "c7synt.y"
               {
         if(PARSETREE) printf(" factor -> set-exp\n");
         (yyval.node) = (yyvsp[0].node);
-
+        
     }
-#line 2307 "c7synt.tab.c"
+#line 2302 "c7synt.tab.c"
     break;
 
   case 72: /* set-exp: ADD '(' in-exp ')'  */
-#line 445 "c7synt.y"
+#line 440 "c7synt.y"
                              {
         if(PARSETREE) printf(" set-op -> ADD (in-exp)\n");
         (yyvsp[-1].node) = createNode(SET_ADD , NULL,NULL,(yyvsp[-1].node), NULL,NULL);
         (yyval.node) = (yyvsp[-1].node);
-    
     }
-#line 2318 "c7synt.tab.c"
+#line 2312 "c7synt.tab.c"
     break;
 
   case 73: /* set-exp: REMOVE '(' in-exp ')'  */
-#line 451 "c7synt.y"
+#line 445 "c7synt.y"
                             {
         if(PARSETREE) printf(" set-op -> REMOVE (in-exp)\n");
         (yyvsp[-1].node) = createNode(SET_REMOVE, NULL,NULL,(yyvsp[-1].node), NULL,NULL);
         (yyval.node) = (yyvsp[-1].node);
         
     }
-#line 2329 "c7synt.tab.c"
+#line 2323 "c7synt.tab.c"
     break;
 
   case 74: /* set-exp: EXISTS '(' in-exp ')'  */
-#line 457 "c7synt.y"
+#line 451 "c7synt.y"
                             {
         if(PARSETREE) printf(" set-op -> EXISTS (in-exp)\n");
         (yyvsp[-1].node) = createNode(SET_EXISTS , NULL,NULL,(yyvsp[-1].node), NULL,NULL);
         (yyval.node) = (yyvsp[-1].node);
     }
-#line 2339 "c7synt.tab.c"
+#line 2333 "c7synt.tab.c"
     break;
 
   case 75: /* set-exp: IS_SET '(' in-exp ')'  */
-#line 462 "c7synt.y"
+#line 456 "c7synt.y"
                             {
         if(PARSETREE) printf(" set-op -> IS_SET (in-exp)\n");
         (yyvsp[-1].node) = createNode(IS_SET_EXP , NULL,NULL,(yyvsp[-1].node), NULL,NULL);
         (yyval.node) = (yyvsp[-1].node);
     }
-#line 2349 "c7synt.tab.c"
+#line 2343 "c7synt.tab.c"
     break;
 
   case 76: /* constant: INTEGER_CONST  */
-#line 469 "c7synt.y"
+#line 463 "c7synt.y"
                         {
             if(PARSETREE)printf(" constant -> INTEGER_CONST\n");
             (yyval.node) = createNode(CONST , NULL,(yyvsp[0].str),NULL, NULL,NULL);
              
         }
-#line 2359 "c7synt.tab.c"
+#line 2353 "c7synt.tab.c"
     break;
 
   case 77: /* constant: FLOAT_CONST  */
-#line 474 "c7synt.y"
+#line 468 "c7synt.y"
                       {
             if(PARSETREE) printf(" constant -> FLOAT_CONST\n");
             (yyval.node) = createNode(CONST , NULL,(yyvsp[0].str),NULL, NULL,NULL);
              
         }
-#line 2369 "c7synt.tab.c"
+#line 2363 "c7synt.tab.c"
     break;
 
   case 78: /* constant: EMPTY_CONST  */
-#line 479 "c7synt.y"
+#line 473 "c7synt.y"
                       {
             if(PARSETREE) printf(" constant -> EMPTY_CONST\n");
             (yyval.node) = createNode(CONST , NULL,(yyvsp[0].str),NULL, NULL,NULL);
              
         }
-#line 2379 "c7synt.tab.c"
+#line 2373 "c7synt.tab.c"
     break;
 
   case 79: /* constant: STRING  */
-#line 484 "c7synt.y"
+#line 478 "c7synt.y"
                  {
             if(PARSETREE) printf(" constant -> STRING\n");
             (yyval.node) = createNode(CONST , NULL,(yyvsp[0].str),NULL, NULL,NULL);   
         }
-#line 2388 "c7synt.tab.c"
+#line 2382 "c7synt.tab.c"
     break;
 
   case 80: /* call: ID '(' arg-list ')'  */
-#line 489 "c7synt.y"
+#line 483 "c7synt.y"
                           {
         if(PARSETREE)printf(" call -> ID (args)\n");
         (yyval.node) = createNode(CALL , NULL,(yyvsp[-3].str),(yyvsp[-1].node), NULL,NULL);
          
          
     }
-#line 2399 "c7synt.tab.c"
+#line 2393 "c7synt.tab.c"
     break;
 
   case 81: /* call: ID '(' ')'  */
-#line 495 "c7synt.y"
+#line 489 "c7synt.y"
                 {
         if(PARSETREE)printf(" call -> ID (args)\n");
         (yyval.node) = createNode(CALL , NULL,(yyvsp[-2].str),NULL, NULL,NULL);
     }
-#line 2408 "c7synt.tab.c"
+#line 2402 "c7synt.tab.c"
     break;
 
-  case 82: /* arg-list: factor  */
-#line 500 "c7synt.y"
-                 {
+  case 82: /* arg-list: assign-exp  */
+#line 494 "c7synt.y"
+                     {
             if(PARSETREE) printf("arg-list");
             (yyval.node)=(yyvsp[0].node);
         }
-#line 2417 "c7synt.tab.c"
+#line 2411 "c7synt.tab.c"
     break;
 
-  case 83: /* arg-list: arg-list ',' factor  */
-#line 504 "c7synt.y"
-                              {
+  case 83: /* arg-list: arg-list ',' assign-exp  */
+#line 498 "c7synt.y"
+                                  {
             if(PARSETREE) printf("arg-list");
             (yyval.node) = createNode(ARG_LIST , NULL,NULL,(yyvsp[-2].node), (yyvsp[0].node),NULL);
         }
-#line 2426 "c7synt.tab.c"
+#line 2420 "c7synt.tab.c"
     break;
 
 
-#line 2430 "c7synt.tab.c"
+#line 2424 "c7synt.tab.c"
 
       default: break;
     }
@@ -2656,7 +2650,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 511 "c7synt.y"
+#line 505 "c7synt.y"
 
 
 
@@ -2667,18 +2661,27 @@ int yyerror(const char *s){
 
 int main( int argc, char **argv ) {
     ++argv, --argc;
+    line= 1;
+    col= 1;
+    semantic_error = 0;
     if(argc > 0)
         yyin = fopen( argv[0], "r" );
     else
         yyin = stdin;
 
-    printf(RED"::>ERROS SEMANTICOS<::\t\n"DFT);
     initGlobalScope();
-    yyparse();
 
+    if (!semantic_error) {
+        printf(RED"\n::>ERROS SEMANTICOS<::\t\n"DFT);
+    }
+
+    yyparse();
     if(error_count==0) {
         printf(RED"\n\n::>ARVORE SINTATICA ABSTRATA<::\t\n"DFT);
         printTree(root,0);
+    } else {
+        printf(RED"\n\n::>ARVORE SINTATICA ABSTRATA<::\t\n"DFT);
+        printf("\n\n Not showed due to Lexical or Syntactical errors. \t\n");
     }
 
     printf(RED"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
@@ -2687,7 +2690,7 @@ int main( int argc, char **argv ) {
     fclose(yyin);
     yylex_destroy();
 
-    if (!root) freeVertex(root);
+    freeVertex(root);
     freeTable();
     pop();
 

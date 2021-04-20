@@ -19,8 +19,6 @@
     extern int yylex_destroy();
     extern FILE *yyin;
 
-    int line= 1;
-    int col= 1;
     int error_count=0;
 %}
 
@@ -127,12 +125,12 @@ declaration: function-definition {
 var-declaration: TYPE ID ';' {
         if(PARSETREE) printf("var-declaration -> type ID\n");
         $$ = createNode(VAR_DECLARATION, $1 , $2, NULL , NULL , NULL);
-        addEntry($2,$1,VAR, line, col);
+        addEntry($2,$1,VAR);
     }
 ; 
 
 function-definition: TYPE ID {
-        addEntry($2,$1,FUNC, line, col);
+        addEntry($2,$1,FUNC);
     }'(' parameters ')' compound-stmt {
         if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
         $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $5 , $7, NULL);
@@ -163,11 +161,11 @@ parameter-list: parameter-declaration {
 parameter-declaration: TYPE ID {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
         $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL,NULL);
-        addEntry($2,$1,PARAM, line,col);
+        addEntry($2,$1,PARAM);
     }
 ;
 compound-stmt: '{' {
-                createScope();
+                    createScope();
             } local-decls-stmts '}' {
                 if(PARSETREE) printf("C-stmt -> '{' local-decls-stmts'}'\n");
                 $$ = $3;
@@ -301,7 +299,7 @@ expression-stmt: expression ';'     {
         if(PARSETREE) printf("expression-stmt -> expression ;\n");
         $$ =$1;
     }
-    | ';' { $$ =NULL;}
+    | ';' { $$ = NULL;}
 ;
 expression: assign-exp  {
         if(PARSETREE) printf("expression-> assign \n");
@@ -333,7 +331,6 @@ in-exp: expression IN in-exp {
     | expression {
         if(PARSETREE) printf("in-exp -> expression\n");
         $$ = $1;
-
     }
 ;
 basic-exp: logical-exp {
@@ -398,7 +395,6 @@ add-exp: term {
         | add-exp MINUS term {
             if(PARSETREE) printf(" add-exp -> term MINUS term\n");
             $$ = createNode(ADD_OP , NULL,$2,$1, $3,NULL);
- 
         }
 ;
 term: factor { 
@@ -419,34 +415,32 @@ term: factor {
 factor: '(' expression ')' {
         if(PARSETREE) printf(" factor -> ( expression )\n");
         $$ = $2;
-
+        
     }
     | ID {
         if(PARSETREE) printf(" factor -> ID\n");
         $$ = createNode(IDENT , NULL,$1,NULL, NULL,NULL);
-
     }
     | constant {
         if(PARSETREE) printf(" factor -> constant\n");
         $$ = $1;
-
+        
     }
     | call {
         if(PARSETREE) printf("factor -> call\n");
         $$ = $1;
-    
+        
     }
     | set-exp {
         if(PARSETREE) printf(" factor -> set-exp\n");
         $$ = $1;
-
+        
     }
 ;
 set-exp: ADD '(' in-exp ')'  {
         if(PARSETREE) printf(" set-op -> ADD (in-exp)\n");
         $3 = createNode(SET_ADD , NULL,NULL,$3, NULL,NULL);
         $$ = $3;
-    
     }   
     | REMOVE '(' in-exp ')' {
         if(PARSETREE) printf(" set-op -> REMOVE (in-exp)\n");
@@ -497,11 +491,11 @@ call: ID '(' arg-list ')' {
         $$ = createNode(CALL , NULL,$1,NULL, NULL,NULL);
     }
 ;
-arg-list: factor {
+arg-list: assign-exp {
             if(PARSETREE) printf("arg-list");
             $$=$1;
         }
-        | arg-list ',' factor {
+        | arg-list ',' assign-exp {
             if(PARSETREE) printf("arg-list");
             $$ = createNode(ARG_LIST , NULL,NULL,$1, $3,NULL);
         }
@@ -518,18 +512,27 @@ int yyerror(const char *s){
 
 int main( int argc, char **argv ) {
     ++argv, --argc;
+    line= 1;
+    col= 1;
+    semantic_error = 0;
     if(argc > 0)
         yyin = fopen( argv[0], "r" );
     else
         yyin = stdin;
 
-    printf(RED"::>ERROS SEMANTICOS<::\t\n"DFT);
     initGlobalScope();
-    yyparse();
 
+    if (!semantic_error) {
+        printf(RED"\n::>ERROS SEMANTICOS<::\t\n"DFT);
+    }
+
+    yyparse();
     if(error_count==0) {
         printf(RED"\n\n::>ARVORE SINTATICA ABSTRATA<::\t\n"DFT);
         printTree(root,0);
+    } else {
+        printf(RED"\n\n::>ARVORE SINTATICA ABSTRATA<::\t\n"DFT);
+        printf("\n\n Not showed due to Lexical or Syntactical errors. \t\n");
     }
 
     printf(RED"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
@@ -538,7 +541,7 @@ int main( int argc, char **argv ) {
     fclose(yyin);
     yylex_destroy();
 
-    if (!root) freeVertex(root);
+    freeVertex(root);
     freeTable();
     pop();
 

@@ -115,7 +115,7 @@ typedef struct vertex
 
 vertex *root;
 
-int scope_counter;
+int line, col,scope_counter;
 vertex *createNode(int variable_name, char *op_or_type, char *value, struct vertex *v1, vertex *v2, vertex *v3);
 void print_tabs(int tabs);
 void print_variable(int name);
@@ -127,7 +127,7 @@ void printTree(vertex *root, int dpt);
 // ID , type , func or variable
 
 Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id , int line, int col);
-void addEntry(char *ID, char *type, int var_or_func, int line, int col);
+void addEntry(char *ID, char *type, int var_or_func);
 void printTable();
 void freeTable();
 
