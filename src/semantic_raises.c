@@ -5,10 +5,10 @@
 
 void raiseRedecl(int line,int col) {
     printf("semantic error: %s , line: %d , col: %d\n","Function or Variable already declared in this scope", line, col);
-    semantic_error++;
+    semantic_error=1;
 }
 
 void raiseNoMain() {
     printf("semantic error: %s \n","No main() function in this program.");
-    semantic_error++;
+    semantic_error=1;
 }

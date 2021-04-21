@@ -91,21 +91,21 @@
 
 %%
 begin:program {
-    $$ = createNode(PROGRAM,NULL,NULL,$1,NULL,NULL);
+    $$ = createNode(PROGRAM,NULL,NULL,$1,NULL);
     root = $$;
     checkNoMain();
     }
 ;
 
 program: declaration-list {
-        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,NULL,NULL);
+        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,NULL);
         if(PARSETREE) printf("begin ->program\n\n\n - end of parse tree - \n");
     }
 ;
 
 declaration-list: declaration-list declaration {
                         if (PARSETREE) printf("declaration-list -> declaration-list declaration \n");
-                        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,$2,NULL);
+                        $$ = createNode(DECLARATION_LIST,NULL,NULL,$1,$2);
                     }
                 | declaration {
                         if(PARSETREE) printf("declaration-list -> declaration\n");
@@ -124,7 +124,7 @@ declaration: function-definition {
 
 var-declaration: TYPE ID ';' {
         if(PARSETREE) printf("var-declaration -> type ID\n");
-        $$ = createNode(VAR_DECLARATION, $1 , $2, NULL , NULL , NULL);
+        $$ = createNode(VAR_DECLARATION, $1 , $2, NULL , NULL );
         addEntry($2,$1,VAR);
     }
 ; 
@@ -133,7 +133,7 @@ function-definition: TYPE ID {
         addEntry($2,$1,FUNC);
     }'(' parameters ')' compound-stmt {
         if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
-        $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $5 , $7, NULL);
+        $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $5 , $7);
     }
 ;
 
@@ -154,13 +154,13 @@ parameter-list: parameter-declaration {
     }
     | parameter-list ',' parameter-declaration {
         if(PARSETREE) printf("parameter-list -> parameter-list ',' parameter-declaration\n");
-        $$ = createNode(PARAMETER_LIST , NULL, NULL ,$1, $3 , NULL);
+        $$ = createNode(PARAMETER_LIST , NULL, NULL ,$1, $3 );
 
     }
 ;
 parameter-declaration: TYPE ID {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
-        $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL,NULL);
+        $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL);
         addEntry($2,$1,PARAM);
     }
 ;
@@ -184,11 +184,11 @@ local-decls-stmts: stmts  {
 ;
 stmts: stmts stmt {
         if(PARSETREE) printf("stmts -> stmts stmt\n");
-        $$ = createNode(STMTS , NULL ,NULL,$1, $2,NULL);
+        $$ = createNode(STMTS , NULL ,NULL,$1, $2);
     }
     | stmt {
         if(PARSETREE) printf("stmts -> stmts stmt\n");
-        $1 = createNode(STMT , NULL ,NULL,$1, NULL,NULL);
+        $1 = createNode(STMT , NULL ,NULL,$1, NULL);
         $$ = $1;
         
     }
@@ -236,29 +236,32 @@ stmt: io-stmt {
 
 io-stmt: READ '(' expression ')' ';' {
             if(PARSETREE) printf("io-stmt -> read ( exp ) \n");
-            $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL);
+            $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL);
             
         }
         | WRITE '(' expression ')' ';' {
            if(PARSETREE) printf("io-stmt -> write ( exp ) \n");
-           $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL);
+           $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL);
 
         }
        | WRITELN '(' expression ')' ';' {
            if(PARSETREE) printf("io-stmt -> writeln ( exp )\n");
-           $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL,NULL);
+           $$ = createNode(IO_STMT , NULL ,NULL,$3, NULL);
         }
 ;
 
 if-stmt: IF condition stmt        %prec THEN {
             if(PARSETREE) printf("if-stmt\n");
-            $$ = createNode(IF_STMT , NULL ,NULL,$2,$3,NULL);
+            $$ = createNode(IF_STMT , NULL ,NULL,$2,$3);
         }
         | IF condition stmt ELSE stmt {
            if(PARSETREE) printf("if-stmt\n");
-           $$ = createNode(IF_ELSE_STMT , NULL ,NULL,$2,$3,$5);
+           $$ = createNode(IF_COND , NULL ,NULL,$2,NULL);
+           vertex * aux = createNode(IF_STMT,NULL,NULL,$3,$5);
+           $$->r = aux;
        }
 ;
+
 
 condition: '(' expression ')'{
         if(PARSETREE) printf("condition -> (exp)\n");
@@ -268,30 +271,33 @@ condition: '(' expression ')'{
 
 for-stmt: FOR for-conditions stmt  {
         if(PARSETREE) printf("for-stmt -> for\n");
-        $$ = createNode(FOR_STMT , NULL ,NULL,$2,$3,NULL);
+        $$ = createNode(FOR_STMT , NULL ,NULL,$2,$3);
     }
 ;
 
 for-conditions: '(' expression ';' expression ';' expression ')'{
         if(PARSETREE) printf("for-stmt ->for-cond\n");
-        $$ = createNode(FOR_COND,NULL,NULL,$2,$4,$6);
+        $$ = createNode(FOR_COND,NULL,NULL,$2,NULL);
+        vertex * aux = createNode(FOR_LAST_ARG,NULL,NULL,$4,$6);
+        $$-> r = aux;
     }
 
 ;
 
 return-stmt: RETURN expression ';' {
         if(PARSETREE) printf("return-stmt -> return exp ;\n");
-        $$ = createNode(RETURN_STMT , NULL,NULL,$2, NULL,NULL);
+        $$ = createNode(RETURN_STMT , NULL,NULL,$2, NULL);
+
     }
 ;
 
 forall-stmt: FORALL '(' in-exp ')' compound-stmt {
         if(PARSETREE) printf("forall-stmt ->FORALL (in-exp) compound\n");
-        $$ = createNode(FORALL_STMT, NULL,NULL,$3, $5,NULL);
+        $$ = createNode(FORALL_STMT, NULL,NULL,$3, $5);
     }
     | FORALL '(' in-exp ')' expression-stmt {
         if(PARSETREE) printf("forall-stmt -> FORALL ( in-exp )\n");
-       $$ = createNode(FORALL_STMT , NULL,NULL,$3, $5,NULL);
+       $$ = createNode(FORALL_STMT , NULL,NULL,$3, $5);
     }
 ;
 
@@ -308,7 +314,7 @@ expression: assign-exp  {
     }
     | expression  ',' assign-exp {
         if(PARSETREE) printf("expression -> exp , assign\n");
-        $$ = createNode(EXPRESSION , NULL,NULL,$1, $3,NULL);
+        $$ = createNode(EXPRESSION , NULL,NULL,$1, $3);
     }      
 ;
 assign-exp: basic-exp {
@@ -318,14 +324,15 @@ assign-exp: basic-exp {
     }
     | basic-exp EQ assign-exp {
         if (PARSETREE) printf("assign -> ID EQ assign\n");
-        $$ = createNode(ASSIGN , $2 ,NULL,$1, $3,NULL);
+        $$ = createNode(ASSIGN , $2 ,NULL,$1, $3);
+        addTypeToNode($$);
        
     }
 ;
 
 in-exp: expression IN in-exp {
         if(PARSETREE) printf("in-exp -> expression IN in-exp\n");
-        $$ = createNode(IN_OP,NULL,NULL,$1, $3,NULL);
+        $$ = createNode(IN_OP,NULL,NULL,$1, $3);
 
     }
     | expression {
@@ -340,16 +347,16 @@ basic-exp: logical-exp {
     }
     | basic-exp OR logical-exp {
         if(PARSETREE) printf("basic-exp -> logical OR logical\n");
-        $$ = createNode(LOGICAL_EXP , $2 ,NULL,$1, $3,NULL);
+        $$ = createNode(LOGICAL_EXP , $2 ,NULL,$1, $3);
     }
     | basic-exp AND logical-exp {
         if(PARSETREE) printf("basic-exp -> logical AND logical\n");
-        $$ = createNode(LOGICAL_EXP , $2 ,NULL,$1, $3,NULL);
+        $$ = createNode(LOGICAL_EXP , $2 ,NULL,$1, $3);
 
     }
     | NOT logical-exp {
         if(PARSETREE) printf("basic-exp -> NOT logical\n");
-        $$ = createNode(LOGICAL_EXP,$1,NULL,$2, NULL,NULL);
+        $$ = createNode(LOGICAL_EXP,$1,NULL,$2, NULL);
     }
 ;
 
@@ -359,28 +366,28 @@ logical-exp: add-exp {
     }
     | logical-exp EQ_TO add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
+        $$ = createNode(REL_OP, $2,NULL,$1, $3);
 
     }
     | logical-exp NEQ_TO add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
+        $$ = createNode(REL_OP, $2,NULL,$1, $3);
     }
     | logical-exp GT add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
+        $$ = createNode(REL_OP, $2,NULL,$1, $3);
     }
     | logical-exp LT add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-       $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
+       $$ = createNode(REL_OP, $2,NULL,$1, $3);
     }
     | logical-exp GTE add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(REL_OP, $2,NULL,$1, $3,NULL);
+        $$ = createNode(REL_OP, $2,NULL,$1, $3);
     }
     | logical-exp LTE add-exp {
         if(PARSETREE) printf(" basic-exp -> add-exp rel-op add-exp\n");
-        $$ = createNode(REL_OP , NULL,$2,$1, $3,NULL);
+        $$ = createNode(REL_OP , NULL,$2,$1, $3);
     }
 ;
 
@@ -390,11 +397,11 @@ add-exp: term {
         }
         | add-exp PLUS term {
             if(PARSETREE)printf(" add-exp -> term PLUS term\n");
-            $$ = createNode(ADD_OP , $2,NULL,$1, $3,NULL);
+            $$ = createNode(ADD_OP , $2,NULL,$1, $3);
         }
         | add-exp MINUS term {
             if(PARSETREE) printf(" add-exp -> term MINUS term\n");
-            $$ = createNode(ADD_OP , NULL,$2,$1, $3,NULL);
+            $$ = createNode(ADD_OP , NULL,$2,$1, $3);
         }
 ;
 term: factor { 
@@ -403,11 +410,11 @@ term: factor {
     }
     | term MULT factor {
         if(PARSETREE) printf(" term -> term mul-op factor\n");
-        $$ = createNode(MUL_OP ,$2,NULL,$1, $3,NULL);
+        $$ = createNode(MUL_OP ,$2,NULL,$1, $3);
     }
     | term DIV factor {
         if(PARSETREE) printf(" term -> term mul-op factor\n");
-        $$ = createNode(DIV_OP ,$2,NULL,$1, $3,NULL);
+        $$ = createNode(DIV_OP ,$2,NULL,$1, $3);
 
     }
 ;
@@ -419,7 +426,7 @@ factor: '(' expression ')' {
     }
     | ID {
         if(PARSETREE) printf(" factor -> ID\n");
-        $$ = createNode(IDENT , NULL,$1,NULL, NULL,NULL);
+        $$ = createNode(IDENT , NULL,$1,NULL, NULL);
     }
     | constant {
         if(PARSETREE) printf(" factor -> constant\n");
@@ -439,56 +446,56 @@ factor: '(' expression ')' {
 ;
 set-exp: ADD '(' in-exp ')'  {
         if(PARSETREE) printf(" set-op -> ADD (in-exp)\n");
-        $3 = createNode(SET_ADD , NULL,NULL,$3, NULL,NULL);
+        $3 = createNode(SET_ADD , NULL,NULL,$3, NULL);
         $$ = $3;
     }   
     | REMOVE '(' in-exp ')' {
         if(PARSETREE) printf(" set-op -> REMOVE (in-exp)\n");
-        $3 = createNode(SET_REMOVE, NULL,NULL,$3, NULL,NULL);
+        $3 = createNode(SET_REMOVE, NULL,NULL,$3, NULL);
         $$ = $3;
         
     }
     | EXISTS '(' in-exp ')' {
         if(PARSETREE) printf(" set-op -> EXISTS (in-exp)\n");
-        $3 = createNode(SET_EXISTS , NULL,NULL,$3, NULL,NULL);
+        $3 = createNode(SET_EXISTS , NULL,NULL,$3, NULL);
         $$ = $3;
     }
     | IS_SET '(' in-exp ')' {
         if(PARSETREE) printf(" set-op -> IS_SET (in-exp)\n");
-        $3 = createNode(IS_SET_EXP , NULL,NULL,$3, NULL,NULL);
+        $3 = createNode(IS_SET_EXP , NULL,NULL,$3, NULL);
         $$ = $3;
     }
 ;
 
 constant: INTEGER_CONST {
             if(PARSETREE)printf(" constant -> INTEGER_CONST\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL);
+            $$ = createNode(CONST , NULL,$1,NULL, NULL);
              
         }
         | FLOAT_CONST {
             if(PARSETREE) printf(" constant -> FLOAT_CONST\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL);
+            $$ = createNode(CONST , NULL,$1,NULL, NULL);
              
         }
         | EMPTY_CONST {
             if(PARSETREE) printf(" constant -> EMPTY_CONST\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL);
+            $$ = createNode(CONST , NULL,$1,NULL, NULL);
              
         }
         | STRING {
             if(PARSETREE) printf(" constant -> STRING\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL,NULL);   
+            $$ = createNode(CONST , NULL,$1,NULL, NULL);   
         }
 ;
 call: ID '(' arg-list ')' {
         if(PARSETREE)printf(" call -> ID (args)\n");
-        $$ = createNode(CALL , NULL,$1,$3, NULL,NULL);
+        $$ = createNode(CALL , NULL,$1,$3, NULL);
          
          
     }
     | ID '('')' {
         if(PARSETREE)printf(" call -> ID (args)\n");
-        $$ = createNode(CALL , NULL,$1,NULL, NULL,NULL);
+        $$ = createNode(CALL , NULL,$1,NULL, NULL);
     }
 ;
 arg-list: assign-exp {
@@ -497,7 +504,7 @@ arg-list: assign-exp {
         }
         | arg-list ',' assign-exp {
             if(PARSETREE) printf("arg-list");
-            $$ = createNode(ARG_LIST , NULL,NULL,$1, $3,NULL);
+            $$ = createNode(ARG_LIST , NULL,NULL,$1, $3);
         }
 ;
 
@@ -522,7 +529,8 @@ int main( int argc, char **argv ) {
 
     initGlobalScope();
 
-    if (!semantic_error) {
+    // fix this
+    if (semantic_error==1) {
         printf(RED"\n::>ERROS SEMANTICOS<::\t\n"DFT);
     }
 

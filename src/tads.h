@@ -71,7 +71,10 @@ typedef enum variable_names
     FOR_COND,
     IF_ELSE_STMT,
     REL_OP,
-    IS_SET_EXP
+    IS_SET_EXP,
+    FOR_LAST_ARG,
+    ELSE_STMT,
+    IF_COND
 
 } variable_names;
 
@@ -108,15 +111,15 @@ typedef struct vertex
     int variable_name;
     char *op_or_type;
     char *value;
-    struct vertex *n1;
-    struct vertex *n2;
-    struct vertex *n3;
+    char *node_taipe;
+    struct vertex *l;
+    struct vertex *r;
 } vertex;
 
 vertex *root;
 
-int line, col,scope_counter;
-vertex *createNode(int variable_name, char *op_or_type, char *value, struct vertex *v1, vertex *v2, vertex *v3);
+int line, col, scope_counter;
+vertex *createNode(int variable_name, char *op_or_type, char *value, struct vertex *v1, vertex *v2);
 void print_tabs(int tabs);
 void print_variable(int name);
 void freeVertex(vertex *root);
@@ -126,10 +129,11 @@ void printTree(vertex *root, int dpt);
 
 // ID , type , func or variable
 
-Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id , int line, int col);
+Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int line, int col);
 void addEntry(char *ID, char *type, int var_or_func);
 void printTable();
 void freeTable();
+void addTypeToNode(vertex *nozes);
 
 // pilha de escopo
 void initGlobalScope();
@@ -137,10 +141,8 @@ void createScope();
 void push(Scope *scope);
 void pop();
 
-
 //SEMANTIC CHECKS
 
 void checkNoMain();
-
 
 #endif

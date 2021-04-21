@@ -3,16 +3,15 @@
 #include <stdio.h>
 #include "tads.h"
 
-vertex *createNode(int variable_name, char *op_or_type, char *value, vertex *n1, vertex *n2, vertex *n3)
+vertex *createNode(int variable_name, char *op_or_type, char *value, vertex *l, vertex *r)
 {
     vertex *node = (vertex *)malloc(sizeof(vertex));
     node->variable_name = variable_name;
     node->op_or_type = op_or_type;
     node->value = value;
-    node->n1 = n1;
-    node->n2 = n2;
-    node->n3 = n3;
-
+    node->l = l;
+    node->r = r;
+    node->node_taipe = '\0';
     return node;
 }
 
@@ -20,13 +19,11 @@ void freeVertex(vertex *root)
 {
     if (!root)
         return;
-       
     free(root->op_or_type);
     free(root->value);
-    freeVertex(root->n1);
-    freeVertex(root->n2);
-    freeVertex(root->n3);
-        
+    free(root->node_taipe);
+    freeVertex(root->l);
+    freeVertex(root->r);
     free(root);
 }
 
@@ -41,12 +38,10 @@ void printTree(vertex *root, int dpt)
             printf(" %s ", root->op_or_type);
         if (root->value != NULL)
             printf(" %s ", root->value);
-        if (root != root->n1)
-            printTree(root->n1, dpt + 1);
-        if (root != root->n2)
-            printTree(root->n2, dpt + 1);
-        if (root != root->n3)
-            printTree(root->n3, dpt + 1);
+        if (root != root->l)
+            printTree(root->l, dpt + 1);
+        if (root != root->r)
+            printTree(root->r, dpt + 1);
     }
 }
 
@@ -95,7 +90,6 @@ void print_variable(int name)
     case IS_SET_EXP:
         printf(YEL "(IS_SET:>" DFT);
         break;
-
     case RETURN_STMT:
         printf(YEL "(RETURN:>" DFT);
         break;
@@ -141,14 +135,29 @@ void print_variable(int name)
     case IF_ELSE_STMT:
         printf(BLU "(IF_ELSE:>" DFT);
         break;
+    case IF_COND:
+        printf(BLU "(IF_CONDITION:>" DFT);
+        break;
     case FOR_STMT:
         printf(BLU "(FOR:>" DFT);
+        break;
+    case FOR_LAST_ARG:
+        printf(BLU "(FOR_ITER:>" DFT);
+        break;
+    case ELSE_STMT:
+        printf(CYN "(ELSE_STATEMENT:>" DFT);
         break;
     case STMT:
         printf(CYN "(STATEMENT:>" DFT);
         break;
     }
 }
+
+void addTypeToNode(vertex *nozes)
+{
+}
+
+// Symbols
 
 Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int line, int col)
 {
@@ -173,7 +182,7 @@ void addEntry(char *ID, char *type, int var_or_func)
     {
         if (var_or_func == PARAM)
         {
-            entry = createSymbol(ID, type, var_or_func, (scope_counter+1), line, col);
+            entry = createSymbol(ID, type, var_or_func, (scope_counter + 1), line, col);
         }
         else
         {
@@ -254,14 +263,17 @@ void pop()
 void checkNoMain()
 {
     int found = 0;
-    for (Symbol *entry = symbolTable; entry!= NULL; entry = entry->hh.next) {
-        if (!strcmp(entry->ID, "main") && entry->var_or_func==FUNC) {
-            found=1;
+    for (Symbol *entry = symbolTable; entry != NULL; entry = entry->hh.next)
+    {
+        if (!strcmp(entry->ID, "main") && entry->var_or_func == FUNC)
+        {
+            found = 1;
         }
     }
-    if(!found){
+    if (!found)
+    {
         raiseNoMain();
-    }    
+    }
 }
 
 vertex *root = NULL;
