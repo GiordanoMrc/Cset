@@ -31,13 +31,17 @@ void printTree(vertex *root, int dpt)
 {
     if (root)
     {
-        printf("\n");
-        print_tabs(dpt);
-        print_variable(root->variable_name);
+        if (root->variable_name != 666)
+        {
+            printf("\n");
+            print_tabs(dpt);
+            print_variable(root->variable_name);
+        }
         if (root->op_or_type != NULL)
-            printf(" %s ", root->op_or_type);
+            printf(": %s ", root->op_or_type);
         if (root->value != NULL)
-            printf(" %s ", root->value);
+            printf(": %s ", root->value);
+
         if (root != root->l)
             printTree(root->l, dpt + 1);
         if (root != root->r)
@@ -49,8 +53,9 @@ void print_tabs(int tabs)
 {
     for (int i = tabs; i != 0; i--)
     {
-        printf(KGRN "_" DFT);
+        printf(" ");
     }
+    printf("├");
 }
 
 void print_variable(int name)
@@ -58,103 +63,156 @@ void print_variable(int name)
     switch (name)
     {
     case PROGRAM:
-        printf(CYN "\nPROGRAM:" DFT);
+        printf(" PROGRAM" DFT);
         break;
     case VAR_DECLARATION:
-        printf(BLU "(DECLARACAO-VARIAVEL:>" DFT);
+        printf(RED " DECLARACAO-VARIAVEL" DFT);
         break;
     case FUNCTION_DEFINITION:
-        printf(BLU "(DEFINICAO-FUNCAO:>" DFT);
+        printf(KMAG " DEFINICAO-FUNCAO" DFT);
         break;
     case PARAMETER_DECL:
-        printf(YEL "(DEFINICAO-PARAMETRO:>" DFT);
+        printf(YEL " DEFINICAO-PARAMETRO" DFT);
         break;
     case CONSTANT:
-        printf(YEL "(CONSTANT:>" DFT);
+        printf(YEL " CONSTANTE" DFT);
         break;
     case CALL:
-        printf(YEL "(CALL:>" DFT);
+        printf(BLU " CALL" DFT);
         break;
     case ARG_LIST:
-        printf(YEL "(ARGUMENTOS:>" DFT);
+        printf(YEL " ARGUMENTOS" DFT);
         break;
     case SET_ADD:
-        printf(YEL "(SET_ADD:>" DFT);
+        printf(BLU " SET_ADD" DFT);
         break;
     case SET_REMOVE:
-        printf(YEL "(SET_REMOVE:>" DFT);
+        printf(BLU " SET_REMOVE" DFT);
         break;
     case SET_EXISTS:
-        printf(YEL "(SET_EXISTS:>" DFT);
+        printf(BLU " SET_EXISTS" DFT);
         break;
     case IS_SET_EXP:
-        printf(YEL "(IS_SET:>" DFT);
+        printf(BLU " IS_SET" DFT);
         break;
     case RETURN_STMT:
-        printf(YEL "(RETURN:>" DFT);
+        printf(BLU " RETURN" DFT);
         break;
     case IN_OP:
-        printf(YEL "(IN:>" DFT);
+        printf(BLU " IN" DFT);
         break;
     case REL_OP:
-        printf(YEL "(REL_OP:>" DFT);
+        printf(YEL " REL_OP" DFT);
+        break;
+    case REL_EQ:
+        printf(YEL " REL_EQ" DFT);
         break;
     case LOGICAL_EXP:
-        printf(YEL "(LOGICAL_OP:>" DFT);
+        printf(YEL " LOGICAL_OP" DFT);
         break;
     case ADD_OP:
-        printf(YEL "(ADD_OP:>" DFT);
+        printf(YEL " ADD_OP" DFT);
         break;
     case MUL_OP:
-        printf(YEL "(MUL_OP:>" DFT);
+        printf(YEL " MUL_OP" DFT);
         break;
     case DIV_OP:
-        printf(YEL "(DIV_OP:>" DFT);
+        printf(YEL " DIV_OP" DFT);
+        break;
+    case NOT_OP:
+        printf(YEL " NOT_OP" DFT);
         break;
     case IO_STMT:
-        printf(BLU "(IO:>" DFT);
+        printf(BLU " IO" DFT);
         break;
     case FORALL_STMT:
-        printf(BLU "(FORALL:>" DFT);
+        printf(BLU " FORALL" DFT);
         break;
     case IDENT:
-        printf(YEL "(ID:>" DFT);
+        printf(YEL " ID" DFT);
         break;
     case BASIC_OP:
-        printf(YEL "(BASIC OP:>" DFT);
+        printf(YEL " BASIC OP" DFT);
         break;
     case CONST:
-        printf(YEL "(CONST:>" DFT);
+        printf(YEL " CONSTANT" DFT);
         break;
     case ASSIGN:
-        printf(YEL "(ASSIGN:>" DFT);
+        printf(YEL " ASSIGN" DFT);
         break;
     case IF_STMT:
-        printf(BLU "(IF:>" DFT);
-        break;
-    case IF_ELSE_STMT:
-        printf(BLU "(IF_ELSE:>" DFT);
+        printf(BLU " IF" DFT);
         break;
     case IF_COND:
-        printf(BLU "(IF_CONDITION:>" DFT);
+        printf(BLU " IF_CONDITION" DFT);
         break;
     case FOR_STMT:
-        printf(BLU "(FOR:>" DFT);
+        printf(BLU " FOR" DFT);
         break;
-    case FOR_LAST_ARG:
-        printf(BLU "(FOR_ITER:>" DFT);
+    case FOR_INIT:
+        printf(BLU " FOR_INIT" DFT);
+        break;
+    case FOR_COND:
+        printf(BLU " FOR_CONDITION" DFT);
+        break;
+    case FOR_INCREMENT:
+        printf(BLU " FOR_INCREMENT" DFT);
         break;
     case ELSE_STMT:
-        printf(CYN "(ELSE_STATEMENT:>" DFT);
+        printf(BLU " ELSE" DFT);
         break;
     case STMT:
-        printf(CYN "(STATEMENT:>" DFT);
+        printf(CYN " STATEMENT" DFT);
+        break;
+    case VALUE_INT:
+        printf(CYN " INT" DFT);
+        break;
+    case VALUE_FLOAT:
+        printf(CYN " FLOAT" DFT);
+        break;
+    case VALUE_EMPTY:
+        printf(CYN " EMPTY" DFT);
+        break;
+    case VALUE_STRING:
+        printf(CYN " STRING" DFT);
         break;
     }
 }
 
 void addTypeToNode(vertex *nozes)
 {
+    char *type_left = NULL;
+    char *type_right = NULL;
+    if (nozes->l != NULL)
+    {
+        type_left = nozes->l->node_taipe;
+    }
+    if (nozes->r != NULL)
+    {
+        type_right = nozes->r->node_taipe;
+    }
+    if (type_left != NULL && type_right != NULL && strcmp(type_left, type_right) != 0)
+    {
+        if ( // type mismatch -- implicit conversion
+            (strcmp(type_left, "int") == 0 && strcmp(type_right, "float") == 0) ||
+            (strcmp(type_left, "float") == 0 && strcmp(type_right, "int") == 0))
+        {
+            //add_implicit_conversion(nozes, NULL);
+            type_left = nozes->l->node_taipe;
+        }
+        else
+        {
+            //raiseTypeMismatch(type_left, type_right);
+        }
+    }
+    if (nozes->variable_name == REL_OP || nozes->variable_name == LOGICAL_EXP)
+    {
+        nozes->node_taipe = "bool";
+    }
+    else
+    {
+        nozes->node_taipe = type_left;
+    }
 }
 
 // Symbols
@@ -172,46 +230,52 @@ Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int li
     return entry;
 }
 
-void addEntry(char *ID, char *type, int var_or_func)
+void addEntry(char *ID, char *type, int var_or_func, int recent_scope)
 {
-    Symbol *entry;
-    Scope *h = STACK_TOP(head);
+    Symbol * entry;
 
-    HASH_FIND_STR(symbolTable, ID, entry);
-    if (entry == NULL || strcmp(entry->type, type) || entry->scope != h->scope_id)
+    for (entry=symbolTable; entry!= NULL; entry = entry->hh.next){
+        if(!strcmp(entry->ID, ID) && recent_scope == entry->scope){
+            if(var_or_func==FUNC){
+                raiseRedecl(line,col,ID,var_or_func);
+                skipScope =1;
+            }
+            else if(var_or_func==PARAM) {
+                raiseRedecl(line,col,ID,var_or_func);
+            } else {
+                raiseRedecl(line,col,ID,var_or_func);
+            }
+            return;
+        }
+    }
+
+    if (var_or_func == PARAM)
     {
-        if (var_or_func == PARAM)
-        {
-            entry = createSymbol(ID, type, var_or_func, (scope_counter + 1), line, col);
-        }
-        else
-        {
-            entry = createSymbol(ID, type, var_or_func, (h->scope_id), line, col);
-        }
-        HASH_ADD_STR(symbolTable, ID, entry);
+        entry = createSymbol(ID, type, var_or_func, recent_scope,line, col);
     }
     else
     {
-        raiseRedecl(line, col);
+        entry = createSymbol(ID, type, var_or_func, recent_scope, line, col);
     }
+    HASH_ADD_STR(symbolTable, ID, entry);
 }
 
 void printTable()
 {
-    printf("\nID   %15s | %4s:%4s | type   %10s | scope  %4s | Declaration Type  %5s\t\n", "", "lin", "col", "", "", "");
-    printf("_____________________________________________________________________________________________________________\n");
+    printf(KMAG "\nID   %11s | %4s:%4s | type   %3s | scope | Declaration Type  %5s\t\n" DFT, "", "lin", "col", "", "");
+    printf("____________________________________________________________________\n");
     for (Symbol *entry = symbolTable; entry != NULL; entry = entry->hh.next)
     {
         switch (entry->var_or_func)
         {
         case VAR:
-            printf("ID:  %15s | %4d:%4d | type:  %10s | scope: %4d | Declaration Type: VARIABLE \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
+            printf(" %15s | %4d:%4d | %10s | %5d | VARIABLE \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
             break;
         case FUNC:
-            printf("ID:  %15s | %4d:%4d | type:  %10s | scope: %4d | Declaration Type: FUNCTION \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
+            printf(" %15s | %4d:%4d | %10s | %5d | FUNCTION \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
             break;
         case PARAM:
-            printf("ID:  %15s | %4d:%4d | type:  %10s | scope: %4d | Declaration Type: PARAMETER \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
+            printf(" %15s | %4d:%4d | %10s | %5d | PARAMETER \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
             break;
         }
     }
@@ -274,6 +338,19 @@ void checkNoMain()
     {
         raiseNoMain();
     }
+}
+
+void checkUndeclaredID(char *id, int line, int col)
+{
+    for (Scope *h = STACK_TOP(head); h != NULL; h = h->next)
+    {
+        for (Symbol *entry = symbolTable; entry != NULL; entry = entry->hh.next)
+        {
+            if(!strcmp(entry->ID,id) && h->scope_id == entry->scope)
+                return;
+        }
+    }
+    raiseUndeclaredId(line,col);
 }
 
 vertex *root = NULL;

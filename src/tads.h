@@ -5,14 +5,6 @@
 #include "uthash/utstack.h"
 #include "semantic_raises.h"
 
-#define DFT "\x1B[0m"
-#define RED "\x1B[31m"
-#define CYN "\x1B[36m"
-#define YEL "\x1B[33m"
-#define BLU "\x1B[34m"
-#define KGRN "\x1B[32m"
-#define KMAG "\x1B[35m"
-#define KWHT "\x1B[37m"
 
 typedef enum variable_names
 {
@@ -31,6 +23,7 @@ typedef enum variable_names
     IO_STMT,
     IF_STMT,
     FOR_STMT,
+    FOR_COND,
     RETURN_STMT,
     FORALL_STMT,
     EXPRESSION_STMT,
@@ -58,7 +51,7 @@ typedef enum variable_names
     WRITELN_IO,
     OR_EXP,
     AND_EXP,
-    NOT_EXP,
+    NOT_OP,
     SET_ADD,
     SET_REMOVE,
     SET_EXISTS,
@@ -68,13 +61,15 @@ typedef enum variable_names
     BASIC_OP,
     IDENT,
     CONST,
-    FOR_COND,
     IF_ELSE_STMT,
     REL_OP,
     IS_SET_EXP,
     FOR_LAST_ARG,
     ELSE_STMT,
-    IF_COND
+    IF_COND,
+    FOR_INIT,
+    FOR_INCREMENT,
+    REL_EQ
 
 } variable_names;
 
@@ -118,7 +113,7 @@ typedef struct vertex
 
 vertex *root;
 
-int line, col, scope_counter;
+int line, col, scope_counter,skipScope;
 vertex *createNode(int variable_name, char *op_or_type, char *value, struct vertex *v1, vertex *v2);
 void print_tabs(int tabs);
 void print_variable(int name);
@@ -130,7 +125,7 @@ void printTree(vertex *root, int dpt);
 // ID , type , func or variable
 
 Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int line, int col);
-void addEntry(char *ID, char *type, int var_or_func);
+void addEntry(char *ID, char *type, int var_or_func, int recent_scope);
 void printTable();
 void freeTable();
 void addTypeToNode(vertex *nozes);
@@ -144,5 +139,6 @@ void pop();
 //SEMANTIC CHECKS
 
 void checkNoMain();
+void checkUndeclaredID(char * id, int line, int col);
 
 #endif

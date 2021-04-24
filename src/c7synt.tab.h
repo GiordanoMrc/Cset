@@ -60,34 +60,35 @@ extern int yydebug;
     INTEGER_CONST = 261,           /* INTEGER_CONST  */
     FLOAT_CONST = 262,             /* FLOAT_CONST  */
     EMPTY_CONST = 263,             /* EMPTY_CONST  */
-    PLUS = 264,                    /* PLUS  */
-    MINUS = 265,                   /* MINUS  */
-    DIV = 266,                     /* DIV  */
-    MULT = 267,                    /* MULT  */
-    EQ = 268,                      /* EQ  */
-    NOT = 269,                     /* NOT  */
-    OR = 270,                      /* OR  */
-    AND = 271,                     /* AND  */
-    EQ_TO = 272,                   /* EQ_TO  */
-    NEQ_TO = 273,                  /* NEQ_TO  */
-    GT = 274,                      /* GT  */
-    LT = 275,                      /* LT  */
-    GTE = 276,                     /* GTE  */
-    LTE = 277,                     /* LTE  */
-    TYPE = 278,                    /* TYPE  */
-    IF = 279,                      /* IF  */
-    ELSE = 280,                    /* ELSE  */
-    FOR = 281,                     /* FOR  */
-    FORALL = 282,                  /* FORALL  */
-    IS_SET = 283,                  /* IS_SET  */
-    ADD = 284,                     /* ADD  */
-    IN = 285,                      /* IN  */
-    REMOVE = 286,                  /* REMOVE  */
-    RETURN = 287,                  /* RETURN  */
-    EXISTS = 288,                  /* EXISTS  */
-    READ = 289,                    /* READ  */
-    WRITE = 290,                   /* WRITE  */
-    WRITELN = 291                  /* WRITELN  */
+    CHAR = 264,                    /* CHAR  */
+    PLUS = 265,                    /* PLUS  */
+    MINUS = 266,                   /* MINUS  */
+    DIV = 267,                     /* DIV  */
+    MULT = 268,                    /* MULT  */
+    EQ = 269,                      /* EQ  */
+    NOT = 270,                     /* NOT  */
+    OR = 271,                      /* OR  */
+    AND = 272,                     /* AND  */
+    EQ_TO = 273,                   /* EQ_TO  */
+    NEQ_TO = 274,                  /* NEQ_TO  */
+    GT = 275,                      /* GT  */
+    LT = 276,                      /* LT  */
+    GTE = 277,                     /* GTE  */
+    LTE = 278,                     /* LTE  */
+    TYPE = 279,                    /* TYPE  */
+    IF = 280,                      /* IF  */
+    ELSE = 281,                    /* ELSE  */
+    FOR = 282,                     /* FOR  */
+    FORALL = 283,                  /* FORALL  */
+    IS_SET = 284,                  /* IS_SET  */
+    ADD = 285,                     /* ADD  */
+    IN = 286,                      /* IN  */
+    REMOVE = 287,                  /* REMOVE  */
+    RETURN = 288,                  /* RETURN  */
+    EXISTS = 289,                  /* EXISTS  */
+    READ = 290,                    /* READ  */
+    WRITE = 291,                   /* WRITE  */
+    WRITELN = 292                  /* WRITELN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -101,7 +102,7 @@ union YYSTYPE
     char* str;
     struct vertex* node;
 
-#line 105 "c7synt.tab.h"
+#line 106 "c7synt.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

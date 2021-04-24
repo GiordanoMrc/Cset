@@ -19,7 +19,7 @@ LETTER                  [a-zA-Z]
 DIGIT                   [0-9]
 EOL                     \n        
 WS                      [ \t]+
-INLINE_COMMENT          [/]{2}.*
+INLINE_COMMENT          [\/]{2}.*
 
 INTEGER_CONST           "-"?{DIGIT}+
 FLOAT_CONST             "-"?{DIGIT}+"."({DIGIT}*)?
@@ -61,14 +61,16 @@ WRITE                   "write"
 WRITELN                 "writeln"
 
 ID                      [a-zA-Z_][_a-z0-9A-Z]*
-STRING                   \"[^\"]*\"|'[^']*'
+STRING                  \"[^\"]*\"
+CHAR                    '[^']?'|'\\[^']'
 
 %x COMMENT
+
 
 %%
 
 {EOL}                   {line++;col=1;}
-{INLINE_COMMENT}        {line++;}
+{INLINE_COMMENT}        {}
 {WS}                    {col+= yyleng;}
 "{"                     {col+= yyleng; return '{';}
 "}"                     {col+= yyleng; return '}';} 
@@ -76,23 +78,23 @@ STRING                   \"[^\"]*\"|'[^']*'
 ")"                     {col+= yyleng; return ')';}   
 ","                     {col+= yyleng; return ',';}    
 ";"                     {col+= yyleng; return ';';}
-{INTEGER_CONST}         {col+= yyleng; yylval.str =(char *) strdup(yytext);return INTEGER_CONST;}
-{FLOAT_CONST}           {col+= yyleng; yylval.str =(char *) strdup(yytext);return FLOAT_CONST;}
-{EMPTY_CONST}           {col+= yyleng; yylval.str =(char *) strdup(yytext);return EMPTY_CONST;}
-{PLUS}                  {col+= yyleng; yylval.str =(char *) strdup(yytext);return PLUS;}
-{MINUS}                 {col+= yyleng; yylval.str =(char *) strdup(yytext);return MINUS;}
-{DIV}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return DIV;}
-{MULT}                  {col+= yyleng; yylval.str =(char *) strdup(yytext);return MULT;}
-{EQ_TO}                 {col+= yyleng; yylval.str =(char *) strdup(yytext);return EQ_TO;}
-{NEQ_TO}                {col+= yyleng; yylval.str =(char *) strdup(yytext);return NEQ_TO;}
-{GTE}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return GTE;}
-{LTE}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return LTE;}
-{GT}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return GT;}
-{LT}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return LT;}
-{EQ}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return EQ;}
-{NOT}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return NOT;}
-{OR}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return OR;}
-{AND}                   {col+= yyleng; yylval.str =(char *) strdup(yytext);return AND;}
+{INTEGER_CONST}         {col+= yyleng;yylval.str =(char *) strdup(yytext); return INTEGER_CONST;}
+{FLOAT_CONST}           {col+= yyleng;yylval.str =(char *) strdup(yytext); return FLOAT_CONST;}
+{EMPTY_CONST}           {col+= yyleng;yylval.str =(char *) strdup(yytext); return EMPTY_CONST;}
+{PLUS}                  {col+= yyleng;yylval.str =(char *) strdup(yytext); return PLUS;}
+{MINUS}                 {col+= yyleng;yylval.str =(char *) strdup(yytext); return MINUS;}
+{DIV}                   {col+= yyleng;yylval.str =(char *) strdup(yytext); return DIV;}
+{MULT}                  {col+= yyleng;yylval.str =(char *) strdup(yytext); return MULT;}
+{EQ_TO}                 {col+= yyleng;yylval.str =(char *) strdup(yytext); return EQ_TO;}
+{NEQ_TO}                {col+= yyleng;yylval.str =(char *) strdup(yytext); return NEQ_TO;}
+{GTE}                   {col+= yyleng;yylval.str =(char *) strdup(yytext); return GTE;}
+{LTE}                   {col+= yyleng;yylval.str =(char *) strdup(yytext); return LTE;}
+{GT}                    {col+= yyleng;yylval.str =(char *) strdup(yytext); return GT;}
+{LT}                    {col+= yyleng;yylval.str =(char *) strdup(yytext); return LT;}
+{EQ}                    {col+= yyleng;yylval.str =(char *) strdup(yytext); return EQ;}
+{NOT}                   {col+= yyleng;yylval.str =(char *) strdup(yytext); return NOT;}
+{OR}                    {col+= yyleng;yylval.str =(char *) strdup(yytext); return OR;}
+{AND}                   {col+= yyleng;yylval.str =(char *) strdup(yytext); return AND;}
 {IF}                    {col+= yyleng; return IF;}
 {ELSE}                  {col+= yyleng; return ELSE;}
 {FOR}                   {col+= yyleng; return FOR;}
@@ -103,12 +105,13 @@ STRING                   \"[^\"]*\"|'[^']*'
 {IN}                    {col+= yyleng; return IN;}
 {RETURN}                {col+= yyleng; return RETURN;}
 {REMOVE}                {col+= yyleng; return REMOVE;}
-{TYPE}                  {col+= yyleng; yylval.str =(char *) strdup(yytext);return TYPE;}
+{TYPE}                  {yylval.str =(char *) strdup(yytext);col+= yyleng; return TYPE;}
 {READ}                  {col+= yyleng; return READ;}
 {WRITE}                 {col+= yyleng; return WRITE;}
 {WRITELN}               {col+= yyleng; return WRITELN;}
-{ID}                    {col+= yyleng; yylval.str =(char *) strdup(yytext);return ID;}
-{STRING}                {col+= yyleng; yylval.str =(char *) strdup(yytext);return STRING;}
+{ID}                    {yylval.str =(char *) strdup(yytext);col+= yyleng; return ID;}
+{STRING}                {yylval.str =(char *) strdup(yytext);col+= yyleng; return STRING;}
+{CHAR}                  {yylval.str =(char *) strdup(yytext);col+= yyleng; return CHAR;}
 .                       {   
                             printf("lexical error: line %d , col  %d , Unexpected: %s \n", line, col, yytext);
                             col+= yyleng;
