@@ -18,6 +18,9 @@ void raiseUndeclaredId(int line,int col) {
     printf("semantic error: %s , line: %d , col: %d\n","Undeclared Function or Variable in this scope", line, col);
     semantic_error=1;
 }
+void raiseTypeMismatch(char* left , char* right){
+    printf("semantic error: %s , left: %s , right: %s\n","Type Mismatch", left, right);
+}
 
 
 void raiseNoMain() {

@@ -12,6 +12,7 @@
 int semantic_error;
 void raiseRedecl(int line,int col, char *ID, int type);
 void raiseUndeclaredId(int line,int col);
+void raiseTypeMismatch(char* left , char* right);
 void raiseNoMain();
 
 #endif

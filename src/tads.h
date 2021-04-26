@@ -3,8 +3,8 @@
 
 #include "uthash/uthash.h"
 #include "uthash/utstack.h"
+#include "uthash/utstring.h"
 #include "semantic_raises.h"
-
 
 typedef enum variable_names
 {
@@ -69,7 +69,9 @@ typedef enum variable_names
     IF_COND,
     FOR_INIT,
     FOR_INCREMENT,
-    REL_EQ
+    REL_EQ,
+    FLOAT_TO_INT,
+    INT_TO_FLOAT
 
 } variable_names;
 
@@ -79,6 +81,29 @@ enum table_type
     FUNC,
     PARAM
 };
+
+enum type
+{
+    TYPE_INT,
+    TYPE_FLOAT,
+    TYPE_SET,
+    TYPE_ELEM
+};
+typedef struct Params
+{
+    int type;
+    struct Params *next; // Próximo parametro
+} Params;
+
+typedef struct functionParams
+{
+    char *functionName;
+    int numberOfParams;
+    struct Params *first;
+    UT_hash_handle hh;
+} functionParams;
+
+functionParams * functionTable;
 
 typedef struct Scope
 {
@@ -96,6 +121,7 @@ typedef struct Symbol
     int col;
     int var_or_func;
     int scope;
+    char * paramC;
     UT_hash_handle hh;
 } Symbol;
 
@@ -104,31 +130,29 @@ Symbol *symbolTable;
 typedef struct vertex
 {
     int variable_name;
-    char *op_or_type;
-    char *value;
-    char *node_taipe;
-    struct vertex *l;
-    struct vertex *r;
+    char * node_type;
+    char * value;
+    struct vertex * l;
+    struct vertex * r;
 } vertex;
 
 vertex *root;
 
-int line, col, scope_counter,skipScope;
-vertex *createNode(int variable_name, char *op_or_type, char *value, struct vertex *v1, vertex *v2);
+int line, col, scope_counter, skipScope, param_counter;
+vertex *createNode(int variable_name, char *node_type, char *value, struct vertex *v1, vertex *v2);
 void print_tabs(int tabs);
 void print_variable(int name);
 void freeVertex(vertex *root);
 void printTree(vertex *root, int dpt);
+void addConversionNode(vertex *node);
+void addTypeToNode(vertex *nozes);
 
 // tabela de simbolos
-
-// ID , type , func or variable
 
 Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int line, int col);
 void addEntry(char *ID, char *type, int var_or_func, int recent_scope);
 void printTable();
 void freeTable();
-void addTypeToNode(vertex *nozes);
 
 // pilha de escopo
 void initGlobalScope();
@@ -136,9 +160,24 @@ void createScope();
 void push(Scope *scope);
 void pop();
 
+// parameters
+void addFunctionParams(char * id);
+void addParams(int type);
+void printFunctionTable();
+void printParams(Params *params, int count);
+void freeFunctionTable();
+void freeParams(Params *params);
+char* addParamCounter();
+
 //SEMANTIC CHECKS
 
 void checkNoMain();
-void checkUndeclaredID(char * id, int line, int col);
+void checkUndeclaredID(char *id, int line, int col);
+void checkReturnType();
 
 #endif
+
+/*
+TO DO: 
+Params and Args.
+*/

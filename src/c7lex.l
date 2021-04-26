@@ -102,7 +102,7 @@ CHAR                    '[^']?'|'\\[^']'
 {IS_SET}                {col+= yyleng; return IS_SET;}
 {ADD}                   {col+= yyleng; return ADD;}
 {EXISTS}                {col+= yyleng; return EXISTS;}
-{IN}                    {col+= yyleng; return IN;}
+{IN}                    {yylval.str =(char *) strdup(yytext);col+= yyleng; return IN;}
 {RETURN}                {col+= yyleng; return RETURN;}
 {REMOVE}                {col+= yyleng; return REMOVE;}
 {TYPE}                  {yylval.str =(char *) strdup(yytext);col+= yyleng; return TYPE;}

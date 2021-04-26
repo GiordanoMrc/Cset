@@ -157,13 +157,13 @@ Terminais, com as regras onde eles aparecem
     GTE <str> (277) 57
     LTE <str> (278) 59
     TYPE <str> (279) 7 9 14
-    IF (280) 33 34
-    ELSE (281) 34
-    FOR (282) 36
-    FORALL (283) 39 40
-    IS_SET (284) 76
-    ADD (285) 73
-    IN (286) 47
+    IN <str> (280) 47
+    IF (281) 33 34
+    ELSE (282) 34
+    FOR (283) 36
+    FORALL (284) 39 40
+    IS_SET (285) 76
+    ADD (286) 73
     REMOVE (287) 74
     RETURN (288) 38
     EXISTS (289) 75
@@ -1960,8 +1960,8 @@ Estado 112
    47 in-exp: expression • IN in-exp
    48       | expression •
 
-    ','  deslocar, e ir ao estado 90
     IN   deslocar, e ir ao estado 141
+    ','  deslocar, e ir ao estado 90
 
     $padrão  reduzir usando a regra 48 (in-exp)
 

@@ -979,7 +979,7 @@ YY_RULE_SETUP
 case 34:
 YY_RULE_SETUP
 #line 105 "c7lex.l"
-{col+= yyleng; return IN;}
+{yylval.str =(char *) strdup(yytext);col+= yyleng; return IN;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP

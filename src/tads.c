@@ -3,15 +3,14 @@
 #include <stdio.h>
 #include "tads.h"
 
-vertex *createNode(int variable_name, char *op_or_type, char *value, vertex *l, vertex *r)
+vertex *createNode(int variable_name, char *node_type, char *value, vertex *l, vertex *r)
 {
     vertex *node = (vertex *)malloc(sizeof(vertex));
     node->variable_name = variable_name;
-    node->op_or_type = op_or_type;
+    node->node_type = node_type;
     node->value = value;
     node->l = l;
     node->r = r;
-    node->node_taipe = '\0';
     return node;
 }
 
@@ -19,9 +18,7 @@ void freeVertex(vertex *root)
 {
     if (!root)
         return;
-    free(root->op_or_type);
     free(root->value);
-    free(root->node_taipe);
     freeVertex(root->l);
     freeVertex(root->r);
     free(root);
@@ -37,8 +34,8 @@ void printTree(vertex *root, int dpt)
             print_tabs(dpt);
             print_variable(root->variable_name);
         }
-        if (root->op_or_type != NULL)
-            printf(": %s ", root->op_or_type);
+        if (root->node_type != NULL)
+            printf(": %s ", root->node_type);
         if (root->value != NULL)
             printf(": %s ", root->value);
 
@@ -176,45 +173,62 @@ void print_variable(int name)
     case VALUE_STRING:
         printf(CYN " STRING" DFT);
         break;
+    case FLOAT_TO_INT:
+        printf(CYN " FLOAT_TO_INT" DFT);
+        break;
+    case INT_TO_FLOAT:
+        printf(CYN " FLOAT_TO_INT" DFT);
+        break;
     }
 }
 
 void addTypeToNode(vertex *nozes)
 {
-    char *type_left = NULL;
-    char *type_right = NULL;
+    char *left_node_type = NULL;
+    char *right_node_type = NULL;
     if (nozes->l != NULL)
-    {
-        type_left = nozes->l->node_taipe;
-    }
+        left_node_type = nozes->l->node_type;
     if (nozes->r != NULL)
+        right_node_type = nozes->r->node_type;
+
+    if (left_node_type != NULL && right_node_type != NULL && strcmp(left_node_type, right_node_type) != 0)
     {
-        type_right = nozes->r->node_taipe;
-    }
-    if (type_left != NULL && type_right != NULL && strcmp(type_left, type_right) != 0)
-    {
-        if ( // type mismatch -- implicit conversion
-            (strcmp(type_left, "int") == 0 && strcmp(type_right, "float") == 0) ||
-            (strcmp(type_left, "float") == 0 && strcmp(type_right, "int") == 0))
+        if ((strcmp(left_node_type, "int") == 0 && strcmp(right_node_type, "float") == 0) || (strcmp(left_node_type, "float") == 0 && strcmp(right_node_type, "int") == 0))
         {
-            //add_implicit_conversion(nozes, NULL);
-            type_left = nozes->l->node_taipe;
+            addConversionNode(nozes);
+            left_node_type = nozes->l->node_type;
+        }
+        else
+            raiseTypeMismatch(left_node_type, right_node_type);
+    }
+    if (nozes->variable_name == REL_OP || nozes->variable_name == LOGICAL_EXP || nozes->variable_name == IS_SET_EXP)
+        nozes->node_type = "int";
+    else
+        nozes->node_type = left_node_type;
+}
+
+void addConversionNode(vertex *node)
+{
+    vertex *convertex;
+    if (strcmp(node->l->node_type, "int") == 0 && strcmp(node->r->node_type, "float") == 0)
+    {
+        if (node->variable_name == ASSIGN)
+        {
+            convertex = createNode(FLOAT_TO_INT, "int", NULL, node->r, NULL);
+            node->r = convertex;
         }
         else
         {
-            //raiseTypeMismatch(type_left, type_right);
+            convertex = createNode(INT_TO_FLOAT, "float", NULL, node->l, NULL);
+            node->l = convertex;
         }
-    }
-    if (nozes->variable_name == REL_OP || nozes->variable_name == LOGICAL_EXP)
-    {
-        nozes->node_taipe = "bool";
     }
     else
     {
-        nozes->node_taipe = type_left;
+        convertex = createNode(INT_TO_FLOAT, "float", NULL, node->l, NULL);
+        node->l = convertex;
     }
 }
-
 // Symbols
 
 Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int line, int col)
@@ -226,37 +240,40 @@ Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int li
     entry->scope = scope_id;
     entry->line = line;
     entry->col = col;
-
+    entry->paramC = NULL;
     return entry;
 }
 
 void addEntry(char *ID, char *type, int var_or_func, int recent_scope)
 {
-    Symbol * entry;
+    Symbol *entry;
 
-    for (entry=symbolTable; entry!= NULL; entry = entry->hh.next){
-        if(!strcmp(entry->ID, ID) && recent_scope == entry->scope){
-            if(var_or_func==FUNC){
-                raiseRedecl(line,col,ID,var_or_func);
-                skipScope =1;
+    for (entry = symbolTable; entry != NULL; entry = entry->hh.next)
+    {
+        if (!strcmp(entry->ID, ID) && recent_scope == entry->scope)
+        {
+            if (var_or_func == FUNC)
+            {
+                raiseRedecl(line, col, ID, var_or_func);
+                skipScope = 1;
             }
-            else if(var_or_func==PARAM) {
-                raiseRedecl(line,col,ID,var_or_func);
-            } else {
-                raiseRedecl(line,col,ID,var_or_func);
+            else if (var_or_func == PARAM)
+            {
+                raiseRedecl(line, col, ID, var_or_func);
+            }
+            else
+            {
+                raiseRedecl(line, col, ID, var_or_func);
             }
             return;
         }
     }
+    if (var_or_func == PARAM) {
+        addParamCounter();
+    }
+  
 
-    if (var_or_func == PARAM)
-    {
-        entry = createSymbol(ID, type, var_or_func, recent_scope,line, col);
-    }
-    else
-    {
-        entry = createSymbol(ID, type, var_or_func, recent_scope, line, col);
-    }
+    entry = createSymbol(ID, type, var_or_func, recent_scope, line, col);
     HASH_ADD_STR(symbolTable, ID, entry);
 }
 
@@ -322,6 +339,77 @@ void pop()
     free(res);
 }
 
+//PARAMs
+
+void addFunctionParams(char *id)
+{
+    functionParams *params = (functionParams *) calloc (1,sizeof(functionParams));
+    char *functionName = (char *)strdup(id);
+
+    params->functionName = (char *)strdup(id);
+    params->numberOfParams = 0;
+
+    HASH_ADD_STR(functionTable, functionName, params);
+    free(functionName);
+}
+
+void addParams(int type)
+{
+    Params *newParams = (Params *)calloc(1,sizeof(Params));
+    //Params *params;
+    functionParams *functionParams;
+    newParams->type = type;
+
+    Scope *h = STACK_TOP(head);
+
+    HASH_FIND_INT(symbolTable, &h->scope_id, functionParams);
+}
+
+void printFunctionTable()
+{
+    printf(KMAG "\nFuncao   %11s | Number of Params  %5s\t\n" DFT, "", "");
+    for (functionParams *s = functionTable; s != NULL; s = s->hh.next)
+    {
+        printf("%20s |  %5d\n\n", s->functionName, s->numberOfParams);
+        if (s->first)
+        {
+            printParams(s->first, 1);
+        }
+    }
+}
+
+void printParams(Params *params, int count)
+{
+    printf("%d, %d\n", count, params->type);
+    if (params->next) printParams(params->next, count + 1);
+}
+
+void freeFunctionTable()
+{
+    for (functionParams *s=functionTable; s != NULL; s = s->hh.next)
+    {
+        free(s->functionName);
+        if (s->first) freeParams(s->first);
+    }
+}
+
+void freeParams(Params *params)
+{
+    if (params != NULL)
+    {
+        freeParams(params->next);
+        free(params);
+    }
+}
+
+char* addParamCounter() {
+  UT_string *str;
+  utstring_new(str);
+  utstring_printf(str, "#%d", param_counter);
+  param_counter++;
+  return utstring_body(str);
+}
+
 //SEMANTIC CHECKS
 
 void checkNoMain()
@@ -346,13 +434,14 @@ void checkUndeclaredID(char *id, int line, int col)
     {
         for (Symbol *entry = symbolTable; entry != NULL; entry = entry->hh.next)
         {
-            if(!strcmp(entry->ID,id) && h->scope_id == entry->scope)
+            if (!strcmp(entry->ID, id) && h->scope_id == entry->scope)
                 return;
         }
     }
-    raiseUndeclaredId(line,col);
+    raiseUndeclaredId(line, col);
 }
 
 vertex *root = NULL;
 Scope *head = NULL;
 Symbol *symbolTable = NULL;
+functionParams * functionTable =NULL;
