@@ -8,3 +8,7 @@ Lexer
 ## Part 2:
 
 Parser
+
+## Part 3:
+
+Semantic Analysis
