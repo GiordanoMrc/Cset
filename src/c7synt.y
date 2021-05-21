@@ -20,6 +20,8 @@
     extern FILE *yyin;
 
     int error_count=0;
+    int hasReturn=0;
+    char* lastFType = NULL;
 %}
 
 %union {
@@ -31,8 +33,9 @@
 %token <str> PLUS MINUS DIV MULT EQ 
 %token <str> NOT OR AND 
 %token <str> EQ_TO NEQ_TO GT LT GTE LTE
-%token <str> TYPE IN
+%token <str> IN
 
+%token TYPE_INT TYPE_FLOAT TYPE_ELEM TYPE_SET
 %token '(' 
 %token ')'
 %token '{'
@@ -123,23 +126,116 @@ declaration: function-definition {
             }
 ;
 
-var-declaration: TYPE ID ';' {
+var-declaration: TYPE_INT ID ';' {
         if(PARSETREE) printf("var-declaration -> type ID\n");
-        $$ = createNode(VAR_DECLARATION, $1 , $2, NULL , NULL );
+        $$ = createNode(VAR_DECLARATION, "int" , $2, NULL , NULL);
         if(!skipScope)
-            addEntry($2,$1,VAR,STACK_TOP(head)->scope_id);
+            addEntry($2,"int",VAR,STACK_TOP(head)->scope_id);
+    }
+    |  TYPE_FLOAT ID ';' {
+        if(PARSETREE) printf("var-declaration -> type ID\n");
+        $$ = createNode(VAR_DECLARATION, "float" , $2, NULL , NULL);
+        if(!skipScope)
+            addEntry($2,"float",VAR,STACK_TOP(head)->scope_id);
+    }
+    |  TYPE_SET ID ';' {
+        if(PARSETREE) printf("var-declaration -> type ID\n");
+        $$ = createNode(VAR_DECLARATION, "set" , $2, NULL , NULL);
+        if(!skipScope)
+            addEntry($2,"set",VAR,STACK_TOP(head)->scope_id);
+    }
+    |  TYPE_ELEM ID ';' {
+        if(PARSETREE) printf("var-declaration -> type ID\n");
+        $$ = createNode(VAR_DECLARATION, "elem" , $2, NULL , NULL);
+        if(!skipScope)
+            addEntry($2,"elem",VAR,STACK_TOP(head)->scope_id);
     }
 ; 
 
-function-definition: TYPE ID {
+function-definition: 
+    TYPE_INT ID 
+    {
         if(!skipScope) {
-            addEntry($2,$1,FUNC,STACK_TOP(head)->scope_id);
-            param_counter = 0;
-            addFunctionParams($2);
+            hasReturn=0;
+            addEntry($2,"int",FUNC,STACK_TOP(head)->scope_id);
+            freePList();
+            lastFType= NULL;
         }
-    }'(' parameters ')' compound-stmt {
+    }'(' parameters ')'{
+        if(!skipScope)
+            addFunctionParams($2,"int");
+    } compound-stmt {
         if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
-        $$ = createNode(FUNCTION_DEFINITION ,$1, $2,  $5 , $7);
+        $$ = createNode(FUNCTION_DEFINITION ,"int", $2,  $5 , $8);
+        if (!skipScope){
+        if(hasReturn ==0){
+            raiseNoReturn($2);
+            }
+            lastFType= "int";
+        }
+    }
+    | TYPE_FLOAT ID 
+    {
+        if(!skipScope) {
+            hasReturn=0;
+            addEntry($2,"float",FUNC,STACK_TOP(head)->scope_id);
+            freePList();
+            lastFType= NULL;
+        }
+    }'(' parameters ')'{
+        addFunctionParams($2,"float");
+
+    } compound-stmt {
+        if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
+        $$ = createNode(FUNCTION_DEFINITION ,"float", $2,  $5 , $8);
+        if (!skipScope){
+            if(hasReturn ==0){
+                raiseNoReturn($2);
+                lastFType= "float";
+            }
+        }
+    }
+    | TYPE_SET ID 
+    {
+        if(!skipScope) {
+            hasReturn=0;
+            addEntry($2,"set",FUNC,STACK_TOP(head)->scope_id);
+            freePList();
+            lastFType= NULL;
+        }
+    }'(' parameters ')'{
+        addFunctionParams($2,"set");
+
+    } compound-stmt {
+        if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
+        $$ = createNode(FUNCTION_DEFINITION ,"set", $2,  $5 , $8);
+        if (!skipScope){
+        if(hasReturn ==0){
+            raiseNoReturn($2);
+            lastFType= "set";
+        }
+        }
+    }
+    | TYPE_ELEM ID 
+    {
+        if(!skipScope) {
+            hasReturn=0;
+            addEntry($2,"set",FUNC,STACK_TOP(head)->scope_id);
+            freePList();
+            lastFType= NULL;
+        }
+    }'(' parameters ')'{
+        addFunctionParams($2,"elem");
+
+    } compound-stmt {
+        if(PARSETREE) printf("function-definition -> type ID '(' parameter-list ')'\n");
+        $$ = createNode(FUNCTION_DEFINITION ,"elem", $2,  $5 , $8);
+        if (!skipScope){
+            if(hasReturn ==0){
+                raiseNoReturn($2);
+                lastFType= "elem";
+            }
+        }
     }
 ;
 
@@ -163,12 +259,36 @@ parameter-list: parameter-declaration {
 
     }
 ;
-parameter-declaration: TYPE ID {
+parameter-declaration: TYPE_INT ID {
         if(PARSETREE) printf("parameter-declaration -> type ID\n");
-        $$ = createNode(PARAMETER_DECL, $1,$2, NULL, NULL);
+        $$ = createNode(PARAMETER_DECL, "int",$2, NULL, NULL);
         if(!skipScope) {
-            addEntry($2,$1,PARAM,(scope_counter +1));
-            addParams(1);
+            addEntry($2,"int",PARAM,(scope_counter +1));
+            addParam("int");
+        }
+    }
+    | TYPE_FLOAT ID {
+        if(PARSETREE) printf("parameter-declaration -> type ID\n");
+        $$ = createNode(PARAMETER_DECL, "float",$2, NULL, NULL);
+        if(!skipScope) {
+            addEntry($2,"float",PARAM,(scope_counter +1));
+            addParam("float");
+        }
+    }
+    |TYPE_SET ID {
+        if(PARSETREE) printf("parameter-declaration -> type ID\n");
+        $$ = createNode(PARAMETER_DECL, "set",$2, NULL, NULL);
+        if(!skipScope) {
+            addEntry($2,"set",PARAM,(scope_counter +1));
+            addParam("set");
+        }
+    }
+    |TYPE_ELEM ID {
+        if(PARSETREE) printf("parameter-declaration -> type ID\n");
+        $$ = createNode(PARAMETER_DECL, "elem", $2, NULL, NULL);
+        if(!skipScope) {
+            addEntry($2,"elem",PARAM,(scope_counter +1));
+            addParam("elem");
         }
     }
 ;
@@ -215,6 +335,7 @@ stmt: io-stmt {
     | return-stmt {
         if(PARSETREE) printf("stmt -> return-stmt\n");
         $$ = $1;
+        hasReturn =1;
     }
     | compound-stmt {
         if(PARSETREE) printf("stmt -> cp-stmt\n");
@@ -301,7 +422,16 @@ for-conditions: '(' expression ';' expression ';' expression ')'{
 return-stmt: RETURN expression ';' {
         if(PARSETREE) printf("return-stmt -> return exp ;\n");
         $$ = createNode(RETURN_STMT , NULL,NULL,$2, NULL);
-
+        if(!skipScope){
+            checkReturnType(lastFType,$2);
+        }
+    }
+    | RETURN ';' {
+        if(PARSETREE) printf("return-stmt -> return exp ;\n");
+        $$ = createNode(RETURN_STMT , "void",NULL,NULL, NULL);
+        if(!skipScope){
+            raiseVoidReturn();
+        }
     }
 ;
 
@@ -311,17 +441,17 @@ forall-stmt: FORALL '(' in-exp ')' compound-stmt {
     }
     | FORALL '(' in-exp ')' expression-stmt {
         if(PARSETREE) printf("forall-stmt -> FORALL ( in-exp )\n");
-       $$ = createNode(FORALL_STMT , NULL,NULL,$3, $5);
+        $$ = createNode(FORALL_STMT , NULL,NULL,$3, $5);
     }
 ;
 
-expression-stmt: expression ';'     {
+expression-stmt: expression ';' {
         if(PARSETREE) printf("expression-stmt -> expression ;\n");
         $$ =$1;
     }
     | ';' { $$ = NULL;}
 ;
-expression: assign-exp  {
+expression: assign-exp {
         if(PARSETREE) printf("expression-> assign \n");
         $$ = $1;
         
@@ -504,46 +634,43 @@ set-exp: ADD '(' in-exp ')'  {
 
 constant: INTEGER_CONST {
             if(PARSETREE)printf(" constant -> INTEGER_CONST\n");
-            $$ = createNode(VALUE_INT ,"int",$1,NULL, NULL);
+            $$ = createNode(CONST,"int",$1,NULL, NULL);
         }
         | FLOAT_CONST {
             if(PARSETREE) printf(" constant -> FLOAT_CONST\n");
-            $$ = createNode(VALUE_FLOAT,"float",$1,NULL, NULL);
+            $$ = createNode(CONST,"float",$1,NULL, NULL);
             
         }
         | EMPTY_CONST {
             if(PARSETREE) printf(" constant -> EMPTY_CONST\n");
-            $$ = createNode(VALUE_EMPTY , NULL,$1,NULL, NULL);
-             
+            $$ = createNode(EMPTY_CONST, "EMPTY",$1,NULL, NULL);
         }
         | STRING {
             if(PARSETREE) printf(" constant -> STRING\n");
-            $$ = createNode(VALUE_STRING , NULL,$1,NULL, NULL);   
+            $$ = createNode(STRING , "STRING",$1,NULL, NULL);
         }
         | CHAR {
             if(PARSETREE) printf(" constant -> CHAR\n");
-            $$ = createNode(CONST , NULL,$1,NULL, NULL);
+            $$ = createNode(CHAR , "CHAR",$1,NULL, NULL);
         }
 ;
 call: ID '(' arg-list ')' {
         if(PARSETREE)printf(" call -> ID (args)\n");
         $$ = createNode(CALL , NULL,$1,$3, NULL);
-         
-         
-    }
-    | ID '('')' {
-        if(PARSETREE)printf(" call -> ID (args)\n");
-        $$ = createNode(CALL , NULL,$1,NULL, NULL);
+        if(!skipScope){
+            checkArgs($1,$3,line,col);
+        }
     }
 ;
-arg-list: assign-exp {
+arg-list: basic-exp {
             if(PARSETREE) printf("arg-list");
             $$=$1;
         }
-        | arg-list ',' assign-exp {
+        | arg-list ',' basic-exp {
             if(PARSETREE) printf("arg-list");
             $$ = createNode(ARG_LIST , NULL,NULL,$1, $3);
         }
+        | %empty {;}
 ;
 
 
@@ -579,8 +706,11 @@ int main( int argc, char **argv ) {
     printf(KMAG"\n\n::>TABELA DE SIMBOLOS<::\t\n"DFT);
     printTable();
 
-    //printf(KMAG"\n\n::>TABELA DE PARAMETROS DE FUNCOES<::\t\n"DFT);
-    //printFunctionTable();
+    printf(KMAG"\n\n::>TABELA DE PARAMETROS DE FUNCOES<::\t\n"DFT);
+    printFunctionTable();
+
+    printf(KMAG"\n\n::>CODIGO INTERMEDIARIO<::\t\n"DFT);
+    printNewCode();
 
     fclose(yyin);
     yylex_destroy();

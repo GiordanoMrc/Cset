@@ -54,7 +54,10 @@ REMOVE                  "remove"
 RETURN                  "return"
 EXISTS                  "exists"
 
-TYPE                    "int"|"float"|"elem"|"set"
+TYPE_INT                "int"
+TYPE_FLOAT              "float"
+TYPE_ELEM               "elem"
+TYPE_SET                "set"
 
 READ                    "read"
 WRITE                   "write"
@@ -105,7 +108,10 @@ CHAR                    '[^']?'|'\\[^']'
 {IN}                    {yylval.str =(char *) strdup(yytext);col+= yyleng; return IN;}
 {RETURN}                {col+= yyleng; return RETURN;}
 {REMOVE}                {col+= yyleng; return REMOVE;}
-{TYPE}                  {yylval.str =(char *) strdup(yytext);col+= yyleng; return TYPE;}
+{TYPE_INT}              {col+= yyleng; return TYPE_INT;}
+{TYPE_FLOAT}            {col+= yyleng; return TYPE_FLOAT;}
+{TYPE_ELEM}             {col+= yyleng; return TYPE_ELEM;}
+{TYPE_SET}              {col+= yyleng; return TYPE_SET;}
 {READ}                  {col+= yyleng; return READ;}
 {WRITE}                 {col+= yyleng; return WRITE;}
 {WRITELN}               {col+= yyleng; return WRITELN;}

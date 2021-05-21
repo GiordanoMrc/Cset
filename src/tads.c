@@ -5,7 +5,7 @@
 
 vertex *createNode(int variable_name, char *node_type, char *value, vertex *l, vertex *r)
 {
-    vertex *node = (vertex *)malloc(sizeof(vertex));
+    vertex *node = (vertex *) calloc (1,sizeof(vertex));
     node->variable_name = variable_name;
     node->node_type = node_type;
     node->value = value;
@@ -18,9 +18,9 @@ void freeVertex(vertex *root)
 {
     if (!root)
         return;
-    free(root->value);
     freeVertex(root->l);
     freeVertex(root->r);
+    free(root->value);
     free(root);
 }
 
@@ -79,6 +79,9 @@ void print_variable(int name)
         break;
     case ARG_LIST:
         printf(YEL " ARGUMENTOS" DFT);
+        break;
+    case ARG:
+        printf(YEL " ARG" DFT);
         break;
     case SET_ADD:
         printf(BLU " SET_ADD" DFT);
@@ -229,6 +232,7 @@ void addConversionNode(vertex *node)
         node->l = convertex;
     }
 }
+
 // Symbols
 
 Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int line, int col)
@@ -240,7 +244,6 @@ Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int li
     entry->scope = scope_id;
     entry->line = line;
     entry->col = col;
-    entry->paramC = NULL;
     return entry;
 }
 
@@ -256,43 +259,35 @@ void addEntry(char *ID, char *type, int var_or_func, int recent_scope)
             {
                 raiseRedecl(line, col, ID, var_or_func);
                 skipScope = 1;
-            }
-            else if (var_or_func == PARAM)
-            {
-                raiseRedecl(line, col, ID, var_or_func);
-            }
-            else
-            {
+            } else {
                 raiseRedecl(line, col, ID, var_or_func);
             }
             return;
         }
     }
-    if (var_or_func == PARAM) {
-        addParamCounter();
-    }
-  
 
+    
     entry = createSymbol(ID, type, var_or_func, recent_scope, line, col);
     HASH_ADD_STR(symbolTable, ID, entry);
+    
 }
 
 void printTable()
-{
-    printf(KMAG "\nID   %11s | %4s:%4s | type   %3s | scope | Declaration Type  %5s\t\n" DFT, "", "lin", "col", "", "");
+{   
+    printf(KMAG"\nID   %11s | %4s:%4s | type   %3s | scope | Declaration Type \t\n"DFT, "", "lin", "col", "");
     printf("____________________________________________________________________\n");
     for (Symbol *entry = symbolTable; entry != NULL; entry = entry->hh.next)
     {
         switch (entry->var_or_func)
         {
         case VAR:
-            printf(" %15s | %4d:%4d | %10s | %5d | VARIABLE \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
+            printf(" %15s | %4d:%4d | %10s | %5d | VARIABLE \t\n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
             break;
         case FUNC:
-            printf(" %15s | %4d:%4d | %10s | %5d | FUNCTION \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
+            printf(" %15s | %4d:%4d | %10s | %5d | FUNCTION \t\n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
             break;
         case PARAM:
-            printf(" %15s | %4d:%4d | %10s | %5d | PARAMETER \n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
+            printf(" %15s | %4d:%4d | %10s | %5d | PARAMETER \t\n", entry->ID, entry->line, entry->col, entry->type, entry->scope);
             break;
         }
     }
@@ -305,9 +300,15 @@ void freeTable()
     {
         HASH_DEL(symbolTable, entry);
         free(entry);
+
     }
 }
 
+Symbol *findS(char * name){
+    Symbol *tmp;
+    HASH_FIND_STR(symbolTable,name,tmp);
+    return tmp;
+}
 // scope pile functions
 
 void createScope()
@@ -341,76 +342,149 @@ void pop()
 
 //PARAMs
 
-void addFunctionParams(char *id)
+void addFunctionParams(char * name, char* returnType)
 {
-    functionParams *params = (functionParams *) calloc (1,sizeof(functionParams));
-    char *functionName = (char *)strdup(id);
+    functionParams *params = (functionParams *) malloc(sizeof(functionParams));
+    Param * el;
+    int count=0;
 
-    params->functionName = (char *)strdup(id);
-    params->numberOfParams = 0;
+    LL_COUNT(paramList,el, count);
+    params->name = name;
+    params->numberOfParams = count;
+    params->returnType =returnType;
+    params->first = paramList;  
 
-    HASH_ADD_STR(functionTable, functionName, params);
-    free(functionName);
+    HASH_ADD_STR(funcTable,name,params); 
 }
 
-void addParams(int type)
+void addParam(char * type)
 {
-    Params *newParams = (Params *)calloc(1,sizeof(Params));
-    //Params *params;
-    functionParams *functionParams;
-    newParams->type = type;
+    Param *newParam = (Param *) calloc(1,sizeof(Param));
+    newParam->type = type;
 
-    Scope *h = STACK_TOP(head);
-
-    HASH_FIND_INT(symbolTable, &h->scope_id, functionParams);
+    LL_APPEND(paramList,newParam);
 }
 
-void printFunctionTable()
-{
-    printf(KMAG "\nFuncao   %11s | Number of Params  %5s\t\n" DFT, "", "");
-    for (functionParams *s = functionTable; s != NULL; s = s->hh.next)
+void freePList(){
+    Param * el;
+    LL_FOREACH(paramList,el) {
+        LL_DELETE(paramList,el);
+        //free(el);
+    }
+}
+
+void freeFunctionTable(){
+    functionParams *entry, *tmp;
+    HASH_ITER(hh, funcTable, entry, tmp)
     {
-        printf("%20s |  %5d\n\n", s->functionName, s->numberOfParams);
-        if (s->first)
-        {
-            printParams(s->first, 1);
+        HASH_DEL(funcTable, entry);
+        if(entry->first!= NULL) freeParamList(entry->first);
+        free(entry);
+    }
+}
+
+void freeParamList(Param* head){
+    Param *p;
+    for (p = head; p!= NULL; p=p->next)
+    {
+        free(p);
+    }
+    
+}
+
+void printFunctionTable() {
+  functionParams *s;
+  for(s=funcTable; s != NULL; s=s->hh.next) {
+    printf("Func: %s | numero de parametros: %d | tipo de retorno: %s\n", s->name, s->numberOfParams,s->returnType);
+    if (s->first) {
+      printParams(s->first);
+    }
+  }
+}
+
+void printParams(Param *params) {
+  printf("├ Tipo: %s\n", params->type);
+  if (params->next) {
+    printParams(params->next);
+  }
+}
+
+void checkArgs(char*name, vertex* node,int l,int c){
+    Symbol *entry = findS(name); 
+    Param *el;
+    int count = 0;
+
+    if(!entry){
+        raiseUndeclaredFunc(name);
+    } else {
+        createArgList(node);
+        LL_COUNT(argCalls,el,count);
+        functionParams *f = findF(name);
+        if(f->numberOfParams != count){
+            raiseNumberOfArgs(line, col,name);
+        } else {
+            Param * p = f->first;
+            LL_FOREACH(argCalls,el){
+                if(p->type !=el->type){
+                    raiseCallTypeMismatch(line, col,name);
+                    break;
+                } else {
+                    p = p->next;
+                }
+            }
+
         }
+        freeAList();
+    }
+
+}
+
+ void createArgList(vertex* node){
+
+    if(!node)
+        return;
+    createArgList(node->l);
+    createArgList(node->r);
+    if(node->node_type != NULL) {
+        Param *tmp = (Param*) calloc(1, sizeof(Param));
+        tmp->type = node->node_type;
+        LL_APPEND(argCalls,tmp);
     }
 }
 
-void printParams(Params *params, int count)
-{
-    printf("%d, %d\n", count, params->type);
-    if (params->next) printParams(params->next, count + 1);
+functionParams *findF(char * name){
+    functionParams *tmp;
+    HASH_FIND_STR(funcTable,name,tmp);
+    return tmp;
 }
 
-void freeFunctionTable()
-{
-    for (functionParams *s=functionTable; s != NULL; s = s->hh.next)
-    {
-        free(s->functionName);
-        if (s->first) freeParams(s->first);
+void freeAList(){
+    Param * el;
+    LL_FOREACH(argCalls,el) {
+        LL_DELETE(argCalls,el);
+        //free(el);
     }
-}
-
-void freeParams(Params *params)
-{
-    if (params != NULL)
-    {
-        freeParams(params->next);
-        free(params);
-    }
-}
-
-char* addParamCounter() {
-  UT_string *str;
-  utstring_new(str);
-  utstring_printf(str, "#%d", param_counter);
-  param_counter++;
-  return utstring_body(str);
 }
 
 //SEMANTIC CHECKS
+
+void checkReturnType(char* lastFType, vertex* retType){
+    ret = NULL;
+    getReturnType(retType);
+    if(ret==NULL){
+        raiseVoidReturn();
+    } else if(strcmp(ret,lastFType)==0) {
+        //raiseWrongReturnType(lastFType,ret);
+    }
+}
+
+void getReturnType(vertex* retType){
+    if(!retType) 
+        return;
+    getReturnType(retType->l);
+    getReturnType(retType->r);
+    if(retType->node_type!=NULL) ret = retType->node_type;
+}
 
 void checkNoMain()
 {
@@ -441,7 +515,34 @@ void checkUndeclaredID(char *id, int line, int col)
     raiseUndeclaredId(line, col);
 }
 
+
+//TAC
+
+void printNewCode() {
+  struct codeLine* cl;
+  FILE *fp;
+  fp = fopen("./arq.tac", "w");
+  printf(".table\n");
+  printf(".code\n");
+  fprintf(fp, ".table\n");
+  fprintf(fp, ".code\n");
+  if (newCode != NULL) {
+    cl = newCode;
+    while(cl != NULL) {
+      printf("%s", utstring_body(cl->line));
+      fprintf(fp, "%s", utstring_body(cl->line));
+      cl = cl->next;
+    }
+  }
+  printf("nop\n\n");
+  fprintf(fp, "nop\n\n");
+  fclose(fp);
+}
+
 vertex *root = NULL;
 Scope *head = NULL;
 Symbol *symbolTable = NULL;
-functionParams * functionTable =NULL;
+functionParams *funcTable = NULL;
+Param * argCalls = NULL;
+Param * paramList = NULL;
+CodeLine * newCode= NULL;

@@ -75,20 +75,23 @@ extern int yydebug;
     LT = 276,                      /* LT  */
     GTE = 277,                     /* GTE  */
     LTE = 278,                     /* LTE  */
-    TYPE = 279,                    /* TYPE  */
-    IN = 280,                      /* IN  */
-    IF = 281,                      /* IF  */
-    ELSE = 282,                    /* ELSE  */
-    FOR = 283,                     /* FOR  */
-    FORALL = 284,                  /* FORALL  */
-    IS_SET = 285,                  /* IS_SET  */
-    ADD = 286,                     /* ADD  */
-    REMOVE = 287,                  /* REMOVE  */
-    RETURN = 288,                  /* RETURN  */
-    EXISTS = 289,                  /* EXISTS  */
-    READ = 290,                    /* READ  */
-    WRITE = 291,                   /* WRITE  */
-    WRITELN = 292                  /* WRITELN  */
+    IN = 279,                      /* IN  */
+    TYPE_INT = 280,                /* TYPE_INT  */
+    TYPE_FLOAT = 281,              /* TYPE_FLOAT  */
+    TYPE_ELEM = 282,               /* TYPE_ELEM  */
+    TYPE_SET = 283,                /* TYPE_SET  */
+    IF = 284,                      /* IF  */
+    ELSE = 285,                    /* ELSE  */
+    FOR = 286,                     /* FOR  */
+    FORALL = 287,                  /* FORALL  */
+    IS_SET = 288,                  /* IS_SET  */
+    ADD = 289,                     /* ADD  */
+    REMOVE = 290,                  /* REMOVE  */
+    RETURN = 291,                  /* RETURN  */
+    EXISTS = 292,                  /* EXISTS  */
+    READ = 293,                    /* READ  */
+    WRITE = 294,                   /* WRITE  */
+    WRITELN = 295                  /* WRITELN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -97,12 +100,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "c7synt.y"
+#line 27 "c7synt.y"
 
     char* str;
     struct vertex* node;
 
-#line 106 "c7synt.tab.h"
+#line 109 "c7synt.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

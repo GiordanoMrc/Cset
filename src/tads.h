@@ -4,21 +4,15 @@
 #include "uthash/uthash.h"
 #include "uthash/utstack.h"
 #include "uthash/utstring.h"
+#include "uthash/utlist.h"
 #include "semantic_raises.h"
 
 typedef enum variable_names
 {
     PROGRAM,
-    DECLARATION_LIST,
-    DECLARATION,
     VAR_DECLARATION,
     FUNCTION_DEFINITION,
-    PARAMATERS,
-    PARAMETER_LIST,
     PARAMETER_DECL,
-    COMPOUND_STMT,
-    LOCAL_STMT,
-    STMTS,
     STMT,
     IO_STMT,
     IF_STMT,
@@ -26,19 +20,12 @@ typedef enum variable_names
     FOR_COND,
     RETURN_STMT,
     FORALL_STMT,
-    EXPRESSION_STMT,
     EXPRESSION,
     ASSIGN,
-    BASIC_EXP,
-    IN_EXP,
     LOGICAL_EXP,
-    ADD_EXP,
     ADD_OP,
     MUL_OP,
     DIV_OP,
-    TERM,
-    FACTOR,
-    SET_EXP,
     CONSTANT,
     CALL,
     ARG_LIST,
@@ -46,32 +33,24 @@ typedef enum variable_names
     VALUE_FLOAT,
     VALUE_EMPTY,
     VALUE_STRING,
-    READ_IO,
-    WRITE_IO,
-    WRITELN_IO,
-    OR_EXP,
-    AND_EXP,
     NOT_OP,
     SET_ADD,
     SET_REMOVE,
     SET_EXISTS,
-    SET_FORALL,
-    SET_IS_SET,
     IN_OP,
     BASIC_OP,
     IDENT,
     CONST,
-    IF_ELSE_STMT,
     REL_OP,
     IS_SET_EXP,
-    FOR_LAST_ARG,
     ELSE_STMT,
     IF_COND,
     FOR_INIT,
     FOR_INCREMENT,
     REL_EQ,
     FLOAT_TO_INT,
-    INT_TO_FLOAT
+    INT_TO_FLOAT,
+    ARG
 
 } variable_names;
 
@@ -84,26 +63,37 @@ enum table_type
 
 enum type
 {
-    TYPE_INT,
-    TYPE_FLOAT,
-    TYPE_SET,
-    TYPE_ELEM
+    INT_T,
+    FLOAT_T,
+    SET_T,
+    ELEM_T
 };
-typedef struct Params
+
+typedef struct codeLine {
+  UT_string *line;
+  struct codeLine *next;
+} CodeLine;
+
+CodeLine * newCode;
+typedef struct Param
 {
-    int type;
-    struct Params *next; // Próximo parametro
-} Params;
+    char* type;
+    struct Param *next; // Próximo parametro
+} Param;
+
+Param * paramList;
+Param * argCalls;
 
 typedef struct functionParams
 {
-    char *functionName;
+    char* name;
+    char* returnType;
     int numberOfParams;
-    struct Params *first;
+    struct Param *first;
     UT_hash_handle hh;
 } functionParams;
 
-functionParams * functionTable;
+functionParams * funcTable;
 
 typedef struct Scope
 {
@@ -121,7 +111,7 @@ typedef struct Symbol
     int col;
     int var_or_func;
     int scope;
-    char * paramC;
+    int nParams;
     UT_hash_handle hh;
 } Symbol;
 
@@ -139,6 +129,7 @@ typedef struct vertex
 vertex *root;
 
 int line, col, scope_counter, skipScope, param_counter;
+char* ret;
 vertex *createNode(int variable_name, char *node_type, char *value, struct vertex *v1, vertex *v2);
 void print_tabs(int tabs);
 void print_variable(int name);
@@ -151,6 +142,7 @@ void addTypeToNode(vertex *nozes);
 
 Symbol *createSymbol(char *ID, char *type, int var_or_func, int scope_id, int line, int col);
 void addEntry(char *ID, char *type, int var_or_func, int recent_scope);
+Symbol * findS(char*name);
 void printTable();
 void freeTable();
 
@@ -161,19 +153,25 @@ void push(Scope *scope);
 void pop();
 
 // parameters
-void addFunctionParams(char * id);
-void addParams(int type);
+void addFunctionParams(char * name, char* returnType);
+void addParam(char* type);
 void printFunctionTable();
-void printParams(Params *params, int count);
+void printParams(Param *params);
 void freeFunctionTable();
-void freeParams(Params *params);
+void freeParamList(Param* head);
+void freePList();
+void freeAList();
 char* addParamCounter();
+void checkArgs(char * name, vertex* node,int line,int col);
+void createArgList(vertex* node);
+functionParams *findF(char * name);
 
 //SEMANTIC CHECKS
 
+void checkReturnType(char* lastFType, vertex* retType);
+void getReturnType(vertex* retType);
 void checkNoMain();
 void checkUndeclaredID(char *id, int line, int col);
-void checkReturnType();
 
 #endif
 
