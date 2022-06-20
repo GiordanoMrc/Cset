@@ -1,5 +1,6 @@
 # Cset
-"Cr ou nao Cr?"
+
+Projeto de compilador C-minus com operações para conjuntos.
 
 ## Part 1:
 
